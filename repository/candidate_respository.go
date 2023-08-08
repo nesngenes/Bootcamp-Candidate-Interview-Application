@@ -33,7 +33,6 @@ func (c *candidateRepository) GetByPhoneNumber(phoneNumber string) (model.Candid
 	return candidate, nil
 }
 
-
 func (c *candidateRepository) List() ([]model.Candidate, error) {
 	panic("")
 }
@@ -50,11 +49,15 @@ func (c *candidateRepository) GetByName(name string) (model.Candidate, error) {
 
 func (c *candidateRepository) Update(payload model.Candidate) error {
 	panic("")
-	
+
 }
 
 func (c *candidateRepository) Delete(id string) error {
-	panic("")
+	_, err := c.db.Exec("DELETE FROM candidate WHERE id=$1", id)
+	if err != nil {
+		return err
+	}
+	return nil
 
 }
 

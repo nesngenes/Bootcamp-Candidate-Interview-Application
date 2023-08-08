@@ -26,21 +26,24 @@ func (c *candidateRepository) Create(payload model.Candidate) error {
 // GetPhoneNumber implements employeeRepository.
 func (c *candidateRepository) GetByPhoneNumber(phoneNumber string) (model.Candidate, error) {
 	var candidate model.Candidate
-	err := c.db.QueryRow("SELECT candidate_id, first_name, last_name, email, phone, address, date_of_birth WHERE phone=$1", phoneNumber).Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
+	err := c.db.QueryRow("SELECT candidate_id, first_name, last_name, email, phone, address, date_of_birth FROM candidate WHERE phone=$1", phoneNumber).Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
 	if err != nil {
 		return model.Candidate{}, err
 	}
 	return candidate, nil
 }
 
-
 func (c *candidateRepository) List() ([]model.Candidate, error) {
 	panic("")
 }
 
 func (c *candidateRepository) Get(id string) (model.Candidate, error) {
-	panic("")
-
+	var candidate model.Candidate
+	err := c.db.QueryRow("SELECT candidate_id, first_name, last_name, email, phone, address, date_of_birth FROM candidate  WHERE candidate_id=$1", id).Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Email, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
+	if err != nil {
+		return model.Candidate{}, err
+	}
+	return candidate, nil
 }
 
 func (c *candidateRepository) GetByName(name string) (model.Candidate, error) {
@@ -50,7 +53,7 @@ func (c *candidateRepository) GetByName(name string) (model.Candidate, error) {
 
 func (c *candidateRepository) Update(payload model.Candidate) error {
 	panic("")
-	
+
 }
 
 func (c *candidateRepository) Delete(id string) error {

@@ -1,11 +1,12 @@
 package api
 
 import (
-	"net/http"
-	"github.com/gin-gonic/gin"
 	"interview_bootcamp/model"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type CandidateController struct {
@@ -33,7 +34,20 @@ func (cc *CandidateController) listHandler(c *gin.Context) {
 	panic("")
 }
 func (cc *CandidateController) getHandler(c *gin.Context) {
-	panic("")
+	id := c.Param("id")
+	uom, err := cc.usecase.FindByIdCandidate(id)
+	if err != nil {
+		c.JSON(500, gin.H{"err": err.Error()})
+		return
+	}
+	status := map[string]any{
+		"code":        200,
+		"description": "Get By Id Data Successfully",
+	}
+	c.JSON(200, gin.H{
+		"status": status,
+		"data":   uom,
+	})
 }
 func (cc *CandidateController) updateHandler(c *gin.Context) {
 	panic("")

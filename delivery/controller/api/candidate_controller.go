@@ -1,11 +1,12 @@
 package api
 
 import (
-	"net/http"
-	"github.com/gin-gonic/gin"
 	"interview_bootcamp/model"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type CandidateController struct {
@@ -36,7 +37,19 @@ func (cc *CandidateController) getHandler(c *gin.Context) {
 	panic("")
 }
 func (cc *CandidateController) updateHandler(c *gin.Context) {
-	panic("")
+	var candidate model.Candidate
+	if err := c.ShouldBindJSON(&candidate); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		return
+	}
+
+	candidate.CandidateID = common.GenerateID()
+	if err := cc.usecase.RegisterNewCandidate(candidate); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, candidate)
 }
 func (cc *CandidateController) deleteHandler(c *gin.Context) {
 	panic("")

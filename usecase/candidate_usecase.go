@@ -61,21 +61,23 @@ func (c *candidateUseCase) DeleteCandidate(id string) error {
 
 // UpdateCandidate implements CandidateUseCase.
 func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
-
-	if payload.FirstName == "" && payload.LastName == "" && payload.Email == "" && payload.Phone == "" && payload.Address == "" {
-		return fmt.Errorf("first name, last name, email, phone, address, date of birth required fields")
+	//untuk mengecek apakah kolom nomor sudah diisi
+	if payload.Phone == "" {
+		return fmt.Errorf("kolom nomor harus di isi")
 	}
 
-	//pengecekan phone number tidak boleh sama
+	//untuk mengecek apakah data dengan nomor tersebut sudah ada
 	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
-	if isExistCandidate.Phone == payload.Phone {
-		return fmt.Errorf("candidate with phoone %s exists", payload.Phone)
+	if isExistCandidate.Phone == payload.Phone && isExistCandidate.CandidateID != payload.CandidateID {
+		return fmt.Errorf("data dengan nomor: %s sudah ada", payload.Phone)
 	}
 
-	err := c.repo.Create(payload)
+	//untuk melakukan update pada data dengan nomor sesuai kolom
+	err := c.repo.Update(payload)
 	if err != nil {
-		return fmt.Errorf("failed to create new candidate: %v", err)
+		return fmt.Errorf("gagal memperbarui nomor: %v", err)
 	}
+
 	return nil
 }
 

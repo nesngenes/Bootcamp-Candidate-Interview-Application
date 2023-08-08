@@ -25,12 +25,6 @@ func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 		return fmt.Errorf("first name, last name, email, phone, address, date of birth required fields")
 	}
 
-	//pengecekan email tidak boleh sama
-	// isExistCandidate, _ := c.repo.GetByEmail(payload.Email)
-	// if isExistCandidate.Email == payload.Email {
-	// 	return fmt.Errorf("candidate with email %s exists", payload.Email)
-	// }
-
 	//pengecekan phone number tidak boleh sama
 	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
 	if isExistCandidate.Phone == payload.Phone {
@@ -46,7 +40,7 @@ func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 
 // FindAllCandidate implements CandidateUseCase.
 func (c *candidateUseCase) FindAllCandidate() ([]model.Candidate, error) {
-	panic("")
+	return c.repo.List()
 }
 
 // FindByIdCandidate implements CandidateUseCase.
@@ -61,6 +55,7 @@ func (c *candidateUseCase) DeleteCandidate(id string) error {
 
 // UpdateCandidate implements CandidateUseCase.
 func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
+
 	//untuk mengecek apakah kolom nomor sudah diisi
 	if payload.Phone == "" {
 		return fmt.Errorf("kolom nomor harus di isi")

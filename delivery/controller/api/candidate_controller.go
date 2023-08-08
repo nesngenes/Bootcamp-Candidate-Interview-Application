@@ -31,12 +31,26 @@ func (cc *CandidateController) createHandler(c *gin.Context) {
 }
 
 func (cc *CandidateController) listHandler(c *gin.Context) {
-	panic("")
+
+	candidates, err := cc.usecase.FindAllCandidate()
+	if err != nil {
+		c.JSON(500, gin.H{"err": err.Error()})
+		return
+	}
+	status := map[string]any{
+		"code":        200,
+		"description": "get all data succesfully",
+	}
+	c.JSON(200, gin.H{
+		"status": status,
+		"data":   candidates,
+	})
 }
 func (cc *CandidateController) getHandler(c *gin.Context) {
 	panic("")
 }
 func (cc *CandidateController) updateHandler(c *gin.Context) {
+
 	var candidate model.Candidate
 	if err := c.ShouldBindJSON(&candidate); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})

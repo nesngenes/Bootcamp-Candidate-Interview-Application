@@ -143,7 +143,7 @@ func (c *interviewerRepository) Update(payload model.Interviewer) error {
 }
 
 func (c *interviewerRepository) Delete(id string) error {
-	_, err := c.db.Exec("DELETE FROM interviewer WHERE id=$1", id)
+	_, err := c.db.Exec("DELETE FROM interviewer WHERE interviewer_id=$1", id)
 	if err != nil {
 		return err
 	}

@@ -26,7 +26,7 @@ func (c *candidateRepository) Create(payload model.Candidate) error {
 // GetPhoneNumber implements employeeRepository.
 func (c *candidateRepository) GetByPhoneNumber(phoneNumber string) (model.Candidate, error) {
 	var candidate model.Candidate
-	err := c.db.QueryRow("SELECT candidate_id, first_name, last_name, email, phone, address, date_of_birth WHERE phone=$1", phoneNumber).Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
+	err := c.db.QueryRow("SELECT candidate_id, first_name, last_name, email, phone, address, date_of_birth FROM candidate WHERE phone=$1", phoneNumber).Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
 	if err != nil {
 		return model.Candidate{}, err
 	}
@@ -53,7 +53,7 @@ func (c *candidateRepository) Update(payload model.Candidate) error {
 }
 
 func (c *candidateRepository) Delete(id string) error {
-	_, err := c.db.Exec("DELETE FROM candidate WHERE id=$1", id)
+	_, err := c.db.Exec("DELETE FROM candidate WHERE candidate_id=$1", id)
 	if err != nil {
 		return err
 	}

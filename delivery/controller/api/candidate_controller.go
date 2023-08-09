@@ -1,11 +1,12 @@
 package api
 
 import (
-	"net/http"
-	"github.com/gin-gonic/gin"
 	"interview_bootcamp/model"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type CandidateController struct {
@@ -39,7 +40,13 @@ func (cc *CandidateController) updateHandler(c *gin.Context) {
 	panic("")
 }
 func (cc *CandidateController) deleteHandler(c *gin.Context) {
-	panic("")
+	id := c.Param("candidate_id")
+	if err := cc.usecase.DeleteCandidate(id); err != nil {
+		c.JSON(500, gin.H{"err": err.Error()})
+		return
+	}
+	c.String(204, "")
+
 }
 
 func NewCandidateController(r *gin.Engine, usecase usecase.CandidateUseCase) *CandidateController {

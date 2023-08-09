@@ -1,7 +1,7 @@
 package model
 
 type Candidate struct {
-	CandidateID          string    `json:"candidate_id"`
+	CandidateID string `json:"candidate_id"`
 	FirstName   string `json:"first_name"`
 	LastName    string `json:"last_name"`
 	Email       string `json:"email"`

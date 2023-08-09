@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
@@ -12,60 +11,52 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CandidateController struct {
+type BootcampController struct {
 	router  *gin.Engine
-	usecase usecase.CandidateUseCase
+	usecase usecase.BootcampUseCase
 }
 
-func (cc *CandidateController) createHandler(c *gin.Context) {
-	var candidate model.Candidate
-	if err := c.ShouldBindJSON(&candidate); err != nil {
+func (b *BootcampController) createHandler(c *gin.Context) {
+	var bootcamp model.Bootcamp
+	if err := c.ShouldBindJSON(&bootcamp); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 
-	candidate.CandidateID = common.GenerateID()
-	if err := cc.usecase.RegisterNewCandidate(candidate); err != nil {
-		fmt.Println(err)
+	bootcamp.BootcampId = common.GenerateID()
+	if err := b.usecase.RegisterNewBootcamp(bootcamp); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
 
-	status := common.WebStatus{
-		Code:        http.StatusCreated,
-		Description: "Create Data Successfully",
-	}
-	c.JSON(http.StatusCreated, gin.H{
-		"status": status,
-	})
+	c.JSON(http.StatusCreated, bootcamp)
 }
-
-func (cc *CandidateController) listHandler(c *gin.Context) {
+func (b *BootcampController) listHandler(c *gin.Context) {
 	page, _ := strconv.Atoi(c.Query("page"))
 	limit, _ := strconv.Atoi(c.Query("limit"))
 	paginationParam := dto.PaginationParam{
 		Page:  page,
 		Limit: limit,
 	}
-
-	candidates, paging, err := cc.usecase.FindAllCandidate(paginationParam)
+	bootcamps, paging, err := b.usecase.FindAllBootcamp(paginationParam)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
-	status := common.WebStatus{
-		Code:        http.StatusOK,
-		Description: "Get All Data Successfully",
+	status := map[string]any{
+		"code":        200,
+		"description": "Get All Data Successfully",
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": status,
-		"data":   candidates,
+		"data":   bootcamps,
 		"paging": paging,
 	})
+
 }
-func (cc *CandidateController) getHandler(c *gin.Context) {
+func (b *BootcampController) getHandler(c *gin.Context) {
 	id := c.Param("id")
-	product, err := cc.usecase.FindByIdCandidate(id)
+	bootcamps, err := b.usecase.FindByIdBootcamp(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
@@ -76,19 +67,18 @@ func (cc *CandidateController) getHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": status,
-		"data":   product,
+		"data":   bootcamps,
 	})
 
 }
-func (cc *CandidateController) updateHandler(c *gin.Context) {
-
-	var candidate model.Candidate
-	if err := c.ShouldBindJSON(&candidate); err != nil {
+func (b *BootcampController) updateHandler(c *gin.Context) {
+	var bootcamp model.Bootcamp
+	if err := c.ShouldBindJSON(&bootcamp); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 
-	if err := cc.usecase.UpdateCandidate(candidate); err != nil {
+	if err := b.usecase.UpdateBootcamp(bootcamp); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
@@ -99,10 +89,11 @@ func (cc *CandidateController) updateHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status": status,
 	})
+
 }
-func (cc *CandidateController) deleteHandler(c *gin.Context) {
+func (b *BootcampController) deleteHandler(c *gin.Context) {
 	id := c.Param("id")
-	if err := cc.usecase.DeleteCandidate(id); err != nil {
+	if err := b.usecase.DeleteBootcamp(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
@@ -114,18 +105,19 @@ func (cc *CandidateController) deleteHandler(c *gin.Context) {
 	c.JSON(http.StatusNoContent, gin.H{
 		"status": status,
 	})
+
 }
 
-func NewCandidateController(r *gin.Engine, usecase usecase.CandidateUseCase) *CandidateController {
-	controller := CandidateController{
+func NewBootcampController(r *gin.Engine, usecase usecase.BootcampUseCase) *BootcampController {
+	controller := BootcampController{
 		router:  r,
 		usecase: usecase,
 	}
 	rg := r.Group("/api/v1")
-	rg.POST("/candidates", controller.createHandler)
-	rg.GET("/candidates", controller.listHandler)
-	rg.GET("/candidates/:id", controller.getHandler)
-	rg.PUT("/candidates", controller.updateHandler)
-	rg.DELETE("/candidates/:id", controller.deleteHandler)
+	rg.POST("/bootcamps", controller.createHandler)
+	rg.GET("/bootcamps", controller.listHandler)
+	rg.GET("/bootcamps/:id", controller.getHandler)
+	rg.PUT("/bootcamps", controller.updateHandler)
+	rg.DELETE("/bootcamps/:id", controller.deleteHandler)
 	return &controller
 }

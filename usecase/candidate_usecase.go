@@ -16,7 +16,8 @@ type CandidateUseCase interface {
 }
 
 type candidateUseCase struct {
-	repo repository.CandidateRepository
+	repo       repository.CandidateRepository
+	bootcampUC BootcampUseCase
 }
 
 // RegisterNewCandidate implements CandidateUseCase.
@@ -27,18 +28,23 @@ func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 	}
 
 	// pengecekan email tidak boleh sama
-	isExistCandidateS, _ := c.repo.GetByEmail(payload.Email)
-	if isExistCandidateS.Email == payload.Email {
+	isExistCandidateEmail, _ := c.repo.GetByEmail(payload.Email)
+	if isExistCandidateEmail.Email == payload.Email {
 		return fmt.Errorf("candidate with email %s exists", payload.Email)
 	}
 
 	//pengecekan phone number tidak boleh sama
-	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
-	if isExistCandidate.Phone == payload.Phone {
+	isExistCandidatePhone, _ := c.repo.GetByPhoneNumber(payload.Phone)
+	if isExistCandidatePhone.Phone == payload.Phone {
 		return fmt.Errorf("candidate with phoone %s exists", payload.Phone)
 	}
 
-	err := c.repo.Create(payload)
+	_, err := c.bootcampUC.FindByIdBootcamp(payload.Bootcamp.BootcampId)
+	if err != nil {
+		return fmt.Errorf("bootcamp with ID %s not found", payload.Bootcamp.BootcampId)
+	}
+
+	err = c.repo.Create(payload)
 	if err != nil {
 		return fmt.Errorf("failed to create new candidate: %v", err)
 	}
@@ -80,7 +86,12 @@ func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
 		return fmt.Errorf("kolom nomor harus di isi")
 	}
 
-	err := c.repo.Update(payload)
+	_, err := c.bootcampUC.FindByIdBootcamp(payload.Bootcamp.BootcampId)
+	if err != nil {
+		return fmt.Errorf("bootcamp with ID %s not found", payload.Bootcamp.BootcampId)
+	}
+
+	err = c.repo.Update(payload)
 	if err != nil {
 		return fmt.Errorf("gagal memperbarui nomor: %v", err)
 	}
@@ -88,6 +99,6 @@ func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
 	return nil
 }
 
-func NewCandidateUseCase(repo repository.CandidateRepository) CandidateUseCase {
-	return &candidateUseCase{repo: repo}
+func NewCandidateUseCase(repo repository.CandidateRepository, bootcampUC BootcampUseCase) CandidateUseCase {
+	return &candidateUseCase{repo: repo, bootcampUC: bootcampUC}
 }

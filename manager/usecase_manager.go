@@ -1,16 +1,22 @@
 package manager
 
-import "interview_bootcamp/usecase"
+import (
+	"github.com/cloudinary/cloudinary-go/v2"
+	"interview_bootcamp/usecase"
+)
 
 type UseCaseManager interface {
     CandidateUseCase() usecase.CandidateUseCase
     ResumeUseCase() usecase.ResumeUseCase
     InterviewerUseCase() usecase.InterviewerUseCase
 	BootcampUseCase() usecase.BootcampUseCase
+	SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary)
+
 }
 
 type useCaseManager struct {
 	repoManager RepoManager
+	cloudinary  *cloudinary.Cloudinary
 }
 
 func (u *useCaseManager) CandidateUseCase() usecase.CandidateUseCase {
@@ -21,11 +27,15 @@ func (u *useCaseManager) BootcampUseCase() usecase.BootcampUseCase {
 }
 
 func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {
-	return usecase.NewResumeUseCase(u.repoManager.ResumeRepo())
+    return usecase.NewResumeUseCase(u.repoManager.ResumeRepo(), u.repoManager.CloudinaryInstance())
 }
 
 func (u *useCaseManager) InterviewerUseCase() usecase.InterviewerUseCase {
     return usecase.NewInterviewerUseCase(u.repoManager.InterviewerRepo())
+}
+
+func (u *useCaseManager) SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary) {
+    u.cloudinary = cloudinary
 }
 
 

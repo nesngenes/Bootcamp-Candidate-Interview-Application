@@ -1,6 +1,11 @@
 package manager
 
-import "interview_bootcamp/repository"
+
+import (
+    "github.com/cloudinary/cloudinary-go/v2"
+	"interview_bootcamp/repository"
+	"interview_bootcamp/config"
+)
 
 type RepoManager interface {
 	// semua repo di daftarkan disini
@@ -8,10 +13,12 @@ type RepoManager interface {
 	BootcampRepo() repository.BootcampRepository
 	ResumeRepo() repository.ResumeRepository
 	InterviewerRepo() repository.InterviewerRepository
+	CloudinaryInstance() *cloudinary.Cloudinary
 }
 
 type repoManager struct {
 	infra InfraManager
+	cloudinary   *cloudinary.Cloudinary
 }
 
 // UserRepo implements RepoManager.
@@ -30,6 +37,26 @@ func (r *repoManager) InterviewerRepo() repository.InterviewerRepository {
 	return repository.NewInterviewerRepository(r.infra.Conn())
 }
 
+func (r *repoManager) CloudinaryInstance() *cloudinary.Cloudinary {
+    return r.cloudinary
+}
+
 func NewRepoManager(infra InfraManager) RepoManager {
-	return &repoManager{infra: infra}
+	cfg, err := config.NewConfig()
+	if err != nil {
+		panic("Failed to read configuration")
+	}
+
+	cloudinaryInstance, err := cloudinary.NewFromParams(
+        cfg.CloudinaryConfig.CloudinaryCloudName,
+        cfg.CloudinaryConfig.CloudinaryAPIKey,
+        cfg.CloudinaryConfig.CloudinaryAPISecret,
+    )
+    if err != nil {
+        panic("Failed to initialize Cloudinary")
+    }
+	return &repoManager{
+        infra: infra,
+        cloudinary:   cloudinaryInstance,
+    }
 }

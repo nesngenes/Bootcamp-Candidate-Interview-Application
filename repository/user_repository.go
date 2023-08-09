@@ -105,6 +105,7 @@ func (r *userRepository) UpdatePassword(userID, newPassword string) error {
 	return nil
 }
 
+// delete
 func (r *userRepository) Delete(id string) error {
 	_, err := r.db.Exec("DELETE FROM users WHERE user_id=$1", id)
 	if err != nil {

@@ -5,6 +5,7 @@ import "interview_bootcamp/usecase"
 type UseCaseManager interface {
 	CandidateUseCase() usecase.CandidateUseCase
 	BootcampUseCase() usecase.BootcampUseCase
+	StatusUseCase() usecase.StatusUseCase
 	ResumeUseCase() usecase.ResumeUseCase
 }
 
@@ -17,6 +18,9 @@ func (u *useCaseManager) CandidateUseCase() usecase.CandidateUseCase {
 }
 func (u *useCaseManager) BootcampUseCase() usecase.BootcampUseCase {
 	return usecase.NewBootcampUseCase(u.repoManager.BootcampRepo())
+}
+func (u *useCaseManager) StatusUseCase() usecase.StatusUseCase {
+	return usecase.NewStatusUseCase(u.repoManager.StatusRepo())
 }
 
 func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {

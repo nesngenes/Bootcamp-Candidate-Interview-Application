@@ -28,6 +28,7 @@ func (s *Server) setupControllers() {
 	// semua controller disini
 	api.NewCandidateController(s.engine, s.useCaseManager.CandidateUseCase())
 	api.NewBootcampController(s.engine, s.useCaseManager.BootcampUseCase())
+	api.NewStatusController(s.engine, s.useCaseManager.StatusUseCase())
 	api.NewResumeController(s.engine, s.useCaseManager.ResumeUseCase())
 }
 

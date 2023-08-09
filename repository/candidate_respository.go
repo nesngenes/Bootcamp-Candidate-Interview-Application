@@ -7,6 +7,7 @@ import (
 
 type CandidateRepository interface {
 	BaseRepository[model.Candidate]
+	GetByPhoneNumber(name string) (model.Candidate, error)
 	GetByPhoneNumber(phoneNumber string) (model.Candidate, error)
 	GetByEmail(email string) (model.Candidate, error)
 }
@@ -27,6 +28,7 @@ func (c *candidateRepository) Create(payload model.Candidate) error {
 // GetPhoneNumber implements employeeRepository.
 func (c *candidateRepository) GetByPhoneNumber(phoneNumber string) (model.Candidate, error) {
 	var candidate model.Candidate
+	err := c.db.QueryRow("SELECT candidate_id, first_name, last_name, email, phone, address, date_of_birth WHERE phone=$1", phoneNumber).Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
 	err := c.db.QueryRow("SELECT * FROM candidate WHERE phone ILIKE $1", "%"+phoneNumber+"%").Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Email, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
 	if err != nil {
 		return model.Candidate{}, err
@@ -34,6 +36,8 @@ func (c *candidateRepository) GetByPhoneNumber(phoneNumber string) (model.Candid
 	return candidate, nil
 }
 
+func (c *candidateRepository) List() ([]model.Candidate, error) {
+	panic("")
 func (c *candidateRepository) List() ([]model.Candidate, error) {
 	rows, err := c.db.Query("SELECT * FROM candidate")
 	if err != nil {
@@ -56,6 +60,8 @@ func (c *candidateRepository) Get(id string) (model.Candidate, error) {
 
 }
 
+func (c *candidateRepository) GetByName(name string) (model.Candidate, error) {
+	panic("")
 func (c *candidateRepository) GetByEmail(email string) (model.Candidate, error) {
 	var candidate model.Candidate
 	err := c.db.QueryRow("SELECT * FROM candidate WHERE email ILIKE $1", "%"+email+"%").Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Email, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
@@ -67,8 +73,12 @@ func (c *candidateRepository) GetByEmail(email string) (model.Candidate, error) 
 }
 
 func (c *candidateRepository) Update(payload model.Candidate) error {
-	panic("")
-
+	//melakukan eksekusi update ke database
+	_, err := c.db.Exec("UPDATE product SET first_name=$2, last_name=$3, email=$4, phone=$5, address=$6, date_of_birth=$7, application_date=$8 WHERE candidate_id=$1", payload.CandidateID, payload.FirstName, payload.LastName, payload.Email, payload.Phone, payload.Address, payload.DateOfBirth)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *candidateRepository) Delete(id string) error {
@@ -80,12 +90,6 @@ func (c *candidateRepository) Delete(id string) error {
 func NewCandidateRepository(db *sql.DB) CandidateRepository {
 	return &candidateRepository{db: db}
 }
-package repository
-
-import (
-	"database/sql"
-	"interview_bootcamp/model"
-)
 
 type CandidateRepository interface {
 	BaseRepository[model.Candidate]

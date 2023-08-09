@@ -20,7 +20,6 @@ type DbConfig struct {
 	Driver   string
 }
 
-<<<<<<< HEAD
 type CloudinaryConfig struct {
 	CloudinaryURL      string
 	CloudinaryCloudName string

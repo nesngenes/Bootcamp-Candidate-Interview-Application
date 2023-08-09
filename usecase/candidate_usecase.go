@@ -25,12 +25,6 @@ func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 		return fmt.Errorf("first name, last name, email, phone, address, date of birth required fields")
 	}
 
-	// pengecekan email tidak boleh sama
-	isExistCandidateS, _ := c.repo.GetByEmail(payload.Email)
-	if isExistCandidateS.Email == payload.Email {
-		return fmt.Errorf("candidate with email %s exists", payload.Email)
-	}
-
 	//pengecekan phone number tidak boleh sama
 	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
 	if isExistCandidate.Phone == payload.Phone {
@@ -61,7 +55,25 @@ func (c *candidateUseCase) DeleteCandidate(id string) error {
 
 // UpdateCandidate implements CandidateUseCase.
 func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
-	panic("")
+
+	//untuk mengecek apakah kolom nomor sudah diisi
+	if payload.Phone == "" {
+		return fmt.Errorf("kolom nomor harus di isi")
+	}
+
+	//untuk mengecek apakah data dengan nomor tersebut sudah ada
+	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
+	if isExistCandidate.Phone == payload.Phone && isExistCandidate.CandidateID != payload.CandidateID {
+		return fmt.Errorf("data dengan nomor: %s sudah ada", payload.Phone)
+	}
+
+	//untuk melakukan update pada data dengan nomor sesuai kolom
+	err := c.repo.Update(payload)
+	if err != nil {
+		return fmt.Errorf("gagal memperbarui nomor: %v", err)
+	}
+
+	return nil
 }
 
 func NewCandidateUseCase(repo repository.CandidateRepository) CandidateUseCase {

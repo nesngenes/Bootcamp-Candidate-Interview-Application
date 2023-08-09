@@ -3,22 +3,28 @@ package manager
 import "interview_bootcamp/usecase"
 
 type UseCaseManager interface {
-    CandidateUseCase() usecase.CandidateUseCase
-    ResumeUseCase() usecase.ResumeUseCase
+	CandidateUseCase() usecase.CandidateUseCase
+	ResumeUseCase() usecase.ResumeUseCase
+	UserRolesUseCase() usecase.UserRolesUseCase // user role
 }
 
 type useCaseManager struct {
-    repoManager RepoManager
+	repoManager RepoManager
 }
 
 func (u *useCaseManager) CandidateUseCase() usecase.CandidateUseCase {
-    return usecase.NewCandidateUseCase(u.repoManager.CandidateRepo())
+	return usecase.NewCandidateUseCase(u.repoManager.CandidateRepo())
 }
 
 func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {
-    return usecase.NewResumeUseCase(u.repoManager.ResumeRepo())
+	return usecase.NewResumeUseCase(u.repoManager.ResumeRepo())
+}
+
+//user role
+func (u *useCaseManager) UserRolesUseCase() usecase.UserRolesUseCase {
+	return usecase.NewUserRolesUseCase(u.repoManager.UserRolesRepo())
 }
 
 func NewUseCaseManager(repoManager RepoManager) UseCaseManager {
-    return &useCaseManager{repoManager: repoManager}
+	return &useCaseManager{repoManager: repoManager}
 }

@@ -2,11 +2,12 @@ package delivery
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"interview_bootcamp/config"
 	"interview_bootcamp/delivery/controller/api"
 	"interview_bootcamp/manager"
 	"interview_bootcamp/utils/execptions"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
@@ -26,6 +27,7 @@ func (s *Server) Run() {
 func (s *Server) setupControllers() {
 	// semua controller disini
 	api.NewCandidateController(s.engine, s.useCaseManager.CandidateUseCase())
+	api.NewUserRoleController(s.engine, s.useCaseManager.UserRolesUseCase()) //user role controller
 	api.NewResumeController(s.engine, s.useCaseManager.ResumeUseCase())
 }
 

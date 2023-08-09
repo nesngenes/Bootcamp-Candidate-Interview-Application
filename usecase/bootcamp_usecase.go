@@ -13,6 +13,7 @@ type BootcampUseCase interface {
 	FindByIdBootcamp(id string) (model.Bootcamp, error)
 	UpdateBootcamp(payload model.Bootcamp) error
 	DeleteBootcamp(id string) error
+	GetBootcampByID(id string) (model.Bootcamp, error)
 }
 type bootcampUseCase struct {
 	repo repository.BootcampRepository
@@ -32,9 +33,20 @@ func (b *bootcampUseCase) RegisterNewBootcamp(payload model.Bootcamp) error {
 	}
 	return nil
 }
+
+func (b *bootcampUseCase) GetBootcampByID(id string) (model.Bootcamp, error) {
+	bootcamp, err := b.repo.GetByID(id)
+	if err != nil {
+		return model.Bootcamp{}, fmt.Errorf("bootcamp with id %s not found", id)
+	}
+	return bootcamp, nil
+}
+
+
 func (b *bootcampUseCase) FindAllBootcamp(requesPaging dto.PaginationParam) ([]model.Bootcamp, dto.Paging, error) {
 	return b.repo.Paging(requesPaging)
 }
+
 func (b *bootcampUseCase) FindByIdBootcamp(id string) (model.Bootcamp, error) {
 	bootcamp, err := b.repo.Get(id)
 	if err != nil {

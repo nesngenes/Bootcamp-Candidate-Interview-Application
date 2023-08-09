@@ -20,7 +20,7 @@ type useCaseManager struct {
 }
 
 func (u *useCaseManager) CandidateUseCase() usecase.CandidateUseCase {
-	return usecase.NewCandidateUseCase(u.repoManager.CandidateRepo())
+	return usecase.NewCandidateUseCase(u.repoManager.CandidateRepo(), u.BootcampUseCase(), u.repoManager.CloudinaryInstance())
 }
 func (u *useCaseManager) BootcampUseCase() usecase.BootcampUseCase {
 	return usecase.NewBootcampUseCase(u.repoManager.BootcampRepo())

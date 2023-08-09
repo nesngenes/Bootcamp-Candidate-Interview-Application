@@ -8,5 +8,4 @@ type Bootcamp struct {
 	StartDate  time.Time `json:"start_date"`
 	EndDate    time.Time `json:"end_date"`
 	Location   string    `json:"location"`
-	Id        string    `json:"id"`
 }

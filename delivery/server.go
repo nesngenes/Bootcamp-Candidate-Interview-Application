@@ -44,7 +44,7 @@ func (s *Server) setupControllers() {
         panic("Failed to initialize Cloudinary")
     }
 	// semua controller disini
-	api.NewCandidateController(s.engine, s.useCaseManager.CandidateUseCase())
+	api.NewCandidateController(s.engine, s.useCaseManager.CandidateUseCase(), s.useCaseManager.BootcampUseCase(), cloudinaryInstance)
 	api.NewBootcampController(s.engine, s.useCaseManager.BootcampUseCase())
 	api.NewInterviewerController(s.engine, s.useCaseManager.InterviewerUseCase())
 	api.NewResumeController(s.engine, s.useCaseManager.ResumeUseCase(), cloudinaryInstance) // Pass cloudinaryInstance

@@ -50,6 +50,8 @@ func (s *Server) setupControllers() {
 	api.NewResumeController(s.engine, s.useCaseManager.ResumeUseCase(), cloudinaryInstance) // Pass cloudinaryInstance
 	api.NewUserRoleController(s.engine, s.useCaseManager.UserRolesUseCase()) //user role controller
 	api.NewUserController(s.engine, s.useCaseManager.UsersUseCase())
+	api.NewStatusController(s.engine, s.useCaseManager.StatusUseCase())
+	api.NewResumeController(s.engine, s.useCaseManager.ResumeUseCase())
 }
 
 func NewServer() *Server {

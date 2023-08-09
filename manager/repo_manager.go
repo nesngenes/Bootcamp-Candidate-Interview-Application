@@ -11,6 +11,7 @@ type RepoManager interface {
 	// semua repo di daftarkan disini
 	CandidateRepo() repository.CandidateRepository
 	BootcampRepo() repository.BootcampRepository
+	StatusRepo() repository.StatusRepository
 	ResumeRepo() repository.ResumeRepository
 	InterviewerRepo() repository.InterviewerRepository
 	CloudinaryInstance() *cloudinary.Cloudinary
@@ -29,6 +30,9 @@ func (r *repoManager) CandidateRepo() repository.CandidateRepository {
 }
 func (r *repoManager) BootcampRepo() repository.BootcampRepository {
 	return repository.NewBootcampRepository(r.infra.Conn())
+}
+func (r *repoManager) StatusRepo() repository.StatusRepository {
+	return repository.NewStatusRepository(r.infra.Conn())
 }
 
 func (r *repoManager) ResumeRepo() repository.ResumeRepository {

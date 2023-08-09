@@ -13,6 +13,7 @@ type UseCaseManager interface {
 	SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary)
 	UserRolesUseCase() usecase.UserRolesUseCase // user role
 	UsersUseCase() usecase.UserUsecase          //user
+	StatusUseCase() usecase.StatusUseCase
 }
 
 type useCaseManager struct {
@@ -25,6 +26,9 @@ func (u *useCaseManager) CandidateUseCase() usecase.CandidateUseCase {
 }
 func (u *useCaseManager) BootcampUseCase() usecase.BootcampUseCase {
 	return usecase.NewBootcampUseCase(u.repoManager.BootcampRepo())
+}
+func (u *useCaseManager) StatusUseCase() usecase.StatusUseCase {
+	return usecase.NewStatusUseCase(u.repoManager.StatusRepo())
 }
 
 func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {

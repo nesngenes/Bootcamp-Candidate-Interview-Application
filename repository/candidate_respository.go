@@ -47,10 +47,17 @@ func (c *candidateRepository) Get(id string) (model.Candidate, error) {
 	return candidate, nil
 }
 
-func (c *candidateRepository) GetByName(name string) (model.Candidate, error) {
-	panic("")
+func (c *candidateRepository) GetByEmail(email string) (model.Candidate, error) {
+	var candidate model.Candidate
+	err := c.db.QueryRow("SELECT * FROM candidate WHERE email ILIKE $1", "%"+email+"%").Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Email, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
+	if err != nil {
+		return model.Candidate{}, err
+	}
+	return candidate, nil
 
 }
+
+
 
 func (c *candidateRepository) Update(payload model.Candidate) error {
 	panic("")

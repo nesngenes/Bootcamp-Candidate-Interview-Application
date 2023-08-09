@@ -65,6 +65,13 @@ func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
 		return fmt.Errorf("kolom nomor harus di isi")
 	}
 
+	// pengecekan email tidak boleh sama
+	isExistCandidateS, _ := c.repo.GetByEmail(payload.Email)
+	if isExistCandidateS.Email == payload.Email {
+		return fmt.Errorf("candidate with email %s exists", payload.Email)
+	}
+
+
 	//untuk mengecek apakah data dengan nomor tersebut sudah ada
 	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
 	if isExistCandidate.Phone == payload.Phone && isExistCandidate.CandidateID != payload.CandidateID {

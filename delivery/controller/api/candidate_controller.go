@@ -31,23 +31,22 @@ func (cc *CandidateController) createHandler(c *gin.Context) {
 }
 
 func (cc *CandidateController) listHandler(c *gin.Context) {
-	panic("")
-}
-func (cc *CandidateController) getHandler(c *gin.Context) {
-	id := c.Param("id")
-	uom, err := cc.usecase.FindByIdCandidate(id)
+	candidates, err := cc.usecase.FindAllCandidate()
 	if err != nil {
 		c.JSON(500, gin.H{"err": err.Error()})
 		return
 	}
 	status := map[string]any{
 		"code":        200,
-		"description": "Get By Id Data Successfully",
+		"description": "get all data succesfully",
 	}
 	c.JSON(200, gin.H{
 		"status": status,
-		"data":   uom,
+		"data":   candidates,
 	})
+}
+func (cc *CandidateController) getHandler(c *gin.Context) {
+	panic("")
 }
 func (cc *CandidateController) updateHandler(c *gin.Context) {
 	panic("")

@@ -21,10 +21,17 @@ type candidateUseCase struct {
 // RegisterNewCandidate implements CandidateUseCase.
 func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 	//pengecekan nama tidak boleh kosong
-	if payload.FirstName == "" && payload.LastName == "" && payload.Email == "" && payload.Phone == "" && payload.Address == "" {
-		return fmt.Errorf("first name, last name, email, phone, address, date of birth required fields")
+	if payload.FullName == "" && payload.Phone == "" && payload.Email == "" && payload.Address == "" {
+		return fmt.Errorf("fullname, email, phone, address, date of birth required fields")
 	}
 
+	// pengecekan email tidak boleh sama
+	isExistCandidateS, _ := c.repo.GetByEmail(payload.Email)
+	if isExistCandidateS.Email == payload.Email {
+		return fmt.Errorf("candidate with email %s exists", payload.Email)
+	}
+
+	
 	//pengecekan phone number tidak boleh sama
 	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
 	if isExistCandidate.Phone == payload.Phone {

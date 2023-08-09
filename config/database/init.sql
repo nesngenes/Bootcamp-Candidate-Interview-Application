@@ -1,8 +1,8 @@
+
 CREATE USER bootcampinterview WITH CREATEDB NOSUPERUSER INHERIT PASSWORD 'password';
 CREATE DATABASE bootcampinterview OWNER bootcampinterview;
 
 \c bootcampinterview bootcampinterview
-
 CREATE TABLE "user_roles" (
   "id" VARCHAR(100) PRIMARY KEY,
   "name" VARCHAR(30)
@@ -28,6 +28,7 @@ CREATE TABLE "bootcamp" (
 CREATE TABLE "candidate" (
   "id" VARCHAR(100) PRIMARY KEY,
   "full_name" VARCHAR(30) NOT NULL,
+  "phone" VARCHAR(30),
   "email" VARCHAR(50) UNIQUE NOT NULL,
   "date_of_birth" DATE NOT NULL,
   "address" VARCHAR(100) NOT NULL,
@@ -41,6 +42,7 @@ CREATE TABLE "candidate" (
 CREATE TABLE "status" (
   "id" VARCHAR(100) PRIMARY KEY,
   "name" VARCHAR(30) NOT NULL
+);
 
 CREATE TABLE "interviewer" (
   "id" VARCHAR(100) PRIMARY KEY,
@@ -81,5 +83,4 @@ CREATE TABLE "interview_result" (
   "note" VARCHAR(100),
   FOREIGN KEY ("interview_id") REFERENCES "interviews_process" ("id"),
   FOREIGN KEY ("result_id") REFERENCES "result" ("id")
-
 );

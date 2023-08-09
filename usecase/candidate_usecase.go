@@ -45,7 +45,11 @@ func (c *candidateUseCase) FindAllCandidate() ([]model.Candidate, error) {
 
 // FindByIdCandidate implements CandidateUseCase.
 func (c *candidateUseCase) FindByIdCandidate(id string) (model.Candidate, error) {
-	panic("")
+	candidate, err := c.repo.Get(id)
+	if err != nil {
+		return model.Candidate{}, fmt.Errorf("candidate with id %s not found", id)
+	}
+	return candidate, nil
 }
 
 // DeleteCandidate implements CandidateUseCase.

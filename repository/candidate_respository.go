@@ -6,9 +6,10 @@ import (
 )
 
 type CandidateRepository interface {
-	BaseRepository[model.Candidate]
+	BaseRepository[model.Candidate]	
 	GetByPhoneNumber(phoneNumber string) (model.Candidate, error)
 	GetByEmail(email string) (model.Candidate, error)
+
 }
 
 type candidateRepository struct {
@@ -27,12 +28,13 @@ func (c *candidateRepository) Create(payload model.Candidate) error {
 // GetPhoneNumber implements employeeRepository.
 func (c *candidateRepository) GetByPhoneNumber(phoneNumber string) (model.Candidate, error) {
 	var candidate model.Candidate
-	err := c.db.QueryRow("SELECT candidate_id, first_name, last_name, email, phone, address, date_of_birth FROM candidate WHERE phone=$1", phoneNumber).Scan(&candidate.CandidateID, &candidate.FirstName, &candidate.LastName, &candidate.Phone, &candidate.Address, &candidate.DateOfBirth)
+	err := c.db.QueryRow("SELECT * FROM candidate WHERE phone ILIKE $1", "%"+phoneNumber+"%").Scan(&candidate.CandidateID, &candidate.FullName, &candidate.Phone, &candidate.Email, &candidate.DateOfBirth, &candidate.Address, &candidate.CvLink, candidate.BootcampId, candidate.InstansiPendidikan, candidate.HackerRank)
 	if err != nil {
 		return model.Candidate{}, err
 	}
 	return candidate, nil
 }
+
 
 func (c *candidateRepository) List() ([]model.Candidate, error) {
 	panic("")

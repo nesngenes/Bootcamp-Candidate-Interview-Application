@@ -45,6 +45,7 @@ func (r *repoManager) InterviewerRepo() repository.InterviewerRepository {
 
 func (r *repoManager) CloudinaryInstance() *cloudinary.Cloudinary {
     return r.cloudinary
+}
 //user role
 func (r *repoManager) UserRolesRepo() repository.UserRolesRepository {
 	return repository.NewUserRolesRepository(r.infra.Conn())

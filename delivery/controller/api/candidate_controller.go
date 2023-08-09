@@ -2,9 +2,12 @@ package api
 
 import (
 	"interview_bootcamp/model"
+	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
 	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,26 +29,54 @@ func (cc *CandidateController) createHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, candidate)
+	status := common.WebStatus{
+		Code:        http.StatusCreated,
+		Description: "Create Data Successfully",
+	}
+	c.JSON(http.StatusCreated, gin.H{
+		"status": status,
+	})
 }
 
 func (cc *CandidateController) listHandler(c *gin.Context) {
-	candidates, err := cc.usecase.FindAllCandidate()
+	page, _ := strconv.Atoi(c.Query("page"))
+	limit, _ := strconv.Atoi(c.Query("limit"))
+	paginationParam := dto.PaginationParam{
+		Page:  page,
+		Limit: limit,
+	}
+
+	candidates, paging, err := cc.usecase.FindAllCandidate(paginationParam)
 	if err != nil {
-		c.JSON(500, gin.H{"err": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
-	status := map[string]any{
-		"code":        200,
-		"description": "get all data succesfully",
+	status := common.WebStatus{
+		Code:        http.StatusOK,
+		Description: "Get All Data Successfully",
 	}
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"status": status,
 		"data":   candidates,
+		"paging": paging,
 	})
 }
 func (cc *CandidateController) getHandler(c *gin.Context) {
-	panic("")
+	id := c.Param("id")
+	product, err := cc.usecase.FindByIdCandidate(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+		return
+	}
+	status := map[string]any{
+		"code":        http.StatusOK,
+		"description": "Get By Id Data Successfully",
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": status,
+		"data":   product,
+	})
+
 }
 func (cc *CandidateController) updateHandler(c *gin.Context) {
 
@@ -55,16 +86,32 @@ func (cc *CandidateController) updateHandler(c *gin.Context) {
 		return
 	}
 
-	candidate.CandidateID = common.GenerateID()
-	if err := cc.usecase.RegisterNewCandidate(candidate); err != nil {
+	if err := cc.usecase.UpdateCandidate(candidate); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+		return
+	}
+	status := map[string]any{
+		"code":        http.StatusOK,
+		"description": "update data succesfully",
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": status,
+	})
+}
+func (cc *CandidateController) deleteHandler(c *gin.Context) {
+	id := c.Param("id")
+	if err := cc.usecase.DeleteCandidate(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, candidate)
-}
-func (cc *CandidateController) deleteHandler(c *gin.Context) {
-	panic("")
+	status := map[string]any{
+		"code":        http.StatusNoContent,
+		"description": "delete data succesfully",
+	}
+	c.JSON(http.StatusNoContent, gin.H{
+		"status": status,
+	})
 }
 
 func NewCandidateController(r *gin.Engine, usecase usecase.CandidateUseCase) *CandidateController {

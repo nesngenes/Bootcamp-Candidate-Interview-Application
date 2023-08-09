@@ -16,10 +16,10 @@ type PaginationQuery struct {
 
 // ini buat di taruh di response
 type Paging struct {
-	Page        int `json:"paging"`
-	RowsPerPage int `json:"rowsPerPage"`
-	TotalRows   int `json:"totalRows"`
-	TotalPages  int `json:"totalPages"`
+	Page        int `json:"page"`
+	RowsPerPage int `json:"rows_per_page"`
+	TotalRows   int `json:"total_rows"`
+	TotalPages  int `json:"total_pages"`
 }
 
 // example pagination -> product 100

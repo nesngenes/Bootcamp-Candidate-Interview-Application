@@ -6,6 +6,7 @@ type UseCaseManager interface {
 	CandidateUseCase() usecase.CandidateUseCase
 	ResumeUseCase() usecase.ResumeUseCase
 	UserRolesUseCase() usecase.UserRolesUseCase // user role
+	UsersUseCase() usecase.UserUsecase          //user
 }
 
 type useCaseManager struct {
@@ -23,6 +24,11 @@ func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {
 //user role
 func (u *useCaseManager) UserRolesUseCase() usecase.UserRolesUseCase {
 	return usecase.NewUserRolesUseCase(u.repoManager.UserRolesRepo())
+}
+
+//user
+func (u *useCaseManager) UsersUseCase() usecase.UserUsecase {
+	return usecase.NewUserUsecase(u.repoManager.UsersRepo())
 }
 
 func NewUseCaseManager(repoManager RepoManager) UseCaseManager {

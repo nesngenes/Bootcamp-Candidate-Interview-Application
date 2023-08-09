@@ -7,8 +7,8 @@ import (
 
 type UserRepository interface {
 	BaseRepository[model.Users]
-	GetByUserName(userName string) (model.Users, error)
-	UpdatePassword(userID, newPassword string) error
+	GetByEmail(email string) (model.Users, error)
+	GetByUserName(username string) (model.Users, error)
 }
 
 type userRepository struct {
@@ -65,13 +65,33 @@ func (r *userRepository) Get(id string) (model.Users, error) {
 	return user, nil
 }
 
+func (r *userRepository) GetByEmail(email string) (model.Users, error) {
+	var user model.Users
+	err := r.db.QueryRow(`
+		SELECT u.id, u.email, u.username, u.password, r.id, r.name
+		FROM users u
+		JOIN user_roles r ON u.role_id = r.id
+		WHERE u.email ILIKE $1`, "%"+email+"%").Scan(
+		&user.Id,
+		&user.Email,
+		&user.UserName,
+		&user.Password,
+		&user.UserRole.Id,
+		&user.UserRole.Name,
+	)
+	if err != nil {
+		return model.Users{}, err
+	}
+	return user, nil
+}
+
 func (r *userRepository) GetByUserName(userName string) (model.Users, error) {
 	var user model.Users
 	err := r.db.QueryRow(`
 		SELECT u.id, u.email, u.username, r.id, r.name
 		FROM users u
 		JOIN user_roles r ON u.role_id = r.id
-		WHERE u.username = $1`, userName).Scan(
+		WHERE u.username ILIKE $1`, "%"+userName+"%").Scan(
 		&user.Id,
 		&user.Email,
 		&user.UserName,
@@ -89,15 +109,6 @@ func (r *userRepository) Update(payload model.Users) error {
 		UPDATE users SET email = $2, username = $3, role_id = $4
 		WHERE id = $1`,
 		payload.Id, payload.Email, payload.UserName, payload.UserRole.Id)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// using user_id to update the password only
-func (r *userRepository) UpdatePassword(userID, newPassword string) error {
-	_, err := r.db.Exec("UPDATE users SET password = $2 WHERE id = $1", userID, newPassword)
 	if err != nil {
 		return err
 	}

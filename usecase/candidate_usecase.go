@@ -54,8 +54,19 @@ func (c *candidateUseCase) FindByIdCandidate(id string) (model.Candidate, error)
 
 // DeleteCandidate implements CandidateUseCase.
 func (c *candidateUseCase) DeleteCandidate(id string) error {
-	panic("")
+	candidate, err := c.FindByIdCandidate(id)
+	if err != nil {
+		return fmt.Errorf("candidate with ID %s not found", id)
+	}
+
+	err = c.repo.Delete(candidate.CandidateID)
+	if err != nil {
+		return fmt.Errorf("failed to delete candidate: %v", err.Error())
+	}
+	return nil
 }
+
+
 
 // UpdateCandidate implements CandidateUseCase.
 func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {

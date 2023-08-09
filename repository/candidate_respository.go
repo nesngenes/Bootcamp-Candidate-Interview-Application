@@ -73,6 +73,7 @@ func (c *candidateRepository) Delete(id string) error {
 
 }
 
+
 // Constructor
 func NewCandidateRepository(db *sql.DB) CandidateRepository {
 	return &candidateRepository{db: db}

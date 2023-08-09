@@ -3,12 +3,13 @@ package usecase
 import (
 	"fmt"
 	"interview_bootcamp/model"
+	"interview_bootcamp/model/dto"
 	"interview_bootcamp/repository"
 )
 
 type CandidateUseCase interface {
 	RegisterNewCandidate(payload model.Candidate) error
-	FindAllCandidate() ([]model.Candidate, error)
+	FindAllCandidate(dto.PaginationParam) ([]model.Candidate, dto.Paging, error)
 	FindByIdCandidate(id string) (model.Candidate, error)
 	UpdateCandidate(payload model.Candidate) error
 	DeleteCandidate(id string) error
@@ -45,8 +46,8 @@ func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 }
 
 // FindAllCandidate implements CandidateUseCase.
-func (c *candidateUseCase) FindAllCandidate() ([]model.Candidate, error) {
-	return c.repo.List()
+func (c *candidateUseCase) FindAllCandidate(requesPaging dto.PaginationParam) ([]model.Candidate, dto.Paging, error) {
+	return c.repo.Paging(requesPaging)
 }
 
 // FindByIdCandidate implements CandidateUseCase.
@@ -75,24 +76,10 @@ func (c *candidateUseCase) DeleteCandidate(id string) error {
 // UpdateCandidate implements CandidateUseCase.
 func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
 
-	//untuk mengecek apakah kolom nomor sudah diisi
 	if payload.Phone == "" {
 		return fmt.Errorf("kolom nomor harus di isi")
 	}
 
-	// pengecekan email tidak boleh sama
-	isExistCandidateS, _ := c.repo.GetByEmail(payload.Email)
-	if isExistCandidateS.Email == payload.Email {
-		return fmt.Errorf("candidate with email %s exists", payload.Email)
-	}
-
-	//untuk mengecek apakah data dengan nomor tersebut sudah ada
-	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
-	if isExistCandidate.Phone == payload.Phone && isExistCandidate.CandidateID != payload.CandidateID {
-		return fmt.Errorf("data dengan nomor: %s sudah ada", payload.Phone)
-	}
-
-	//untuk melakukan update pada data dengan nomor sesuai kolom
 	err := c.repo.Update(payload)
 	if err != nil {
 		return fmt.Errorf("gagal memperbarui nomor: %v", err)

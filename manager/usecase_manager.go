@@ -11,7 +11,8 @@ type UseCaseManager interface {
     InterviewerUseCase() usecase.InterviewerUseCase
 	BootcampUseCase() usecase.BootcampUseCase
 	SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary)
-
+	UserRolesUseCase() usecase.UserRolesUseCase // user role
+	UsersUseCase() usecase.UserUsecase          //user
 }
 
 type useCaseManager struct {
@@ -32,6 +33,16 @@ func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {
 
 func (u *useCaseManager) InterviewerUseCase() usecase.InterviewerUseCase {
     return usecase.NewInterviewerUseCase(u.repoManager.InterviewerRepo())
+}
+
+//user role
+func (u *useCaseManager) UserRolesUseCase() usecase.UserRolesUseCase {
+	return usecase.NewUserRolesUseCase(u.repoManager.UserRolesRepo())
+}
+
+//user
+func (u *useCaseManager) UsersUseCase() usecase.UserUsecase {
+	return usecase.NewUserUsecase(u.repoManager.UsersRepo())
 }
 
 func (u *useCaseManager) SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary) {

@@ -55,7 +55,7 @@ func (r *resumeUseCase) UpdateResume(payload model.Resume) error {
 	}
 
 	// pengecekan id resume tidak boleh sama
-	isExistResume, _ := r.repo.GetByName(payload.ResumeID)
+	isExistResume, _ := r.repo.FindByIdResume(payload.ResumeID)
 	if isExistResume.ResumeID == payload.ResumeID {
 		return fmt.Errorf("candidate with email %s exists", payload.ResumeID)
 	}

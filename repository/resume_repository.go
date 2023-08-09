@@ -38,7 +38,12 @@ func (r *resumeRepository) GetByName(name string) (model.Resume, error) {
 }
 
 func (r *resumeRepository) Update(payload model.Resume) error {
-	panic("")
+	_, err := r.db.Exec("UPDATE product SET full_name=$2, email=$3, date_of_birth=$4, address=$5, cv_link=$6, bootcamp_id=$7, instansi_pendidikan=$8, hackerrank_score=$9 WHERE id = $1", payload.FullName, payload.Email, payload.DateOfBirth, payload.Address, payload.CvLink, payload.BootcampId, payload.InstansiPendidikan, payload.HackerRank)
+	if err != nil {
+		return err
+	}
+
+	return nil
 	
 }
 

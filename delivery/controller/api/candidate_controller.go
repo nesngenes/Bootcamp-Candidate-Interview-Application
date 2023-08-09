@@ -31,22 +31,41 @@ func (cc *CandidateController) createHandler(c *gin.Context) {
 }
 
 func (cc *CandidateController) listHandler(c *gin.Context) {
-	panic("")
+	candidates, err := cc.usecase.FindAllCandidate()
+	if err != nil {
+		c.JSON(500, gin.H{"err": err.Error()})
+		return
+	}
+	status := map[string]any{
+		"code":        200,
+		"description": "get all data succesfully",
+	}
+	c.JSON(200, gin.H{
+		"status": status,
+		"data":   candidates,
+	})
 }
 func (cc *CandidateController) getHandler(c *gin.Context) {
 	panic("")
 }
 func (cc *CandidateController) updateHandler(c *gin.Context) {
-	panic("")
-}
-func (cc *CandidateController) deleteHandler(c *gin.Context) {
-	id := c.Param("candidate_id")
-	if err := cc.usecase.DeleteCandidate(id); err != nil {
-		c.JSON(500, gin.H{"err": err.Error()})
+
+	var candidate model.Candidate
+	if err := c.ShouldBindJSON(&candidate); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
-	c.String(204, "")
 
+	candidate.CandidateID = common.GenerateID()
+	if err := cc.usecase.RegisterNewCandidate(candidate); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, candidate)
+}
+func (cc *CandidateController) deleteHandler(c *gin.Context) {
+	panic("")
 }
 
 func NewCandidateController(r *gin.Engine, usecase usecase.CandidateUseCase) *CandidateController {

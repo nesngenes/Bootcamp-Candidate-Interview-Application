@@ -1,11 +1,14 @@
 package model
 
 type Candidate struct {
-	CandidateID string `json:"candidate_id"`
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
-	Email       string `json:"email"`
-	Phone       string `json:"phone"`
-	Address     string `json:"address"`
-	DateOfBirth string `json:"date_of_birth"`
+	CandidateID        string `json:"candidate_id"`
+	FullName           string `json:"full_name"`
+	Phone              string `json:"phone"`
+	Email              string `json:"email"`
+	DateOfBirth        string `json:"date_of_birth"`
+	Address            string `json:"address"`
+	CvLink             string `json:"cv_link"`
+	BootcampId         string `json:"bootcamp_id"`
+	InstansiPendidikan string `json:"instansi_pendidikan"`
+	HackerRank         int    `json:"hackerrank_score"`
 }

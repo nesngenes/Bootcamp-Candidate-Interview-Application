@@ -5,7 +5,6 @@ import (
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,8 +13,7 @@ type InterviewerController struct {
 	usecase usecase.InterviewerUseCase
 }
 
-func (cc *InterviewerController) createHandler(c *gin.Context) {
-	//reminder: cek lagi,kayaknya masih harus di rombak createnya
+func (i *InterviewerController) createHandler(c *gin.Context) {
 	var interviewer model.Interviewer
 	if err := c.ShouldBindJSON(&interviewer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
@@ -23,8 +21,7 @@ func (cc *InterviewerController) createHandler(c *gin.Context) {
 	}
 
 	interviewer.InterviewerID = common.GenerateID()
-
-	if err := cc.usecase.RegisterNewInterviewer(interviewer); err != nil {
+	if err := i.usecase.RegisterNewInterviewer(interviewer); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
@@ -32,12 +29,25 @@ func (cc *InterviewerController) createHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, interviewer)
 }
 
-func (cc *InterviewerController) listHandler(c *gin.Context) {
-	panic("")
+func (i *InterviewerController) listHandler(c *gin.Context) {
+	interviewers, err := i.usecase.FindAllInterviewer()
+	if err != nil {
+		c.JSON(500, gin.H{"err": err.Error()})
+		return
+	}
+	status := map[string]any{
+		"code":        200,
+		"description": "get all data succesfully",
+	}
+	c.JSON(200, gin.H{
+		"status": status,
+		"data":   interviewers,
+	})
 }
-func (cc *InterviewerController) getHandler(c *gin.Context) {
-	id := c.Param("interviewer_id")
-	interviewer, err := cc.usecase.FindByIdInterviewer(id)
+
+func (i *InterviewerController) getHandler(c *gin.Context) {
+	id := c.Param("id")
+	interviewer, err := i.usecase.FindByIdInterviewer(id)
 	if err != nil {
 		c.JSON(500, gin.H{"err": err.Error()})
 		return
@@ -52,12 +62,31 @@ func (cc *InterviewerController) getHandler(c *gin.Context) {
 	})
 
 }
-func (cc *InterviewerController) updateHandler(c *gin.Context) {
-	panic("")
+
+func (i *InterviewerController) updateHandler(c *gin.Context) {
+	var interviewer model.Interviewer
+	if err := c.ShouldBindJSON(&interviewer); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		return
+	}
+
+	// Ensure that InterviewerID is provided in the JSON payload
+	if interviewer.InterviewerID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"err": "InterviewerID is required for updating"})
+		return
+	}
+
+	if err := i.usecase.UpdateInterviewer(interviewer); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, interviewer)
 }
-func (cc *InterviewerController) deleteHandler(c *gin.Context) {
-	id := c.Param("candidate_id")
-	if err := cc.usecase.DeleteInterviewer(id); err != nil {
+
+func (i *InterviewerController) deleteHandler(c *gin.Context) {
+	id := c.Param("id")
+	if err := i.usecase.DeleteInterviewer(id); err != nil {
 		c.JSON(500, gin.H{"err": err.Error()})
 		return
 	}

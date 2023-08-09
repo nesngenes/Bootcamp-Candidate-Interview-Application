@@ -31,7 +31,6 @@ func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 		return fmt.Errorf("candidate with email %s exists", payload.Email)
 	}
 
-	
 	//pengecekan phone number tidak boleh sama
 	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
 	if isExistCandidate.Phone == payload.Phone {
@@ -73,14 +72,12 @@ func (c *candidateUseCase) DeleteCandidate(id string) error {
 	return nil
 }
 
-
-
 // UpdateCandidate implements CandidateUseCase.
 func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
 
 	//untuk mengecek apakah kolom nomor sudah diisi
 	if payload.Phone == "" {
-		return fmt.Errorf("kolom nomor harus di isi")
+		return fmt.Errorf("number phone form must be fill")
 	}
 
 	// pengecekan email tidak boleh sama
@@ -88,7 +85,6 @@ func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
 	if isExistCandidateS.Email == payload.Email {
 		return fmt.Errorf("candidate with email %s exists", payload.Email)
 	}
-
 
 	//untuk mengecek apakah data dengan nomor tersebut sudah ada
 	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)

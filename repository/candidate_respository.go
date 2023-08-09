@@ -53,7 +53,6 @@ func (c *candidateRepository) List() ([]model.Candidate, error) {
 
 func (c *candidateRepository) Get(id string) (model.Candidate, error) {
 	panic("")
-
 }
 
 func (c *candidateRepository) GetByEmail(email string) (model.Candidate, error) {
@@ -72,7 +71,11 @@ func (c *candidateRepository) Update(payload model.Candidate) error {
 }
 
 func (c *candidateRepository) Delete(id string) error {
-	panic("")
+	_, err := c.db.Exec("DELETE FROM candidate WHERE candidate_id=$1", id)
+	if err != nil {
+		return err
+	}
+	return nil
 
 }
 

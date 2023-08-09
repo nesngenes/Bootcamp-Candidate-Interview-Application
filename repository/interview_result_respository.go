@@ -34,7 +34,7 @@ func (cr *interviewResultRepository) GetByIdInterviewResult(id string) (model.In
 }
 
 // mendapatkan seluruh hasil interview
-func (cr *interviewResultRepository) List() ([]model.InterviewResult, error) {
+func (cr *interviewResultRepository) ListInterviewResult() ([]model.InterviewResult, error) {
 	rows, err := cr.db.Query("SELECT * FROM interview_result")
 	if err != nil {
 		return nil, err
@@ -49,6 +49,7 @@ func (cr *interviewResultRepository) List() ([]model.InterviewResult, error) {
 		}
 		interviewResults = append(interviewResults, interviewResult)
 	}
+
 	return interviewResults, nil
 }
 

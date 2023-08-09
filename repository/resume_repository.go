@@ -7,6 +7,9 @@ import (
 
 type ResumeRepository interface {
 	BaseRepository[model.Resume]
+	Create(payload model.Resume) error
+	Update(payload model.Resume) error
+	GetByName(name string) (model.Resume, error)
 }
 
 type resumeRepository struct {
@@ -21,7 +24,6 @@ func (r *resumeRepository) Create(payload model.Resume) error {
 	return nil
 
 }
-
 
 func (r *resumeRepository) List() ([]model.Resume, error) {
 	panic("")
@@ -44,7 +46,7 @@ func (r *resumeRepository) Update(payload model.Resume) error {
 	}
 
 	return nil
-	
+
 }
 
 func (r *resumeRepository) Delete(id string) error {

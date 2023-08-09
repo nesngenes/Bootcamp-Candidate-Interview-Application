@@ -21,8 +21,8 @@ type candidateUseCase struct {
 // RegisterNewCandidate implements CandidateUseCase.
 func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 	//pengecekan nama tidak boleh kosong
-	if payload.FirstName == "" && payload.LastName == "" && payload.Email == "" && payload.Phone == "" && payload.Address == "" {
-		return fmt.Errorf("first name, last name, email, phone, address, date of birth required fields")
+	if payload.FullName == "" && payload.Phone == "" && payload.Email == "" && payload.Address == "" {
+		return fmt.Errorf("fullname, email, phone, address, date of birth required fields")
 	}
 
 	// pengecekan email tidak boleh sama

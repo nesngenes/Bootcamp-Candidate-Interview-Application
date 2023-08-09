@@ -58,7 +58,7 @@ func (c *candidateRepository) GetByEmail(email string) (model.Candidate, error) 
 }
 
 func (c *candidateRepository) Update(payload model.Candidate) error {
-	_, err := c.db.Exec("UPDATE product SET full_name=$2, email=$3, date_of_birth=$4, address=$5, cv_link=$6, bootcamp_id=$7, instansi_pendidikan=$8, hackerrank_score=$9 WHERE id = $1", payload.full_name, payload.Email, payload.DateOfBirth, payload.Address, payload.cv_link)
+	_, err := c.db.Exec("UPDATE product SET full_name=$2, email=$3, date_of_birth=$4, address=$5, cv_link=$6, bootcamp_id=$7, instansi_pendidikan=$8, hackerrank_score=$9 WHERE id = $1", payload.Email, payload.DateOfBirth, payload.Address)
 	if err != nil {
 		return err
 	}

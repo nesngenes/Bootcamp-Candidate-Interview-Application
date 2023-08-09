@@ -6,6 +6,7 @@ type RepoManager interface {
 	// semua repo di daftarkan disini
 	CandidateRepo() repository.CandidateRepository
 	ResumeRepo() repository.ResumeRepository
+	InterviewerRepo() repository.InterviewerRepository
 }
 
 type repoManager struct {
@@ -19,6 +20,10 @@ func (r *repoManager) CandidateRepo() repository.CandidateRepository {
 
 func (r *repoManager) ResumeRepo() repository.ResumeRepository {
 	return repository.NewResumeRepository(r.infra.Conn())
+}
+
+func (r *repoManager) InterviewerRepo() repository.InterviewerRepository {
+	return repository.NewInterviewerRepository(r.infra.Conn())
 }
 
 func NewRepoManager(infra InfraManager) RepoManager {

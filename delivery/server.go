@@ -27,6 +27,7 @@ func (s *Server) setupControllers() {
 	// semua controller disini
 	api.NewCandidateController(s.engine, s.useCaseManager.CandidateUseCase())
 	api.NewResumeController(s.engine, s.useCaseManager.ResumeUseCase())
+	api.NewInterviewerController(s.engine, s.useCaseManager.InterviewerUseCase())
 }
 
 func NewServer() *Server {

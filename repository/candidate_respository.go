@@ -6,10 +6,9 @@ import (
 )
 
 type CandidateRepository interface {
-	BaseRepository[model.Candidate]	
+	BaseRepository[model.Candidate]
 	GetByPhoneNumber(phoneNumber string) (model.Candidate, error)
 	GetByEmail(email string) (model.Candidate, error)
-
 }
 
 type candidateRepository struct {
@@ -28,7 +27,7 @@ func (c *candidateRepository) Create(payload model.Candidate) error {
 // GetPhoneNumber implements employeeRepository.
 func (c *candidateRepository) GetByPhoneNumber(phoneNumber string) (model.Candidate, error) {
 	var candidate model.Candidate
-	err := c.db.QueryRow("SELECT * FROM candidate WHERE phone ILIKE $1", "%"+phoneNumber+"%").Scan(&candidate.CandidateID, &candidate.FullName, &candidate.Phone, &candidate.Email, &candidate.DateOfBirth, &candidate.Address, &candidate.CvLink, candidate.BootcampId, candidate.InstansiPendidikan, candidate.HackerRank)
+	err := c.db.QueryRow("SELECT * FROM candidate WHERE phone ILIKE $1", "%"+phoneNumber+"%").Scan(&candidate.CandidateID, &candidate.FullName, &candidate.Phone, &candidate.Email, &candidate.DateOfBirth, &candidate.Address, &candidate.CvLink, &candidate.BootcampId, &candidate.InstansiPendidikan, &candidate.HackerRank)
 	if err != nil {
 		return model.Candidate{}, err
 	}
@@ -43,7 +42,7 @@ func (c *candidateRepository) List() ([]model.Candidate, error) {
 	var candidates []model.Candidate
 	for rows.Next() {
 		var candidate model.Candidate
-		err := rows.Scan(&candidate.CandidateID, &candidate.FullName, &candidate.Phone, &candidate.Email, &candidate.DateOfBirth, &candidate.Address, &candidate.CvLink, candidate.BootcampId, candidate.InstansiPendidikan, candidate.HackerRank)
+		err := rows.Scan(&candidate.CandidateID, &candidate.FullName, &candidate.Phone, &candidate.Email, &candidate.DateOfBirth, &candidate.Address, &candidate.CvLink, &candidate.BootcampId, &candidate.InstansiPendidikan, &candidate.HackerRank)
 		if err != nil {
 			return nil, err
 		}
@@ -58,15 +57,13 @@ func (c *candidateRepository) Get(id string) (model.Candidate, error) {
 
 func (c *candidateRepository) GetByEmail(email string) (model.Candidate, error) {
 	var candidate model.Candidate
-	err := c.db.QueryRow("SELECT * FROM candidate WHERE email ILIKE $1", "%"+email+"%").Scan(&candidate.CandidateID, &candidate.FullName, &candidate.Phone, &candidate.Email, &candidate.DateOfBirth, &candidate.Address, &candidate.CvLink, candidate.BootcampId, candidate.InstansiPendidikan, candidate.HackerRank)
+	err := c.db.QueryRow("SELECT * FROM candidate WHERE email ILIKE $1", "%"+email+"%").Scan(&candidate.CandidateID, &candidate.FullName, &candidate.Phone, &candidate.Email, &candidate.DateOfBirth, &candidate.Address, &candidate.CvLink, &candidate.BootcampId, &candidate.InstansiPendidikan, &candidate.HackerRank)
 	if err != nil {
 		return model.Candidate{}, err
 	}
 	return candidate, nil
 
 }
-
-
 
 func (c *candidateRepository) Update(payload model.Candidate) error {
 	panic("")
@@ -81,7 +78,6 @@ func (c *candidateRepository) Delete(id string) error {
 	return nil
 
 }
-
 
 // Constructor
 func NewCandidateRepository(db *sql.DB) CandidateRepository {

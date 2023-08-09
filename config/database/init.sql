@@ -41,7 +41,6 @@ CREATE TABLE "candidate" (
 CREATE TABLE "status" (
   "id" VARCHAR(100) PRIMARY KEY,
   "name" VARCHAR(30) NOT NULL
-);
 
 CREATE TABLE "interviewer" (
   "id" VARCHAR(100) PRIMARY KEY,
@@ -82,4 +81,5 @@ CREATE TABLE "interview_result" (
   "note" VARCHAR(100),
   FOREIGN KEY ("interview_id") REFERENCES "interviews_process" ("id"),
   FOREIGN KEY ("result_id") REFERENCES "result" ("id")
+
 );

@@ -20,6 +20,7 @@ type DbConfig struct {
 	Driver   string
 }
 
+<<<<<<< HEAD
 type CloudinaryConfig struct {
 	CloudinaryURL      string
 	CloudinaryCloudName string
@@ -53,14 +54,13 @@ func (c *Config) ReadConfig() error {
 		ApiHost: os.Getenv("API_HOST"),
 		ApiPort: os.Getenv("API_PORT"),
 	}
-
+	
 	c.CloudinaryConfig = CloudinaryConfig{
 		CloudinaryURL: os.Getenv("CLOUDINARY_URL"),
 		CloudinaryCloudName: os.Getenv("CLOUDINARY_NAME"),
 		CloudinaryAPIKey: os.Getenv("CLOUDINARY_API_KEY"),
 		CloudinaryAPISecret: os.Getenv("CLOUDINARY_API_SECRET"),
 	}
-
 
 	if c.DbConfig.Host == "" || c.DbConfig.Port == "" || c.DbConfig.Name == "" ||
 		c.DbConfig.User == "" || c.DbConfig.Password == "" || c.DbConfig.Driver == "" ||

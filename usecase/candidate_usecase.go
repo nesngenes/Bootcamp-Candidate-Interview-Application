@@ -25,11 +25,11 @@ func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 		return fmt.Errorf("first name, last name, email, phone, address, date of birth required fields")
 	}
 
-	//pengecekan email tidak boleh sama
-	// isExistCandidate, _ := c.repo.GetByEmail(payload.Email)
-	// if isExistCandidate.Email == payload.Email {
-	// 	return fmt.Errorf("candidate with email %s exists", payload.Email)
-	// }
+	// pengecekan email tidak boleh sama
+	isExistCandidateS, _ := c.repo.GetByEmail(payload.Email)
+	if isExistCandidateS.Email == payload.Email {
+		return fmt.Errorf("candidate with email %s exists", payload.Email)
+	}
 
 	//pengecekan phone number tidak boleh sama
 	isExistCandidate, _ := c.repo.GetByPhoneNumber(payload.Phone)
@@ -46,7 +46,7 @@ func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error {
 
 // FindAllCandidate implements CandidateUseCase.
 func (c *candidateUseCase) FindAllCandidate() ([]model.Candidate, error) {
-	panic("")
+	return c.repo.List()
 }
 
 // FindByIdCandidate implements CandidateUseCase.
@@ -56,16 +56,7 @@ func (c *candidateUseCase) FindByIdCandidate(id string) (model.Candidate, error)
 
 // DeleteCandidate implements CandidateUseCase.
 func (c *candidateUseCase) DeleteCandidate(id string) error {
-	candidate, err := c.FindByIdCandidate(id)
-	if err != nil {
-		return fmt.Errorf("candidate with ID %s not found", id)
-	}
-
-	err = c.repo.Delete(candidate.CandidateID)
-	if err != nil {
-		return fmt.Errorf("failed to delete candidate: %v", err.Error())
-	}
-	return nil
+	panic("")
 }
 
 // UpdateCandidate implements CandidateUseCase.

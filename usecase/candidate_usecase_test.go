@@ -81,6 +81,20 @@ type usecaseMock struct {
 	mock.Mock
 }
 
+// FindByIdBootcamp implements BootcampUseCase.
+func (*usecaseMock) FindByIdBootcamp(id string) (model.Bootcamp, error) {
+	panic("unimplemented")
+}
+
+// GetBootcampByID implements BootcampUseCase.
+func (u *usecaseMock) GetBootcampByID(id string) (model.Bootcamp, error) {
+	args := u.Called(id)
+	if args.Get(1) != nil {
+		return model.Bootcamp{}, args.Error(1)
+	}
+	return args.Get(0).(model.Bootcamp), nil
+}
+
 func (*usecaseMock) DeleteBootcamp(id string) error {
 	panic("unimplemented")
 }
@@ -95,14 +109,6 @@ func (u *usecaseMock) RegisterNewBootcamp(payload model.Bootcamp) error {
 
 func (u *usecaseMock) UpdateBootcamp(payload model.Bootcamp) error {
 	panic("unimplemented")
-}
-
-func (u *usecaseMock) FindByIdBootcamp(id string) (model.Bootcamp, error) {
-	args := u.Called(id)
-	if args.Get(1) != nil {
-		return model.Bootcamp{}, args.Error(1)
-	}
-	return args.Get(0).(model.Bootcamp), nil
 }
 
 type CandidateUseCaseTestSuite struct {

@@ -11,6 +11,7 @@ type BootcampRepository interface {
 	BaseRepository[model.Bootcamp]
 	BaseRepositoryPaging[model.Bootcamp]
 	GetByName(name string) (model.Bootcamp, error)
+	GetByID(id string) (model.Bootcamp, error)
 }
 
 type bootcampRepository struct {
@@ -32,6 +33,15 @@ func (b *bootcampRepository) GetByName(name string) (model.Bootcamp, error) {
 	}
 	return bootcamp, nil
 }
+
+func (b *bootcampRepository) GetByID(id string) (model.Bootcamp, error) {
+	var bootcamp model.Bootcamp
+	err := b.db.QueryRow("SELECT * FROM bootcamp WHERE id = $1", id).
+		Scan(&bootcamp.BootcampId, &bootcamp.Name, &bootcamp.StartDate, &bootcamp.EndDate, &bootcamp.Location)
+	return bootcamp, err
+}
+
+
 func (b *bootcampRepository) List() ([]model.Bootcamp, error) {
 	rows, err := b.db.Query("SELECT * FROM bootcamp")
 	if err != nil {

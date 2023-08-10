@@ -1,3 +1,4 @@
+// repository/resume_repository.go
 package repository
 
 import (
@@ -6,7 +7,10 @@ import (
 )
 
 type ResumeRepository interface {
-	BaseRepository[model.Resume]
+	Create(payload model.Resume) error
+	Get(id string) (model.Resume, error)
+	Delete(id string) error
+	Update(payload model.Resume) error
 }
 
 type resumeRepository struct {
@@ -14,40 +18,35 @@ type resumeRepository struct {
 }
 
 func (r *resumeRepository) Create(payload model.Resume) error {
-	_, err := r.db.Exec("INSERT INTO resume (resume_id, candidate_id, cv_file) VALUES ($1, $2, $3)", payload.ResumeID, payload.CandidateID, payload.CvURL)
-	if err != nil {
-		return err
-	}
-	return nil
-
-}
-
-
-func (r *resumeRepository) List() ([]model.Resume, error) {
-	panic("")
+	_, err := r.db.Exec(
+		"INSERT INTO resume (resume_id, candidate_id, cv_url) VALUES ($1, $2, $3)",
+		payload.ResumeID, payload.CandidateID, payload.CvURL,
+	)
+	return err
 }
 
 func (r *resumeRepository) Get(id string) (model.Resume, error) {
-	panic("")
-
-}
-
-func (r *resumeRepository) GetByName(name string) (model.Resume, error) {
-	panic("")
-
-}
-
-func (r *resumeRepository) Update(payload model.Resume) error {
-	panic("")
-	
+	var resume model.Resume
+	err := r.db.QueryRow(
+		"SELECT resume_id, candidate_id, cv_url FROM resume WHERE resume_id = $1",
+		id,
+	).Scan(&resume.ResumeID, &resume.CandidateID, &resume.CvURL)
+	return resume, err
 }
 
 func (r *resumeRepository) Delete(id string) error {
-	panic("")
-
+	_, err := r.db.Exec("DELETE FROM resume WHERE resume_id = $1", id)
+	return err
 }
 
-// Constructor
+func (r *resumeRepository) Update(payload model.Resume) error {
+	_, err := r.db.Exec(
+		"UPDATE resume SET candidate_id = $2, cv_url = $3 WHERE resume_id = $1",
+		payload.ResumeID, payload.CandidateID, payload.CvURL,
+	)
+	return err
+}
+
 func NewResumeRepository(db *sql.DB) ResumeRepository {
 	return &resumeRepository{db: db}
 }

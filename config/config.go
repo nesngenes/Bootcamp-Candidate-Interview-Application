@@ -73,7 +73,7 @@ func (c *Config) ReadConfig() error {
 		CloudinaryAPISecret: os.Getenv("CLOUDINARY_API_SECRET"),
 	}
 
-	appTokenExpire, err := strconv.Atoi(os.Getenv(""))
+	appTokenExpire, _ := strconv.Atoi(os.Getenv(""))
 	accessTokenLifeTime := time.Duration(appTokenExpire) * time.Minute
 
 	c.TokenConfig = TokenConfig{

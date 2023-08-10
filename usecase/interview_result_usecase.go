@@ -41,8 +41,7 @@ func (cr *interviewResultUseCase) CreateInterviewResult(payload model.InterviewR
 
 // Menampilkan seluruh hasil interview
 func (cr *interviewResultUseCase) ListInterviewResult() ([]model.InterviewResult, error) {
-	// return cr.repo.ListInterviewResult()
-	panic("")
+	return cr.repo.List()
 }
 
 // menampilkan hasil interview berdasarkan id
@@ -57,49 +56,45 @@ func (cr *interviewResultUseCase) GetByIdInterviewResult(id string) (model.Inter
 
 // menghapus data hasil iterview
 func (cr *interviewResultUseCase) DeleteInterviewResult(id string) error {
-	// interview_result, err := cr.GetByIdInterviewResult(id)
-	// if err != nil {
-	// 	return fmt.Errorf("data dengan id: %s tidak ditemukan", id)
-	// }
+	interview_result, err := cr.GetByIdInterviewResult(id)
+	if err != nil {
+		return fmt.Errorf("data dengan id: %s tidak ditemukan", id)
+	}
 
-	// err = cr.repo.DeleteInterviewResult(interview_result.Id)
-	// if err != nil {
-	// 	return fmt.Errorf("gagal menghapus hasil interview: %v", err.Error())
-	// }
-	// return nil
-	panic("")
-
+	err = cr.repo.Delete(interview_result.Id)
+	if err != nil {
+		return fmt.Errorf("gagal menghapus hasil interview: %v", err.Error())
+	}
+	return nil
 }
 
 // melakukan perubahan data pada hasil interview
 func (cr *interviewResultUseCase) UpdateInterviewResult(payload model.InterviewResult) error {
 
 	//untuk mengecek apakah kolom interview id sudah diisi
-	// if payload.InterviewId == "" {
-	// 	return fmt.Errorf("kolom interview id harus diisi")
-	// }
+	if payload.InterviewId == "" {
+		return fmt.Errorf("kolom interview id harus diisi")
+	}
 
-	// // pengecekan interview id tidak boleh sama
-	// isExistInterviewResults, _ := cr.repo.GetByIdInterviewResult(payload.InterviewId)
-	// if isExistInterviewResults.InterviewId == payload.InterviewId {
-	// 	return fmt.Errorf("interview id: %s sudah ada", payload.InterviewId)
-	// }
+	// pengecekan interview id tidak boleh sama
+	isExistInterviewResults, _ := cr.repo.GetByIdInterviewResult(payload.InterviewId)
+	if isExistInterviewResults.InterviewId == payload.InterviewId {
+		return fmt.Errorf("interview id: %s sudah ada", payload.InterviewId)
+	}
 
-	// //untuk mengecek apakah data dengan nomor tersebut sudah ada
-	// isExistInterviewResult, _ := cr.repo.GetByIdInterviewResult(payload.InterviewId)
-	// if isExistInterviewResult.InterviewId == payload.InterviewId && isExistInterviewResult.Id != payload.Id {
-	// 	return fmt.Errorf("data dengan interview id: %s sudah ada", payload.InterviewId)
-	// }
+	//untuk mengecek apakah data dengan nomor tersebut sudah ada
+	isExistInterviewResult, _ := cr.repo.GetByIdInterviewResult(payload.InterviewId)
+	if isExistInterviewResult.InterviewId == payload.InterviewId && isExistInterviewResult.Id != payload.Id {
+		return fmt.Errorf("data dengan interview id: %s sudah ada", payload.InterviewId)
+	}
 
-	// //untuk melakukan update pada data dengan nomor sesuai kolom
-	// err := cr.repo.UpdateInterviewResult(payload)
-	// if err != nil {
-	// 	return fmt.Errorf("gagal memperbarui hasil interview: %v", err)
-	// }
+	//untuk melakukan update pada data dengan nomor sesuai kolom
+	err := cr.repo.Update(payload)
+	if err != nil {
+		return fmt.Errorf("gagal memperbarui hasil interview: %v", err)
+	}
 
-	// return nil
-
-	panic("")
+	return nil
 }
 
 func NewInterviewResultUseCase(repo repository.InterviewResultRepository) InterviewResultUseCase {

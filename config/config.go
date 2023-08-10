@@ -2,8 +2,12 @@ package config
 
 import (
 	"fmt"
-	"os"
 	"interview_bootcamp/utils/common"
+	"os"
+	"strconv"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type ApiConfig struct {
@@ -21,16 +25,24 @@ type DbConfig struct {
 }
 
 type CloudinaryConfig struct {
-	CloudinaryURL      string
+	CloudinaryURL       string
 	CloudinaryCloudName string
 	CloudinaryAPIKey    string
 	CloudinaryAPISecret string
+}
+
+type TokenConfig struct {
+	ApplicationName      string
+	JwtSigntureKey       []byte
+	JwtSigningMethod     *jwt.SigningMethodHMAC
+	AccessTokenLiifeTime time.Duration
 }
 
 type Config struct {
 	ApiConfig
 	DbConfig
 	CloudinaryConfig
+	TokenConfig
 }
 
 // Method
@@ -53,14 +65,23 @@ func (c *Config) ReadConfig() error {
 		ApiHost: os.Getenv("API_HOST"),
 		ApiPort: os.Getenv("API_PORT"),
 	}
-	
+
 	c.CloudinaryConfig = CloudinaryConfig{
-		CloudinaryURL: "",
+		CloudinaryURL:       "",
 		CloudinaryCloudName: os.Getenv("CLOUDINARY_NAME"),
-		CloudinaryAPIKey: os.Getenv("CLOUDINARY_API_KEY"),
+		CloudinaryAPIKey:    os.Getenv("CLOUDINARY_API_KEY"),
 		CloudinaryAPISecret: os.Getenv("CLOUDINARY_API_SECRET"),
 	}
-	
+
+	appTokenExpire, err := strconv.Atoi(os.Getenv(""))
+	accessTokenLifeTime := time.Duration(appTokenExpire) * time.Minute
+
+	c.TokenConfig = TokenConfig{
+		ApplicationName:      os.Getenv(""),
+		JwtSigntureKey:       []byte(os.Getenv("")),
+		JwtSigningMethod:     jwt.SigningMethodHS256,
+		AccessTokenLiifeTime: accessTokenLifeTime,
+	}
 
 	if c.DbConfig.Host == "" || c.DbConfig.Port == "" || c.DbConfig.Name == "" ||
 		c.DbConfig.User == "" || c.DbConfig.Password == "" || c.DbConfig.Driver == "" ||

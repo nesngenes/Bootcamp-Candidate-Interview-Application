@@ -11,6 +11,7 @@ type AuthUseCase interface {
 
 type authUseCase struct {
 	usecase UserUsecase
+	roleUC  UserRolesUseCase
 }
 
 func (a *authUseCase) Login(username string, password string) (string, error) {
@@ -19,6 +20,9 @@ func (a *authUseCase) Login(username string, password string) (string, error) {
 		return "", fmt.Errorf("invalid username or password")
 	}
 
+	role, _ := a.roleUC.GetUserRoleByID(user.UserRole.Id)
+	user.UserRole = role
+
 	token, err := security.CreateAccessToken(user)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate token")
@@ -26,6 +30,6 @@ func (a *authUseCase) Login(username string, password string) (string, error) {
 	return token, nil
 }
 
-func NewAuthUseCase(usecase UserUsecase) AuthUseCase {
-	return &authUseCase{usecase: usecase}
+func NewAuthUseCase(usecase UserUsecase, roleUC UserRolesUseCase) AuthUseCase {
+	return &authUseCase{usecase: usecase, roleUC: roleUC}
 }

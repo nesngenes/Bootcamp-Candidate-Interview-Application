@@ -56,7 +56,7 @@ func (u *useCaseManager) SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary
 }
 
 func (u *useCaseManager) AuthUseCase() usecase.AuthUseCase {
-	return usecase.NewAuthUseCase(u.UsersUseCase())
+	return usecase.NewAuthUseCase(u.UsersUseCase(), u.UserRolesUseCase())
 }
 
 func NewUseCaseManager(repoManager RepoManager) UseCaseManager {

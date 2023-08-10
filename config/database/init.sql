@@ -32,7 +32,7 @@ CREATE TABLE "candidate" (
   "email" VARCHAR(50) UNIQUE NOT NULL,
   "date_of_birth" DATE NOT NULL,
   "address" VARCHAR(100) NOT NULL,
-  "cv_link" VARCHAR(50),
+  "cv_link" VARCHAR(255),
   "bootcamp_id" VARCHAR(100),
   "instansi_pendidikan"VARCHAR(50),
   "hackerrank_score" INT,

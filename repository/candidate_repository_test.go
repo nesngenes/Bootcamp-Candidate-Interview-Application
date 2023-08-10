@@ -22,7 +22,7 @@ var candidateDummy = []model.Candidate{
 		DateOfBirth:        "2005-01-01",
 		Address:            "Address",
 		CvLink:             "https://example.com",
-		Bootcamp:           model.Bootcamp{Id: "1"},
+		Bootcamp:           model.Bootcamp{BootcampId: "1"},
 		InstansiPendidikan: "SMK",
 		HackerRank:         90,
 	},
@@ -34,7 +34,7 @@ var candidateDummy = []model.Candidate{
 		DateOfBirth:        "2005-01-02",
 		Address:            "Address 2",
 		CvLink:             "https://example.com",
-		Bootcamp:           model.Bootcamp{Id: "1"},
+		Bootcamp:           model.Bootcamp{BootcampId: "1"},
 		InstansiPendidikan: "SMK",
 		HackerRank:         90,
 	},
@@ -46,7 +46,7 @@ var candidateDummy = []model.Candidate{
 		DateOfBirth:        "2005-01-03",
 		Address:            "Address 3",
 		CvLink:             "https://example.com",
-		Bootcamp:           model.Bootcamp{Id: "1"},
+		Bootcamp:           model.Bootcamp{BootcampId: "1"},
 		InstansiPendidikan: "SMK",
 		HackerRank:         90,
 	},
@@ -79,7 +79,7 @@ func TestCandidateRepositoryTestSuite(t *testing.T) {
 
 func (suite *CandidateRepositoryTestSuite) TestCreateNewCandidate_Success() {
 	dummy := candidateDummy[0]
-	suite.mockSql.ExpectExec("INSERT INTO candidate (.+)").WithArgs(dummy.CandidateID, dummy.FullName, dummy.Phone, dummy.Email, dummy.DateOfBirth, dummy.Address, dummy.CvLink, dummy.Bootcamp.Id, dummy.InstansiPendidikan, dummy.HackerRank).WillReturnResult(sqlmock.NewResult(1, 1))
+	suite.mockSql.ExpectExec("INSERT INTO candidate (.+)").WithArgs(dummy.CandidateID, dummy.FullName, dummy.Phone, dummy.Email, dummy.DateOfBirth, dummy.Address, dummy.CvLink, dummy.Bootcamp.BootcampId, dummy.InstansiPendidikan, dummy.HackerRank).WillReturnResult(sqlmock.NewResult(1, 1))
 	actualError := suite.repo.Create(dummy)
 	assert.Nil(suite.T(), actualError)
 	assert.NoError(suite.T(), actualError)
@@ -87,7 +87,7 @@ func (suite *CandidateRepositoryTestSuite) TestCreateNewCandidate_Success() {
 
 func (suite *CandidateRepositoryTestSuite) TestCreateNewCandidate_Fail() {
 	dummy := candidateDummy[0]
-	suite.mockSql.ExpectExec("INSERT INTO candidate (.+)").WithArgs(dummy.CandidateID, dummy.FullName, dummy.Phone, dummy.Email, dummy.DateOfBirth, dummy.Address, dummy.CvLink, dummy.Bootcamp.Id, dummy.InstansiPendidikan, dummy.HackerRank).WillReturnError(fmt.Errorf("error"))
+	suite.mockSql.ExpectExec("INSERT INTO candidate (.+)").WithArgs(dummy.CandidateID, dummy.FullName, dummy.Phone, dummy.Email, dummy.DateOfBirth, dummy.Address, dummy.CvLink, dummy.Bootcamp.BootcampId, dummy.InstansiPendidikan, dummy.HackerRank).WillReturnError(fmt.Errorf("error"))
 	actualError := suite.repo.Create(dummy)
 	assert.Error(suite.T(), actualError)
 }
@@ -95,7 +95,7 @@ func (suite *CandidateRepositoryTestSuite) TestCreateNewCandidate_Fail() {
 func (suite *CandidateRepositoryTestSuite) TestListCandidate_Succes() {
 	rows := sqlmock.NewRows([]string{"id", "full_name", "phone", "email", "date_of_birth", "address", "cv_link", "bootcamp_id", "bootcamp_name", "bootcamp_start", "bootcamp_end", "bootcamp_location", "instansi_pendidikan", "hackerrank_score"})
 	for _, candidate := range candidateDummy {
-		rows.AddRow(candidate.CandidateID, candidate.FullName, candidate.Phone, candidate.Email, candidate.DateOfBirth, candidate.Address, candidate.CvLink, candidate.Bootcamp.Id, candidate.Bootcamp.Name, candidate.Bootcamp.StartDate, candidate.Bootcamp.EndDate, candidate.Bootcamp.Location, candidate.InstansiPendidikan, candidate.HackerRank)
+		rows.AddRow(candidate.CandidateID, candidate.FullName, candidate.Phone, candidate.Email, candidate.DateOfBirth, candidate.Address, candidate.CvLink, candidate.Bootcamp.BootcampId, candidate.Bootcamp.Name, candidate.Bootcamp.StartDate, candidate.Bootcamp.EndDate, candidate.Bootcamp.Location, candidate.InstansiPendidikan, candidate.HackerRank)
 	}
 	suite.mockSql.ExpectQuery("SELECT (.+) from candidate (.+)").WillReturnRows(rows)
 	candidates, err := suite.repo.List()
@@ -116,7 +116,7 @@ func (suite *CandidateRepositoryTestSuite) TestListCandidate_Fail() {
 func (suite *CandidateRepositoryTestSuite) TestGetCandidate_Success() {
 	expectedCandidate := candidateDummy[0]
 	rows := sqlmock.NewRows([]string{"id", "full_name", "phone", "email", "date_of_birth", "address", "cv_link", "bootcamp_id", "bootcamp_name", "bootcamp_start", "bootcamp_end", "bootcamp_location", "instansi_pendidikan", "hackerrank_score"})
-	rows.AddRow(expectedCandidate.CandidateID, expectedCandidate.FullName, expectedCandidate.Phone, expectedCandidate.Email, expectedCandidate.DateOfBirth, expectedCandidate.Address, expectedCandidate.CvLink, expectedCandidate.Bootcamp.Id, expectedCandidate.Bootcamp.Name, expectedCandidate.Bootcamp.StartDate, expectedCandidate.Bootcamp.EndDate, expectedCandidate.Bootcamp.Location, expectedCandidate.InstansiPendidikan, expectedCandidate.HackerRank)
+	rows.AddRow(expectedCandidate.CandidateID, expectedCandidate.FullName, expectedCandidate.Phone, expectedCandidate.Email, expectedCandidate.DateOfBirth, expectedCandidate.Address, expectedCandidate.CvLink, expectedCandidate.Bootcamp.BootcampId, expectedCandidate.Bootcamp.Name, expectedCandidate.Bootcamp.StartDate, expectedCandidate.Bootcamp.EndDate, expectedCandidate.Bootcamp.Location, expectedCandidate.InstansiPendidikan, expectedCandidate.HackerRank)
 	suite.mockSql.ExpectQuery("SELECT (.+) from candidate (.+) where c.id = ?").WithArgs(expectedCandidate.CandidateID).WillReturnRows(rows)
 	actualCandidate, actualError := suite.repo.Get(expectedCandidate.CandidateID)
 	assert.NoError(suite.T(), actualError)
@@ -134,7 +134,7 @@ func (suite *CandidateRepositoryTestSuite) TestGetCandidate_Fail() {
 func (suite *CandidateRepositoryTestSuite) TestGetCandidateByPhoneNumber_Success() {
 	expectedCandidate := candidateDummy[0]
 	rows := sqlmock.NewRows([]string{"id", "full_name", "phone", "email", "date_of_birth", "address", "cv_link", "bootcamp_id", "bootcamp_name", "bootcamp_start", "bootcamp_end", "bootcamp_location", "instansi_pendidikan", "hackerrank_score"})
-	rows.AddRow(expectedCandidate.CandidateID, expectedCandidate.FullName, expectedCandidate.Phone, expectedCandidate.Email, expectedCandidate.DateOfBirth, expectedCandidate.Address, expectedCandidate.CvLink, expectedCandidate.Bootcamp.Id, expectedCandidate.Bootcamp.Name, expectedCandidate.Bootcamp.StartDate, expectedCandidate.Bootcamp.EndDate, expectedCandidate.Bootcamp.Location, expectedCandidate.InstansiPendidikan, expectedCandidate.HackerRank)
+	rows.AddRow(expectedCandidate.CandidateID, expectedCandidate.FullName, expectedCandidate.Phone, expectedCandidate.Email, expectedCandidate.DateOfBirth, expectedCandidate.Address, expectedCandidate.CvLink, expectedCandidate.Bootcamp.BootcampId, expectedCandidate.Bootcamp.Name, expectedCandidate.Bootcamp.StartDate, expectedCandidate.Bootcamp.EndDate, expectedCandidate.Bootcamp.Location, expectedCandidate.InstansiPendidikan, expectedCandidate.HackerRank)
 	suite.mockSql.ExpectQuery(regexp.QuoteMeta("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id WHERE phone ILIKE $1")).WithArgs("%" + expectedCandidate.Email + "%").WillReturnRows(rows)
 	actualCandidate, actualError := suite.repo.GetByPhoneNumber(expectedCandidate.Email)
 	assert.NoError(suite.T(), actualError)
@@ -151,7 +151,7 @@ func (suite *CandidateRepositoryTestSuite) TestGetCandidateByPhoneNumber_Fail() 
 func (suite *CandidateRepositoryTestSuite) TestGetCandidateByEmail_Success() {
 	expectedCandidate := candidateDummy[0]
 	rows := sqlmock.NewRows([]string{"id", "full_name", "phone", "email", "date_of_birth", "address", "cv_link", "bootcamp_id", "bootcamp_name", "bootcamp_start", "bootcamp_end", "bootcamp_location", "instansi_pendidikan", "hackerrank_score"})
-	rows.AddRow(expectedCandidate.CandidateID, expectedCandidate.FullName, expectedCandidate.Phone, expectedCandidate.Email, expectedCandidate.DateOfBirth, expectedCandidate.Address, expectedCandidate.CvLink, expectedCandidate.Bootcamp.Id, expectedCandidate.Bootcamp.Name, expectedCandidate.Bootcamp.StartDate, expectedCandidate.Bootcamp.EndDate, expectedCandidate.Bootcamp.Location, expectedCandidate.InstansiPendidikan, expectedCandidate.HackerRank)
+	rows.AddRow(expectedCandidate.CandidateID, expectedCandidate.FullName, expectedCandidate.Phone, expectedCandidate.Email, expectedCandidate.DateOfBirth, expectedCandidate.Address, expectedCandidate.CvLink, expectedCandidate.Bootcamp.BootcampId, expectedCandidate.Bootcamp.Name, expectedCandidate.Bootcamp.StartDate, expectedCandidate.Bootcamp.EndDate, expectedCandidate.Bootcamp.Location, expectedCandidate.InstansiPendidikan, expectedCandidate.HackerRank)
 	suite.mockSql.ExpectQuery(regexp.QuoteMeta("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id WHERE c.email ILIKE $1")).WithArgs("%" + expectedCandidate.Email + "%").WillReturnRows(rows)
 	actualCandidate, actualError := suite.repo.GetByEmail(expectedCandidate.Email)
 	assert.NoError(suite.T(), actualError)
@@ -179,14 +179,14 @@ func (suite *CandidateRepositoryTestSuite) TestDeleteCandidate_Fail() {
 
 func (suite *CandidateRepositoryTestSuite) TestUpdateCandidate_Success() {
 	dummy := candidateDummy[0]
-	suite.mockSql.ExpectExec(regexp.QuoteMeta("UPDATE candidate SET full_name = $2, phone = $3, email = $4, date_of_birth = $5, address = $6,cv_link = $7,bootcamp_id = $8,instansi_pendidikan= $9,hackerrank_score = $10  WHERE id = $1")).WithArgs(dummy.CandidateID, dummy.FullName, dummy.Phone, dummy.Email, dummy.DateOfBirth, dummy.Address, dummy.CvLink, dummy.Bootcamp.Id, dummy.InstansiPendidikan, dummy.HackerRank).WillReturnResult(sqlmock.NewResult(1, 1))
+	suite.mockSql.ExpectExec(regexp.QuoteMeta("UPDATE candidate SET full_name = $2, phone = $3, email = $4, date_of_birth = $5, address = $6,cv_link = $7,bootcamp_id = $8,instansi_pendidikan= $9,hackerrank_score = $10  WHERE id = $1")).WithArgs(dummy.CandidateID, dummy.FullName, dummy.Phone, dummy.Email, dummy.DateOfBirth, dummy.Address, dummy.CvLink, dummy.Bootcamp.BootcampId, dummy.InstansiPendidikan, dummy.HackerRank).WillReturnResult(sqlmock.NewResult(1, 1))
 	actualError := suite.repo.Update(dummy)
 	assert.Nil(suite.T(), actualError)
 }
 
 func (suite *CandidateRepositoryTestSuite) TestUpdateCandidate_Fail() {
 	dummy := candidateDummy[0]
-	suite.mockSql.ExpectExec(regexp.QuoteMeta("UPDATE candidate SET full_name = $2, phone = $3, email = $4, date_of_birth = $5, address = $6,cv_link = $7,bootcamp_id = $8,instansi_pendidikan= $9,hackerrank_score = $10  WHERE id = $1")).WithArgs(dummy.CandidateID, dummy.FullName, dummy.Phone, dummy.Email, dummy.DateOfBirth, dummy.Address, dummy.CvLink, dummy.Bootcamp.Id, dummy.InstansiPendidikan, dummy.HackerRank).WillReturnError(fmt.Errorf("error"))
+	suite.mockSql.ExpectExec(regexp.QuoteMeta("UPDATE candidate SET full_name = $2, phone = $3, email = $4, date_of_birth = $5, address = $6,cv_link = $7,bootcamp_id = $8,instansi_pendidikan= $9,hackerrank_score = $10  WHERE id = $1")).WithArgs(dummy.CandidateID, dummy.FullName, dummy.Phone, dummy.Email, dummy.DateOfBirth, dummy.Address, dummy.CvLink, dummy.Bootcamp.BootcampId, dummy.InstansiPendidikan, dummy.HackerRank).WillReturnError(fmt.Errorf("error"))
 	actualError := suite.repo.Update(dummy)
 	assert.Error(suite.T(), actualError)
 }
@@ -206,7 +206,7 @@ func (suite *CandidateRepositoryTestSuite) TestPagingCandidate_Success() {
 
 	rows := sqlmock.NewRows([]string{"id", "full_name", "phone", "email", "date_of_birth", "address", "cv_link", "bootcamp_id", "bootcamp_name", "bootcamp_start", "bootcamp_end", "bootcamp_location", "instansi_pendidikan", "hackerrank_score"})
 	for _, candidate := range candidateDummy {
-		rows.AddRow(candidate.CandidateID, candidate.FullName, candidate.Phone, candidate.Email, candidate.DateOfBirth, candidate.Address, candidate.CvLink, candidate.Bootcamp.Id, candidate.Bootcamp.Name, candidate.Bootcamp.StartDate, candidate.Bootcamp.EndDate, candidate.Bootcamp.Location, candidate.InstansiPendidikan, candidate.HackerRank)
+		rows.AddRow(candidate.CandidateID, candidate.FullName, candidate.Phone, candidate.Email, candidate.DateOfBirth, candidate.Address, candidate.CvLink, candidate.Bootcamp.BootcampId, candidate.Bootcamp.Name, candidate.Bootcamp.StartDate, candidate.Bootcamp.EndDate, candidate.Bootcamp.Location, candidate.InstansiPendidikan, candidate.HackerRank)
 	}
 	suite.mockSql.ExpectQuery(regexp.QuoteMeta("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id LIMIT $1 OFFSET $2")).WithArgs(paginationQuery.Take, paginationQuery.Skip).WillReturnRows(rows)
 
@@ -242,7 +242,7 @@ func (suite *CandidateRepositoryTestSuite) TestPagingCandidat_QueryCountError() 
 
 	rows := sqlmock.NewRows([]string{"id", "full_name", "phone", "email", "date_of_birth", "address", "cv_link", "bootcamp_id", "bootcamp_name", "bootcamp_start", "bootcamp_end", "bootcamp_location", "instansi_pendidikan", "hackerrank_score"})
 	for _, candidate := range candidateDummy {
-		rows.AddRow(candidate.CandidateID, candidate.FullName, candidate.Phone, candidate.Email, candidate.DateOfBirth, candidate.Address, candidate.CvLink, candidate.Bootcamp.Id, candidate.Bootcamp.Name, candidate.Bootcamp.StartDate, candidate.Bootcamp.EndDate, candidate.Bootcamp.Location, candidate.InstansiPendidikan, candidate.HackerRank)
+		rows.AddRow(candidate.CandidateID, candidate.FullName, candidate.Phone, candidate.Email, candidate.DateOfBirth, candidate.Address, candidate.CvLink, candidate.Bootcamp.BootcampId, candidate.Bootcamp.Name, candidate.Bootcamp.StartDate, candidate.Bootcamp.EndDate, candidate.Bootcamp.Location, candidate.InstansiPendidikan, candidate.HackerRank)
 	}
 	suite.mockSql.ExpectQuery(regexp.QuoteMeta("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id LIMIT $1 OFFSET $2")).WithArgs(paginationQuery.Take, paginationQuery.Skip).WillReturnRows(rows)
 	rowCount := sqlmock.NewRows([]string{"count"})

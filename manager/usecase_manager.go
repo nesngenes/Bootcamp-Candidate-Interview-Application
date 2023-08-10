@@ -5,8 +5,9 @@ import "interview_bootcamp/usecase"
 type UseCaseManager interface {
 	CandidateUseCase() usecase.CandidateUseCase
 	ResumeUseCase() usecase.ResumeUseCase
-	UserRolesUseCase() usecase.UserRolesUseCase // user role
-	UsersUseCase() usecase.UserUsecase          //user
+	UserRolesUseCase() usecase.UserRolesUseCase         // user role
+	UsersUseCase() usecase.UserUsecase                  //user
+	HRRecruitmentUsecase() usecase.HRRecruitmentUsecase //hr
 }
 
 type useCaseManager struct {
@@ -29,6 +30,11 @@ func (u *useCaseManager) UserRolesUseCase() usecase.UserRolesUseCase {
 //user
 func (u *useCaseManager) UsersUseCase() usecase.UserUsecase {
 	return usecase.NewUserUsecase(u.repoManager.UsersRepo())
+}
+
+//hr
+func (u *useCaseManager) HRRecruitmentUsecase() usecase.HRRecruitmentUsecase {
+	return usecase.NewHRRecruitmentUsecase(u.repoManager.HRRecruitmentRepo(), u.repoManager.UsersRepo())
 }
 
 func NewUseCaseManager(repoManager RepoManager) UseCaseManager {

@@ -6,8 +6,9 @@ type RepoManager interface {
 	// semua repo di daftarkan disini
 	CandidateRepo() repository.CandidateRepository
 	ResumeRepo() repository.ResumeRepository
-	UserRolesRepo() repository.UserRolesRepository //user role
-	UsersRepo() repository.UserRepository          // user
+	UserRolesRepo() repository.UserRolesRepository         //user role
+	UsersRepo() repository.UserRepository                  // user
+	HRRecruitmentRepo() repository.HRRecruitmentRepository //hr
 }
 
 type repoManager struct {
@@ -31,6 +32,11 @@ func (r *repoManager) UserRolesRepo() repository.UserRolesRepository {
 //user
 func (r *repoManager) UsersRepo() repository.UserRepository {
 	return repository.NewUserRepository(r.infra.Conn())
+}
+
+//hr
+func (r *repoManager) HRRecruitmentRepo() repository.HRRecruitmentRepository {
+	return repository.NewHRRecruitmentRepository(r.infra.Conn())
 }
 
 func NewRepoManager(infra InfraManager) RepoManager {

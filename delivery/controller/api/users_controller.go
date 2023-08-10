@@ -52,7 +52,7 @@ func (c *UserController) getHandler(ctx *gin.Context) {
 }
 
 func (c *UserController) getByUsernameHandler(ctx *gin.Context) {
-	username := ctx.Param("username")
+	username := ctx.Param("user_name")
 	user, err := c.userUC.GetUserByUserName(username)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -103,7 +103,6 @@ func NewUserController(r *gin.Engine, usecase usecase.UserUsecase) *UserControll
 	rg.GET("/users/:id", controller.getHandler)
 	rg.GET("/users/by-username/:username", controller.getByUsernameHandler)
 	rg.PUT("/users/:id", controller.updateHandler) //bisa update asal role id and role name tetep sama
-
 	rg.DELETE("/users/:id", controller.deleteHandler)
 
 	return &controller

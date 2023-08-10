@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"interview_bootcamp/model"
 	"interview_bootcamp/repository"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserUsecase interface {
@@ -14,6 +16,7 @@ type UserUsecase interface {
 	GetUserByID(id string) (model.Users, error)
 	UpdateUser(payload model.Users) error
 	DeleteUser(id string) error
+	FindByUsernamePassword(username string, password string) (model.Users, error)
 }
 
 type userUsecase struct {
@@ -37,6 +40,9 @@ func (u *userUsecase) RegisterNewUser(payload model.Users) error {
 	if err == nil && existingUserByEmail.Email == payload.Email {
 		return fmt.Errorf("user with email %s already exists", payload.Email)
 	}
+
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
+	payload.Password = string(bytes)
 
 	// Create the new user
 	err = u.userRepo.Create(payload)
@@ -91,6 +97,9 @@ func (u *userUsecase) UpdateUser(payload model.Users) error {
 		return fmt.Errorf("failed to update user: %v", err)
 	}
 	return nil
+}
+func (u *userUsecase) FindByUsernamePassword(username string, password string) (model.Users, error) {
+	return u.userRepo.GetUsernamePassword(username, password)
 }
 
 func (u *userUsecase) DeleteUser(id string) error {

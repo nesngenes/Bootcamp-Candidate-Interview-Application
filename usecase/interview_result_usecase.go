@@ -40,7 +40,7 @@ func (cr *interviewResultUseCase) CreateInterviewResult(payload model.InterviewR
 
 // Menampilkan seluruh hasil interview
 func (cr *interviewResultUseCase) ListInterviewResult() ([]model.InterviewResult, error) {
-	return cr.repo.ListInterviewResult()
+	return cr.repo.List()
 }
 
 // menampilkan hasil interview berdasarkan id
@@ -59,7 +59,7 @@ func (cr *interviewResultUseCase) DeleteInterviewResult(id string) error {
 		return fmt.Errorf("data dengan id: %s tidak ditemukan", id)
 	}
 
-	err = cr.repo.DeleteInterviewResult(interview_result.Id)
+	err = cr.repo.Delete(interview_result.Id)
 	if err != nil {
 		return fmt.Errorf("gagal menghapus hasil interview: %v", err.Error())
 	}
@@ -87,7 +87,7 @@ func (cr *interviewResultUseCase) UpdateInterviewResult(payload model.InterviewR
 	}
 
 	//untuk melakukan update pada data dengan nomor sesuai kolom
-	err := cr.repo.UpdateInterviewResult(payload)
+	err := cr.repo.Update(payload)
 	if err != nil {
 		return fmt.Errorf("gagal memperbarui hasil interview: %v", err)
 	}

@@ -2,13 +2,17 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"interview_bootcamp/model"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepository interface {
 	BaseRepository[model.Users]
 	GetByEmail(email string) (model.Users, error)
 	GetByUserName(username string) (model.Users, error)
+	GetUsernamePassword(username string, password string) (model.Users, error)
 }
 
 type userRepository struct {
@@ -88,13 +92,14 @@ func (r *userRepository) GetByEmail(email string) (model.Users, error) {
 func (r *userRepository) GetByUserName(userName string) (model.Users, error) {
 	var user model.Users
 	err := r.db.QueryRow(`
-		SELECT u.id, u.email, u.username, r.id, r.name
+		SELECT u.id, u.email, u.username,u.password, r.id, r.name
 		FROM users u
 		JOIN user_roles r ON u.role_id = r.id
 		WHERE u.username ILIKE $1`, "%"+userName+"%").Scan(
 		&user.Id,
 		&user.Email,
 		&user.UserName,
+		&user.Password,
 		&user.UserRole.Id,
 		&user.UserRole.Name,
 	)
@@ -121,6 +126,21 @@ func (r *userRepository) Delete(id string) error {
 		return err
 	}
 	return nil
+}
+
+func (u *userRepository) GetUsernamePassword(username string, password string) (model.Users, error) {
+
+	user, err := u.GetByUserName(username)
+	if err != nil {
+		return model.Users{}, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return model.Users{}, fmt.Errorf("failed to verivy password hash : %v", err)
+	}
+
+	return user, nil
 }
 
 func NewUserRepository(db *sql.DB) UserRepository {

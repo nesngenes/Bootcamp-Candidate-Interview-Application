@@ -10,44 +10,35 @@ import (
 )
 
 func CreateAccessToken(user model.Users) (string, error) {
-	AccessTokenLifeTime := time.Duration(1) * time.Minute
-	tokenConfig := TokenConfig{
-		ApplicationName:     "enigma-interview-bootcamp",
-		JwtSigntureKey:      "test-kunci-masuk",
-		JwtSigningMethod:    jwt.SigningMethodHS256,
-		AccessTokenLifeTime: AccessTokenLifeTime,
-	}
-
+	cfg, _ := config.NewConfig()
 	now := time.Now().UTC()
-	end := now.Add(tokenConfig.AccessTokenLifeTime)
+	end := now.Add(cfg.AccessTokenLifeTime)
 
-	tokenMyClaims := TokenMyClaims{
+	claims := &TokenMyClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer: tokenConfig.ApplicationName,
+			Issuer:    cfg.ApplicationName,
+			IssuedAt:  jwt.NewNumericDate(now),
+			ExpiresAt: jwt.NewNumericDate(end),
 		},
 		Username: user.UserName,
+		Role:     user.UserRole.Name,
 	}
 
-	tokenMyClaims.IssuedAt = jwt.NewNumericDate(now)
-	tokenMyClaims.ExpiresAt = jwt.NewNumericDate(end)
-
-	token := jwt.NewWithClaims(tokenConfig.JwtSigningMethod, tokenMyClaims)
-	sString, err := token.SignedString(tokenConfig.JwtSigntureKey)
+	token := jwt.NewWithClaims(cfg.JwtSigningMethod, claims)
+	ss, err := token.SignedString(cfg.JwtSignatureKey)
 	if err != nil {
-		return "gagal", err
+		return "", fmt.Errorf("failed to create access token: %v", err)
 	}
-
-	return sString, nil
+	return ss, nil
 }
 
 func VerifyAccessToken(tokenString string) (jwt.MapClaims, error) {
 	cfg, _ := config.NewConfig()
-
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		if method, ok := t.Method.(*jwt.SigningMethodHMAC); !ok || method != cfg.JwtSigningMethod {
-			return nil, fmt.Errorf("token tidak valid")
+			return nil, fmt.Errorf("invalid token signing method")
 		}
-		return cfg.JwtSigntureKey, nil
+		return cfg.JwtSignatureKey, nil
 	})
 
 	if err != nil {
@@ -55,9 +46,7 @@ func VerifyAccessToken(tokenString string) (jwt.MapClaims, error) {
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if ok || !token.Valid || claims["iss"] != cfg.ApplicationName {
-		return nil, fmt.Errorf("token tidak valid")
+	if !ok || !token.Valid || claims["iss"] != cfg.ApplicationName {
+		return nil, fmt.Errorf("invalid token")
 	}
 
-	return claims, nil
-}

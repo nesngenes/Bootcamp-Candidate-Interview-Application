@@ -8,6 +8,10 @@ import (
 type InterviewResultRepository interface {
 	BaseRepository[model.InterviewResult]
 	GetByIdInterviewResult(result string) (model.InterviewResult, error)
+	CreateInterviewResult(payload model.InterviewResult) error
+	ListInterviewResult() ([]model.InterviewResult, error)
+	UpdateInterviewResult(payload model.InterviewResult) error
+	DeleteInterviewResult(id string) error
 }
 
 type interviewResultRepository struct {

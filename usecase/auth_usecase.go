@@ -2,37 +2,34 @@ package usecase
 
 import (
 	"fmt"
-	"interview_bootcamp/model"
+	"interview_bootcamp/utils/security"
 )
 
-type AuthUseCAse interface {
-	Login(username string) (string, error)
+type AuthUseCase interface {
+	Login(username string, password string) (string, error)
 }
 
 type authUseCase struct {
-	user UserUsecase
+	usecase UserUsecase
+	roleUC  UserRolesUseCase
 }
 
-func (a *authUseCase) Login(username string) (string, error) {
-	user, err := a.user.GetUserByUserName(username)
+func (a *authUseCase) Login(username string, password string) (string, error) {
+	user, err := a.usecase.FindByUsernamePassword(username, password)
 	if err != nil {
-		return "un authorization", fmt.Errorf("user un authorization")
+		return "", fmt.Errorf("invalid username or password")
 	}
 
-	//bila user ditemukan maka token akan muncul
-	token, err := GenerateToken(user)
-	if err != nil {
-		return "gagal", fmt.Errorf("token gagal dibuat")
-	}
+	role, _ := a.roleUC.GetUserRoleByID(user.UserRole.Id)
+	user.UserRole = role
 
+	token, err := security.CreateAccessToken(user)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate token")
+	}
 	return token, nil
 }
 
-// untuk membuat token sebagai autentikasi
-func GenerateToken(user model.Users) (string, error) {
-	return "iniToken", nil
-}
-
-func NewAuthUseCase(user AuthUseCAse) AuthUseCAse {
-	return &authUseCase{user: user}
+func NewAuthUseCase(usecase UserUsecase, roleUC UserRolesUseCase) AuthUseCase {
+	return &authUseCase{usecase: usecase, roleUC: roleUC}
 }

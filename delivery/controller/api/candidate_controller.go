@@ -1,28 +1,29 @@
 package api
 
 import (
+	"bytes"
+	"context"
+	"fmt"
+	"interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
+	"io"
 	"net/http"
 	"strconv"
-	"io"
-	"context"
-	"bytes"
-	"fmt"
-	"github.com/gin-gonic/gin"
+
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/gin-gonic/gin"
 )
 
 type CandidateController struct {
-	router          *gin.Engine
+	router           *gin.Engine
 	candidateUsecase usecase.CandidateUseCase
 	bootcampUsecase  usecase.BootcampUseCase
-	cloudinary      *cloudinary.Cloudinary
+	cloudinary       *cloudinary.Cloudinary
 }
-
 
 func (cc *CandidateController) createHandler(c *gin.Context) {
 	// Parse the form data
@@ -111,7 +112,6 @@ func (cc *CandidateController) createHandler(c *gin.Context) {
 		"status": status,
 	})
 }
-
 
 func (cc *CandidateController) listHandler(c *gin.Context) {
 	page, _ := strconv.Atoi(c.Query("page"))
@@ -241,7 +241,6 @@ func (cc *CandidateController) updateHandler(c *gin.Context) {
 	})
 }
 
-
 func (cc *CandidateController) deleteHandler(c *gin.Context) {
 	id := c.Param("id")
 	if err := cc.candidateUsecase.DeleteCandidate(id); err != nil {
@@ -260,14 +259,14 @@ func (cc *CandidateController) deleteHandler(c *gin.Context) {
 
 func NewCandidateController(r *gin.Engine, candidateUsecase usecase.CandidateUseCase, bootcampUsecase usecase.BootcampUseCase, cloudinary *cloudinary.Cloudinary) *CandidateController {
 	controller := CandidateController{
-		router:          r,
+		router:           r,
 		candidateUsecase: candidateUsecase,
 		bootcampUsecase:  bootcampUsecase,
-		cloudinary:      cloudinary,
+		cloudinary:       cloudinary,
 	}
 	rg := r.Group("/api/v1")
 	rg.POST("/candidates", controller.createHandler)
-	rg.GET("/candidates", controller.listHandler)
+	rg.GET("/candidates", middleware.AuthMiddleware("admin", "hr"), controller.listHandler)
 	rg.GET("/candidates/:id", controller.getHandler)
 	rg.PUT("/candidates", controller.updateHandler)
 	rg.DELETE("/candidates/:id", controller.deleteHandler)

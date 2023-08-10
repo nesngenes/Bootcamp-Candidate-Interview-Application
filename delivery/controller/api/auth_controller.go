@@ -10,7 +10,7 @@ import (
 
 type AuthController struct {
 	router  *gin.Engine
-	usecase usecase.AuthUseCAse
+	usecase usecase.AuthUseCase
 }
 
 func (a *AuthController) loginHandler(c *gin.Context) {
@@ -20,22 +20,21 @@ func (a *AuthController) loginHandler(c *gin.Context) {
 		return
 	}
 
-	token, err := a.usecase.Login(payload.UserName)
+	token, err := a.usecase.Login(payload.UserName, payload.Password)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, token)
+	c.JSON(http.StatusCreated, gin.H{"token": token})
 }
 
-func NewAuthUseCase(e *gin.Engine, usecase usecase.AuthUseCAse) *AuthController {
+func NewAuthController(r *gin.Engine, usecase usecase.AuthUseCase) *AuthController {
 	controller := AuthController{
-		router:  e,
+		router:  r,
 		usecase: usecase,
 	}
-
-	rGroup := e.Group("api/v1")
-	rGroup.POST("login", controller.loginHandler)
+	rg := r.Group("/api/v1")
+	rg.POST("/login", controller.loginHandler)
 	return &controller
 }

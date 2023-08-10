@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"interview_bootcamp/model"
 	"interview_bootcamp/repository"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserUsecase interface {
@@ -11,6 +13,7 @@ type UserUsecase interface {
 	List() ([]model.Users, error)
 	GetUserByEmail(email string) (model.Users, error)
 	GetUserByUserName(userName string) (model.Users, error)
+	FindByUsernamePassword(username string, password string) (model.Users, error)
 	GetUserByID(id string) (model.Users, error)
 	UpdateUser(payload model.Users) error
 	DeleteUser(id string) error
@@ -21,30 +24,38 @@ type userUsecase struct {
 }
 
 func (u *userUsecase) RegisterNewUser(payload model.Users) error {
-	// cek klo kosong
 	if payload.Email == "" || payload.UserName == "" || payload.Password == "" {
 		return fmt.Errorf("email, username, and password are required fields")
 	}
 
-	// cek kali username ada yang sama
 	existingUserByUsername, err := u.userRepo.GetByUserName(payload.UserName)
 	if err == nil && existingUserByUsername.UserName == payload.UserName {
 		return fmt.Errorf("user with username %s already exists", payload.UserName)
 	}
 
-	// Check if a user with the given email already exists
 	existingUserByEmail, err := u.userRepo.GetByEmail(payload.Email)
 	if err == nil && existingUserByEmail.Email == payload.Email {
 		return fmt.Errorf("user with email %s already exists", payload.Email)
 	}
 
-	// Create the new user
+	//lastest update
+	// Hash the password using bcrypt
+	bytes, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return fmt.Errorf("failed to hash password: %v", err)
+	}
+	payload.Password = string(bytes)
+
 	err = u.userRepo.Create(payload)
 	if err != nil {
 		return fmt.Errorf("failed to register new user: %v", err)
 	}
 
 	return nil
+}
+
+func (u *userUsecase) FindByUsernamePassword(username string, password string) (model.Users, error) {
+	return u.userRepo.GetUserNamePassword(username, password)
 }
 
 func (u *userUsecase) List() ([]model.Users, error) {

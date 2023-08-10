@@ -27,17 +27,50 @@ func (c *UserController) createHandler(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, user)
+	// Create the user response object
+	userResponse := map[string]interface{}{
+		"id":        user.Id,
+		"email":     user.Email,
+		"user_name": user.UserName,
+		"user_role": map[string]interface{}{
+			"id":   user.UserRole.Id,
+			"name": user.UserRole.Name,
+		},
+	}
+
+	ctx.JSON(http.StatusCreated, userResponse)
 }
 
-func (c *UserController) listHandler(ctx *gin.Context) {
-	users, err := c.userUC.List()
+func (u *UserController) listHandler(c *gin.Context) {
+	users, err := u.userUC.List()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, users)
+	status := map[string]interface{}{
+		"code":        200,
+		"description": "Get All Data Successfully",
+	}
+
+	userResponses := make([]map[string]interface{}, 0, len(users))
+	for _, user := range users {
+		userResponse := map[string]interface{}{
+			"id":        user.Id,
+			"email":     user.Email,
+			"user_name": user.UserName,
+			"user_role": map[string]interface{}{
+				"id":   user.UserRole.Id,
+				"name": user.UserRole.Name,
+			},
+		}
+		userResponses = append(userResponses, userResponse)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": status,
+		"data":   userResponses,
+	})
 }
 
 func (c *UserController) getHandler(ctx *gin.Context) {

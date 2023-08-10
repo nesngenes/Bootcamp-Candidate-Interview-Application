@@ -2,13 +2,17 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"interview_bootcamp/model"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepository interface {
 	BaseRepository[model.Users]
 	GetByEmail(email string) (model.Users, error)
 	GetByUserName(username string) (model.Users, error)
+	GetUserNamePassword(username string, password string) (model.Users, error) //passwordnya di hash
 }
 
 type userRepository struct {
@@ -63,6 +67,21 @@ func (r *userRepository) Get(id string) (model.Users, error) {
 		return model.Users{}, err
 	}
 	return user, nil
+}
+
+func (r *userRepository) GetUserNamePassword(username string, password string) (model.Users, error) {
+	user, err := r.GetByUserName(username)
+	if err != nil {
+		return model.Users{}, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return model.Users{}, fmt.Errorf("failed to verify password hash : %v", err)
+	}
+
+	return user, nil
+
 }
 
 func (r *userRepository) GetByEmail(email string) (model.Users, error) {

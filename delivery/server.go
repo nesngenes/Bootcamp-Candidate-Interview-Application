@@ -55,6 +55,7 @@ func (s *Server) setupControllers() {
 	api.NewUserRoleController(s.engine, s.useCaseManager.UserRolesUseCase())                //user role controller
 	api.NewUserController(s.engine, s.useCaseManager.UsersUseCase())
 	api.NewStatusController(s.engine, s.useCaseManager.StatusUseCase())
+	api.NewAuthController(s.engine, s.useCaseManager.AuthUseCase())
 }
 
 func NewServer() *Server {

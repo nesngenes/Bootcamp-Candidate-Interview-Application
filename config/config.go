@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"interview_bootcamp/utils/common"
 	"os"
+	"strconv"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type ApiConfig struct {
@@ -30,12 +34,19 @@ type CloudinaryConfig struct {
 type FileConfig struct {
 	FilePath string
 }
+type TokenConfig struct {
+	ApplicationName     string
+	JwtSignatureKey     []byte
+	JwtSigningMethod    *jwt.SigningMethodHMAC
+	AccessTokenLifeTime time.Duration
+}
 
 type Config struct {
 	ApiConfig
 	DbConfig
 	CloudinaryConfig
 	FileConfig
+	TokenConfig
 }
 
 // Method
@@ -68,6 +79,18 @@ func (c *Config) ReadConfig() error {
 
 	c.FileConfig = FileConfig{
 		FilePath: os.Getenv("FILE_PATH"),
+	}
+	appTokenExpire, err := strconv.Atoi(os.Getenv("APP_TOKEN_EXPIRE"))
+	if err != nil {
+		return err
+	}
+	accessTokenLifeTime := time.Duration(appTokenExpire) * time.Minute
+
+	c.TokenConfig = TokenConfig{
+		ApplicationName:     os.Getenv("APP_TOKEN_NAME"),
+		JwtSignatureKey:     []byte(os.Getenv("APP_TOKEN_KEY")),
+		JwtSigningMethod:    jwt.SigningMethodHS256,
+		AccessTokenLifeTime: accessTokenLifeTime,
 	}
 
 	if c.DbConfig.Host == "" || c.DbConfig.Port == "" || c.DbConfig.Name == "" ||

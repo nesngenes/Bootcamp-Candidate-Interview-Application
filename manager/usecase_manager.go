@@ -1,19 +1,21 @@
 package manager
 
 import (
-	"github.com/cloudinary/cloudinary-go/v2"
 	"interview_bootcamp/usecase"
+
+	"github.com/cloudinary/cloudinary-go/v2"
 )
 
 type UseCaseManager interface {
-    CandidateUseCase() usecase.CandidateUseCase
-    ResumeUseCase() usecase.ResumeUseCase
-    InterviewerUseCase() usecase.InterviewerUseCase
+	CandidateUseCase() usecase.CandidateUseCase
+	ResumeUseCase() usecase.ResumeUseCase
+	InterviewerUseCase() usecase.InterviewerUseCase
 	BootcampUseCase() usecase.BootcampUseCase
 	SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary)
 	UserRolesUseCase() usecase.UserRolesUseCase // user role
 	UsersUseCase() usecase.UserUsecase          //user
 	StatusUseCase() usecase.StatusUseCase
+	AuthUseCase() usecase.AuthUseCase
 }
 
 type useCaseManager struct {
@@ -32,27 +34,30 @@ func (u *useCaseManager) StatusUseCase() usecase.StatusUseCase {
 }
 
 func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {
-    return usecase.NewResumeUseCase(u.repoManager.ResumeRepo(), u.repoManager.CloudinaryInstance())
+	return usecase.NewResumeUseCase(u.repoManager.ResumeRepo(), u.repoManager.CloudinaryInstance())
 }
 
 func (u *useCaseManager) InterviewerUseCase() usecase.InterviewerUseCase {
-    return usecase.NewInterviewerUseCase(u.repoManager.InterviewerRepo())
+	return usecase.NewInterviewerUseCase(u.repoManager.InterviewerRepo())
 }
 
-//user role
+// user role
 func (u *useCaseManager) UserRolesUseCase() usecase.UserRolesUseCase {
 	return usecase.NewUserRolesUseCase(u.repoManager.UserRolesRepo())
 }
 
-//user
+// user
 func (u *useCaseManager) UsersUseCase() usecase.UserUsecase {
 	return usecase.NewUserUsecase(u.repoManager.UsersRepo())
 }
 
 func (u *useCaseManager) SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary) {
-    u.cloudinary = cloudinary
+	u.cloudinary = cloudinary
 }
 
+func (u *useCaseManager) AuthUseCase() usecase.AuthUseCase {
+	return usecase.NewAuthUseCase(u.UsersUseCase())
+}
 
 func NewUseCaseManager(repoManager RepoManager) UseCaseManager {
 	return &useCaseManager{repoManager: repoManager}

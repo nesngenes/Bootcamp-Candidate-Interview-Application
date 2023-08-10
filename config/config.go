@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
-	"os"
 	"interview_bootcamp/utils/common"
+	"os"
 )
 
 type ApiConfig struct {
@@ -21,16 +21,21 @@ type DbConfig struct {
 }
 
 type CloudinaryConfig struct {
-	CloudinaryURL      string
+	CloudinaryURL       string
 	CloudinaryCloudName string
 	CloudinaryAPIKey    string
 	CloudinaryAPISecret string
+}
+
+type FileConfig struct {
+	FilePath string
 }
 
 type Config struct {
 	ApiConfig
 	DbConfig
 	CloudinaryConfig
+	FileConfig
 }
 
 // Method
@@ -53,18 +58,21 @@ func (c *Config) ReadConfig() error {
 		ApiHost: os.Getenv("API_HOST"),
 		ApiPort: os.Getenv("API_PORT"),
 	}
-	
+
 	c.CloudinaryConfig = CloudinaryConfig{
-		CloudinaryURL: "",
+		CloudinaryURL:       "",
 		CloudinaryCloudName: os.Getenv("CLOUDINARY_NAME"),
-		CloudinaryAPIKey: os.Getenv("CLOUDINARY_API_KEY"),
+		CloudinaryAPIKey:    os.Getenv("CLOUDINARY_API_KEY"),
 		CloudinaryAPISecret: os.Getenv("CLOUDINARY_API_SECRET"),
 	}
-	
+
+	c.FileConfig = FileConfig{
+		FilePath: os.Getenv("FILE_PATH"),
+	}
 
 	if c.DbConfig.Host == "" || c.DbConfig.Port == "" || c.DbConfig.Name == "" ||
 		c.DbConfig.User == "" || c.DbConfig.Password == "" || c.DbConfig.Driver == "" ||
-		c.ApiConfig.ApiHost == "" || c.ApiConfig.ApiPort == "" {
+		c.ApiConfig.ApiHost == "" || c.ApiConfig.ApiPort == "" || c.FileConfig.FilePath == "" {
 		return fmt.Errorf("missing required environment variables")
 	}
 	return nil

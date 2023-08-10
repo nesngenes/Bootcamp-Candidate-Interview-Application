@@ -51,6 +51,8 @@ func (s *Server) setupControllers() {
 	api.NewCandidateController(s.engine, s.useCaseManager.CandidateUseCase(), s.useCaseManager.BootcampUseCase(), cloudinaryInstance)
 	api.NewBootcampController(s.engine, s.useCaseManager.BootcampUseCase())
 	api.NewInterviewerController(s.engine, s.useCaseManager.InterviewerUseCase())
+	api.NewInterviewProcessController(s.engine, s.useCaseManager.InterviewProcessUseCase())
+	api.NewResultController(s.engine, s.useCaseManager.ResultUseCase())
 	api.NewResumeController(s.engine, s.useCaseManager.ResumeUseCase(), cloudinaryInstance) // Pass cloudinaryInstance
 	api.NewUserRoleController(s.engine, s.useCaseManager.UserRolesUseCase())                //user role controller
 	api.NewUserController(s.engine, s.useCaseManager.UsersUseCase())
@@ -59,7 +61,7 @@ func (s *Server) setupControllers() {
 }
 
 func NewServer() *Server {
-	cfg, err := config.NewConfig()
+	cfg, _ := config.NewConfig()
 	cloudinaryInstance, err := initializeCloudinaryInstance(cfg)
 	if err != nil {
 		panic("Failed to initialize Cloudinary")

@@ -29,7 +29,7 @@ func (s *statusUseCase) RegisterNewStatus(payload model.Status) error {
 	}
 	err := s.repo.Create(payload)
 	if err != nil {
-		return fmt.Errorf("failed to create new botcamp: %v", err)
+		return fmt.Errorf("failed to create new status: %v", err)
 	}
 	return nil
 }

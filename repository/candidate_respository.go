@@ -82,7 +82,6 @@ func (c *candidateRepository) Update(payload model.Candidate) error {
 	}
 	return nil
 
-	return nil
 }
 
 func (c *candidateRepository) Delete(id string) error {

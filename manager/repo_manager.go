@@ -15,6 +15,7 @@ type RepoManager interface {
 	ResumeRepo() repository.ResumeRepository
 	InterviewerRepo() repository.InterviewerRepository
 	InterviewProcessRepo() repository.InterviewProcessRepository
+	InterviewResultRepo() repository.InterviewResultRepository
 	ResultRepo() repository.ResultRepository
 	CloudinaryInstance() *cloudinary.Cloudinary
 	UserRolesRepo() repository.UserRolesRepository //user role
@@ -43,7 +44,9 @@ func (r *repoManager) ResumeRepo() repository.ResumeRepository {
 func (r *repoManager) InterviewProcessRepo() repository.InterviewProcessRepository {
 	return repository.NewInterviewProcessRepository(r.infra.Conn())
 }
-
+func (r *repoManager) InterviewResultRepo() repository.InterviewResultRepository {
+	return repository.NewInterviewResultRepository(r.infra.Conn())
+}
 func (r *repoManager) InterviewerRepo() repository.InterviewerRepository {
 	return repository.NewInterviewerRepository(r.infra.Conn())
 }

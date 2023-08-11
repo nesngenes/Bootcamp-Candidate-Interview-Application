@@ -10,8 +10,10 @@ type UseCaseManager interface {
 	CandidateUseCase() usecase.CandidateUseCase
 	ResumeUseCase() usecase.ResumeUseCase
 	InterviewerUseCase() usecase.InterviewerUseCase
+	ResultUseCase() usecase.ResultUseCase
 	BootcampUseCase() usecase.BootcampUseCase
 	SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary)
+	InterviewProcessUseCase() usecase.InterviewProcessUseCase
 	UserRolesUseCase() usecase.UserRolesUseCase // user role
 	UsersUseCase() usecase.UserUsecase          //user
 	StatusUseCase() usecase.StatusUseCase
@@ -36,9 +38,15 @@ func (u *useCaseManager) StatusUseCase() usecase.StatusUseCase {
 func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {
 	return usecase.NewResumeUseCase(u.repoManager.ResumeRepo(), u.repoManager.CloudinaryInstance())
 }
+func (u *useCaseManager) InterviewProcessUseCase() usecase.InterviewProcessUseCase {
+	return usecase.NewInterviewProcessUseCase(u.repoManager.InterviewProcessRepo(), u.CandidateUseCase(), u.InterviewerUseCase(), u.StatusUseCase())
+}
 
 func (u *useCaseManager) InterviewerUseCase() usecase.InterviewerUseCase {
 	return usecase.NewInterviewerUseCase(u.repoManager.InterviewerRepo())
+}
+func (u *useCaseManager) ResultUseCase() usecase.ResultUseCase {
+	return usecase.NewResultUseCase(u.repoManager.ResultRepo())
 }
 
 // user role

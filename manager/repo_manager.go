@@ -13,6 +13,7 @@ type RepoManager interface {
 	BootcampRepo() repository.BootcampRepository
 	StatusRepo() repository.StatusRepository
 	ResumeRepo() repository.ResumeRepository
+	FormRepo() repository.FormRepository
 	InterviewerRepo() repository.InterviewerRepository
 	InterviewProcessRepo() repository.InterviewProcessRepository
 	ResultRepo() repository.ResultRepository
@@ -40,6 +41,11 @@ func (r *repoManager) StatusRepo() repository.StatusRepository {
 func (r *repoManager) ResumeRepo() repository.ResumeRepository {
 	return repository.NewResumeRepository(r.infra.Conn())
 }
+
+func (r *repoManager) FormRepo() repository.FormRepository {
+	return repository.NewFormRepository(r.infra.Conn())
+}
+
 func (r *repoManager) InterviewProcessRepo() repository.InterviewProcessRepository {
 	return repository.NewInterviewProcessRepository(r.infra.Conn())
 }

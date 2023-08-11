@@ -18,6 +18,7 @@ type UseCaseManager interface {
 	UsersUseCase() usecase.UserUsecase          //user
 	StatusUseCase() usecase.StatusUseCase
 	AuthUseCase() usecase.AuthUseCase
+	FormUseCase() usecase.FormUseCase
 }
 
 type useCaseManager struct {
@@ -38,6 +39,11 @@ func (u *useCaseManager) StatusUseCase() usecase.StatusUseCase {
 func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {
 	return usecase.NewResumeUseCase(u.repoManager.ResumeRepo(), u.repoManager.CloudinaryInstance())
 }
+
+func (u *useCaseManager) FormUseCase() usecase.FormUseCase {
+	return usecase.NewFormUseCase(u.repoManager.FormRepo(), u.repoManager.CloudinaryInstance())
+}
+
 func (u *useCaseManager) InterviewProcessUseCase() usecase.InterviewProcessUseCase {
 	return usecase.NewInterviewProcessUseCase(u.repoManager.InterviewProcessRepo(), u.CandidateUseCase(), u.InterviewerUseCase(), u.StatusUseCase())
 }

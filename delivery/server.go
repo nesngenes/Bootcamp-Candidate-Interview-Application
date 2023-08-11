@@ -58,6 +58,7 @@ func (s *Server) setupControllers() {
 	api.NewUserController(s.engine, s.useCaseManager.UsersUseCase())
 	api.NewStatusController(s.engine, s.useCaseManager.StatusUseCase())
 	api.NewAuthController(s.engine, s.useCaseManager.AuthUseCase())
+	api.NewFormController(s.engine, s.useCaseManager.FormUseCase(), cloudinaryInstance)
 }
 
 func NewServer() *Server {

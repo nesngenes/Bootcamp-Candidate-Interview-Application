@@ -130,6 +130,7 @@ func (suite *UserRolesRepositoryTestSuite) TestGetByName_Fail() {
 	assert.Equal(suite.T(), model.UserRoles{}, actualUserRole)
 }
 
+// $ itu special karakter makanya ditambahin \,klo diganti ? kode nya error ,jdi harus pake $ supaya sesuai placeholdernya.
 func (suite *UserRolesRepositoryTestSuite) TestUpdate_Success() {
 	dummy := userRolesDummy[0]
 	suite.mockSql.ExpectExec(`UPDATE user_roles SET name = \$2 WHERE id = \$1`).

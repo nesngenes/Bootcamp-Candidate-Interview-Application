@@ -42,7 +42,6 @@ func (b *bootcampUseCase) GetBootcampByID(id string) (model.Bootcamp, error) {
 	return bootcamp, nil
 }
 
-
 func (b *bootcampUseCase) FindAllBootcamp(requesPaging dto.PaginationParam) ([]model.Bootcamp, dto.Paging, error) {
 	return b.repo.Paging(requesPaging)
 }

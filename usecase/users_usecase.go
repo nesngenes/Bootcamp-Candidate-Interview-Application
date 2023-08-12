@@ -13,7 +13,6 @@ type UserUsecase interface {
 	List() ([]model.Users, error)
 	GetUserByEmail(email string) (model.Users, error)
 	GetUserByUserName(userName string) (model.Users, error)
-	FindByUsernamePassword(username string, password string) (model.Users, error)
 	GetUserByID(id string) (model.Users, error)
 	UpdateUser(payload model.Users) error
 	DeleteUser(id string) error
@@ -38,7 +37,6 @@ func (u *userUsecase) RegisterNewUser(payload model.Users) error {
 		return fmt.Errorf("user with email %s already exists", payload.Email)
 	}
 
-	//lastest update
 	// Hash the password using bcrypt
 	bytes, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -52,10 +50,6 @@ func (u *userUsecase) RegisterNewUser(payload model.Users) error {
 	}
 
 	return nil
-}
-
-func (u *userUsecase) FindByUsernamePassword(username string, password string) (model.Users, error) {
-	return u.userRepo.GetUserNamePassword(username, password)
 }
 
 func (u *userUsecase) List() ([]model.Users, error) {

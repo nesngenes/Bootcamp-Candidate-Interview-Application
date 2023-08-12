@@ -14,6 +14,11 @@ type HRRecruitmentController struct {
 	hrRecruitmentUsecase usecase.HRRecruitmentUsecase
 }
 
+// tambahan buat router
+func (c *HRRecruitmentController) GetRouter() *gin.Engine {
+	return c.router
+}
+
 func (c *HRRecruitmentController) createHandler(ctx *gin.Context) {
 	var hrRecruitment model.HRRecruitment
 	if err := ctx.ShouldBindJSON(&hrRecruitment); err != nil {
@@ -56,8 +61,6 @@ func (c *HRRecruitmentController) updateHandler(ctx *gin.Context) {
 		ctx.JSON(http.StatusConflict, gin.H{"error": "Cannot update to a different HR recruitment record ID"})
 		return
 	}
-
-	// Update the HR recruitment record
 	err = c.hrRecruitmentUsecase.UpdateHRRecruitment(hrRecruitment)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

@@ -49,22 +49,14 @@ func (suite *UserRolesRepositoryTestSuite) TearDownTest() {
 }
 
 func (suite *UserRolesRepositoryTestSuite) TestCreate_Success() {
-	dummy := model.UserRoles{
-		Id:   "1",
-		Name: "Admin",
-	}
-
+	dummy := userRolesDummy[0]
 	suite.mockSql.ExpectExec("INSERT INTO user_roles (.+)").WithArgs(dummy.Id, dummy.Name).WillReturnResult(sqlmock.NewResult(1, 1))
 	actualError := suite.repo.Create(dummy)
 	assert.NoError(suite.T(), actualError)
 }
 
 func (suite *UserRolesRepositoryTestSuite) TestCreate_Fail() {
-	dummy := model.UserRoles{
-		Id:   "1",
-		Name: "Admin",
-	}
-
+	dummy := userRolesDummy[0]
 	suite.mockSql.ExpectExec("INSERT INTO user_roles (.+)").WithArgs(dummy.Id, dummy.Name).WillReturnError(suite.errMocked)
 	actualError := suite.repo.Create(dummy)
 	assert.Error(suite.T(), actualError)
@@ -110,10 +102,7 @@ func (suite *UserRolesRepositoryTestSuite) TestGet_Fail() {
 }
 
 func (suite *UserRolesRepositoryTestSuite) TestGetByName_Success() {
-	expectedUserRole := model.UserRoles{
-		Id:   "1",
-		Name: "Admin",
-	}
+	expectedUserRole := userRolesDummy[0]
 
 	suite.mockSql.ExpectQuery("SELECT id, name FROM user_roles WHERE name ILIKE ?").WithArgs("%Admin%").
 		WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(expectedUserRole.Id, expectedUserRole.Name))
@@ -139,10 +128,7 @@ func (suite *UserRolesRepositoryTestSuite) TestUpdate_Success() {
 }
 
 func (suite *UserRolesRepositoryTestSuite) TestUpdate_Fail() {
-	dummy := model.UserRoles{
-		Id:   "1",
-		Name: "Admin",
-	}
+	dummy := userRolesDummy[0]
 
 	suite.mockSql.ExpectExec("UPDATE user_roles SET name = ? WHERE id = ?").
 		WithArgs(dummy.Name, dummy.Id).WillReturnError(suite.errMocked)

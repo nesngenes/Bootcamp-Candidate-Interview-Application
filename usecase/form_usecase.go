@@ -39,12 +39,13 @@ func (f *formUseCase) FindByIdForm(id string) (model.Form, error) {
     return form, nil
 }
 
-// FindAllForm implements FormUseCase.
-func (f *formUseCase) FindAllForm(requesPaging dto.PaginationParam) ([]model.Form, dto.Paging, error) {
-	return f.repo.Paging(requesPaging)
+func (f *formUseCase) FindAllForm(requestPaging dto.PaginationParam) ([]model.Form, dto.Paging, error) {
+	forms, paging, err := f.repo.Paging(requestPaging)
+	if err != nil {
+		return nil, dto.Paging{}, fmt.Errorf("failed to retrieve forms: %v", err)
+	}
+	return forms, paging, nil
 }
-
-
 
 func (f *formUseCase) DeleteForm(id string) error {
 	form, err := f.FindByIdForm(id)

@@ -14,6 +14,11 @@ type userRepoMock struct {
 	mock.Mock
 }
 
+// GetUsernamePassword implements repository.UserRepository.
+func (*userRepoMock) GetUsernamePassword(username string, password string) (model.Users, error) {
+	panic("unimplemented")
+}
+
 func (u *userRepoMock) Create(user model.Users) error {
 	args := u.Called(user)
 	if args.Get(0) != nil {

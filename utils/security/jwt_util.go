@@ -50,5 +50,3 @@ func VerifyAccessToken(tokenString string) (jwt.MapClaims, error) {
 		return nil, fmt.Errorf("invalid token")
 	}
 
-	return claims, nil
-}

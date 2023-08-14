@@ -11,8 +11,11 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.8.3
 	golang.org/x/crypto v0.9.0
+	github.com/stretchr/testify v1.8.3
+)
+
+require (
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/creasty/defaults v1.5.1 // indirect

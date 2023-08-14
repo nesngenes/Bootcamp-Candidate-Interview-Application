@@ -94,7 +94,7 @@ func (c *candidateRepository) Delete(id string) error {
 
 func (c *candidateRepository) Paging(requestPaging dto.PaginationParam) ([]model.Candidate, dto.Paging, error) {
 	paginationQuery := common.GetPaginationParams(requestPaging)
-	rows, err := c.db.Query("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id  LIMIT $1 OFFSET $2", paginationQuery.Take, paginationQuery.Skip)
+	rows, err := c.db.Query("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id LIMIT $1 OFFSET $2", paginationQuery.Take, paginationQuery.Skip)
 	if err != nil {
 		return nil, dto.Paging{}, err
 	}

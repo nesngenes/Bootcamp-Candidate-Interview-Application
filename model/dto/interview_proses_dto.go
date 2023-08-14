@@ -6,11 +6,11 @@ import (
 )
 
 type InterviewProcessResponseDto struct {
-	ID                string            `json:"id"`
+	ID                string    `json:"id"`
 	Candidate         model.Candidate   `json:"candidate"`
 	Interviewer       model.Interviewer `json:"interviewer"`
-	InterviewDatetime time.Time         `json:"interview_datetime"`
-	MeetingLink       string            `json:"meeting_link"`
-	FormInterview     string            `json:"form_interview"`
+	InterviewDatetime time.Time `json:"interview_datetime"`
+	MeetingLink       string    `json:"meeting_link"`
+	FormLink		  string            `json:"form_link"`
 	Status            model.Status      `json:"status"`
 }

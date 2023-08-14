@@ -7,7 +7,6 @@ import (
 	"interview_bootcamp/utils/common"
 	"net/http"
 	"strconv"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,6 +30,7 @@ func (i *InterviewProcessController) createHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, interviewProcess)
 }
+
 func (i *InterviewProcessController) listHandler(c *gin.Context) {
 	page, _ := strconv.Atoi(c.Query("page"))
 	limit, _ := strconv.Atoi(c.Query("limit"))

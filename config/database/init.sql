@@ -64,7 +64,7 @@ CREATE TABLE "interviews_process" (
   "interviewer_id" VARCHAR(100) NOT NULL,
   "interview_datetime" timestamp NOT NULL,
   "meeting_link" VARCHAR(100),
-  "form_interview" VARCHAR(100),
+  "form_interview" VARCHAR(255),
   "status_id" VARCHAR(100),
   FOREIGN KEY ("candidate_id") REFERENCES "candidate" ("id"),
   FOREIGN KEY ("interviewer_id") REFERENCES "interviewer" ("id"),

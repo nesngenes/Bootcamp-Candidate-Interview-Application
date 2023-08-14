@@ -42,7 +42,7 @@ func (u *useCaseManager) FormUseCase() usecase.FormUseCase {
 }
 
 func (u *useCaseManager) InterviewProcessUseCase() usecase.InterviewProcessUseCase {
-	return usecase.NewInterviewProcessUseCase(u.repoManager.InterviewProcessRepo(), u.CandidateUseCase(), u.InterviewerUseCase(), u.StatusUseCase())
+	return usecase.NewInterviewProcessUseCase(u.repoManager.InterviewProcessRepo(), u.CandidateUseCase(), u.InterviewerUseCase(), u.StatusUseCase(), u.FormUseCase())
 }
 
 func (u *useCaseManager) InterviewResultUseCase() usecase.InterviewResultUseCase {

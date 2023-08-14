@@ -17,31 +17,32 @@ type interviewProcessRepository struct {
 }
 
 func (i *interviewProcessRepository) Create(payload model.InterviewProcess) error {
-	tx, err := i.db.Begin()
-	if err != nil {
-		return err
-	}
+    tx, err := i.db.Begin()
+    if err != nil {
+        return err
+    }
 
-	defer func() {
-		if err != nil {
-			tx.Rollback() // Rollback the transaction if there was an error
-		}
-	}()
+    defer func() {
+        if err != nil {
+            tx.Rollback() // Rollback the transaction if there was an error
+        }
+    }()
 
-	// Insert interview process
-	_, err = tx.Exec("INSERT INTO interviews_process (id, candidate_id, interviewer_id, interview_datetime, meeting_link, form_interview, status_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", payload.ID, payload.CandidateID, payload.InterviewerID, payload.InterviewDatetime, payload.MeetingLink, payload.FormInterview, payload.StatusID)
+    // Insert interview process
+    _, err = tx.Exec("INSERT INTO interviews_process (id, candidate_id, interviewer_id, interview_datetime, meeting_link, form_interview, status_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", payload.ID, payload.CandidateID, payload.InterviewerID, payload.InterviewDatetime, payload.MeetingLink, payload.FormLink, payload.StatusID)
 
-	if err != nil {
-		return err
-	}
+    if err != nil {
+        return err
+    }
 
-	err = tx.Commit() // Commit the transaction if everything is successful
-	if err != nil {
-		return err
-	}
+    err = tx.Commit() // Commit the transaction if everything is successful
+    if err != nil {
+        return err
+    }
 
-	return nil
+    return nil
 }
+
 
 func (i *interviewProcessRepository) Get(id string) (dto.InterviewProcessResponseDto, error) {
 	var interviewPrResponseDto dto.InterviewProcessResponseDto
@@ -63,7 +64,7 @@ func (i *interviewProcessRepository) Get(id string) (dto.InterviewProcessRespons
 
 	err := i.db.QueryRow(sqlInterviewProcess, id).Scan(
 		&interviewPrResponseDto.ID, &interviewPrResponseDto.InterviewDatetime, &interviewPrResponseDto.MeetingLink,
-		&interviewPrResponseDto.FormInterview,
+		&interviewPrResponseDto.FormLink,
 		&interviewPrResponseDto.Candidate.CandidateID, &interviewPrResponseDto.Candidate.FullName,
 		&interviewPrResponseDto.Candidate.Email,
 		&interviewPrResponseDto.Candidate.DateOfBirth, &interviewPrResponseDto.Candidate.Address,
@@ -110,7 +111,7 @@ func (i *interviewProcessRepository) List(_ dto.PaginationParam) ([]dto.Intervie
 		var interviewProcess dto.InterviewProcessResponseDto
 		err := rows.Scan(
 			&interviewProcess.ID, &interviewProcess.InterviewDatetime, &interviewProcess.MeetingLink,
-			&interviewProcess.FormInterview,
+			&interviewProcess.FormLink,
 			&interviewProcess.Candidate.CandidateID, &interviewProcess.Candidate.FullName,
 			&interviewProcess.Candidate.Email,
 			&interviewProcess.Candidate.DateOfBirth, &interviewProcess.Candidate.Address,

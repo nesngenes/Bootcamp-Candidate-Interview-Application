@@ -8,7 +8,6 @@ import (
 
 type UseCaseManager interface {
 	CandidateUseCase() usecase.CandidateUseCase
-	ResumeUseCase() usecase.ResumeUseCase
 	ResultUseCase() usecase.ResultUseCase
 	SetCloudinaryInstance(cloudinary *cloudinary.Cloudinary)
 	InterviewProcessUseCase() usecase.InterviewProcessUseCase
@@ -36,10 +35,6 @@ func (u *useCaseManager) BootcampUseCase() usecase.BootcampUseCase {
 }
 func (u *useCaseManager) StatusUseCase() usecase.StatusUseCase {
 	return usecase.NewStatusUseCase(u.repoManager.StatusRepo())
-}
-
-func (u *useCaseManager) ResumeUseCase() usecase.ResumeUseCase {
-	return usecase.NewResumeUseCase(u.repoManager.ResumeRepo(), u.repoManager.CloudinaryInstance())
 }
 
 func (u *useCaseManager) FormUseCase() usecase.FormUseCase {

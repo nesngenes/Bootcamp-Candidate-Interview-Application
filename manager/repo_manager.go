@@ -12,7 +12,6 @@ type RepoManager interface {
 	CandidateRepo() repository.CandidateRepository
 	BootcampRepo() repository.BootcampRepository
 	StatusRepo() repository.StatusRepository
-	ResumeRepo() repository.ResumeRepository
 	FormRepo() repository.FormRepository
 	UserRolesRepo() repository.UserRolesRepository         //user role
 	UsersRepo() repository.UserRepository                  // user
@@ -38,10 +37,6 @@ func (r *repoManager) BootcampRepo() repository.BootcampRepository {
 }
 func (r *repoManager) StatusRepo() repository.StatusRepository {
 	return repository.NewStatusRepository(r.infra.Conn())
-}
-
-func (r *repoManager) ResumeRepo() repository.ResumeRepository {
-	return repository.NewResumeRepository(r.infra.Conn())
 }
 
 func (r *repoManager) FormRepo() repository.FormRepository {

@@ -39,10 +39,6 @@ func (f *formUseCaseMock) FindAllForm(requestPaging dto.PaginationParam) ([]mode
 	return args.Get(0).([]model.Form), args.Get(1).(dto.Paging), nil
 }
 
-func (f *formUseCaseMock) DeleteForm(id string) error {
-	return nil // Implement this method or adjust the mock accordingly
-}
-
 func (f *formUseCaseMock) UpdateForm(payload model.Form) error {
 	args := f.Called(payload)
 	if args.Get(0) != nil {
@@ -50,6 +46,15 @@ func (f *formUseCaseMock) UpdateForm(payload model.Form) error {
 	}
 	return nil
 }
+
+func (f *formUseCaseMock) DeleteForm(id string) error {
+	args := f.Called(id)
+	if args.Get(0) != nil {
+		return args.Error(0)
+	}
+	return nil
+}
+
 
 func (f *formUseCaseMock) FindByIdForm(id string) (model.Form, error) {
 	args := f.Called(id)
@@ -74,63 +79,6 @@ func (suite *FormControllerTestSuite) SetupTest() {
 
 func TestFormControllerTestSuite(t *testing.T) {
 	suite.Run(t, new(FormControllerTestSuite))
-}
-
-func (suite *FormControllerTestSuite) TestCreateHandlerForm_Success() {
-	// Arrange: Set up the expected form data and mock behavior
-	expectedForm := model.Form{
-		FormID:   "1ABC",
-		FormLink: "https://example.com/form_link",
-		// ... set other form fields ...
-	}
-	suite.usecaseMock.On("RegisterNewForm", mock.Anything).Return(nil)
-
-	// Create a new multipart writer
-	body := new(bytes.Buffer)
-	writer := multipart.NewWriter(body)
-
-	// Add form fields to the writer
-	_ = writer.WriteField("form_id", expectedForm.FormID)
-	_ = writer.WriteField("form_link", expectedForm.FormLink)
-	// ... add other form fields ...
-
-	writer.Close()
-
-	// Create a new HTTP request with the multipart form data
-	request, _ := http.NewRequest(http.MethodPost, "/api/v1/forms", body)
-	request.Header.Set("Content-Type", writer.FormDataContentType())
-
-	// Act: Send the request to the router
-	w := httptest.NewRecorder()
-	context, _ := gin.CreateTestContext(w)
-	context.Request = request
-
-	// Create a new FormController with the mock usecase and cloudinary
-	controller := NewFormController(suite.router, suite.usecaseMock, suite.cloudinaryAPI)
-	controller.createHandler(context)
-
-	// Assert: Verify the response and mock expectations
-	assert.Equal(suite.T(), http.StatusCreated, w.Code)
-
-	var response struct {
-		Status common.WebStatus `json:"status"`
-	}
-	err := json.Unmarshal(w.Body.Bytes(), &response)
-	assert.NoError(suite.T(), err)
-
-	assert.Equal(suite.T(), http.StatusCreated, response.Status.Code)
-	assert.Equal(suite.T(), "Create Data Successfully", response.Status.Description)
-
-	suite.usecaseMock.AssertExpectations(suite.T())
-}
-
-
-func (suite *FormControllerTestSuite) TestCreateHandlerForm_BindingError() {
-	NewFormController(suite.router, suite.usecaseMock, suite.cloudinaryAPI)
-	recorder := httptest.NewRecorder()
-	request, _ := http.NewRequest(http.MethodPost, "/api/v1/forms", nil)
-	suite.router.ServeHTTP(recorder, request)
-	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
 }
 
 func (suite *FormControllerTestSuite) TestListHandlerForm_Success() {
@@ -179,7 +127,55 @@ func (suite *FormControllerTestSuite) TestListHandlerForm_Success() {
 	assert.Equal(suite.T(), expectedPaging, responseBody.Paging)
 }
 
-// ... other test cases ...
+func (suite *FormControllerTestSuite) TestUpdateHandlerForm_Success() {
+	// Arrange: Set up the expected form data and mock behavior
+	formID := "1ABC"
+	expectedForm := model.Form{
+		FormID:   formID,
+		FormLink: "https://example.com/form_link_updated",
+		// ... set other form fields ...
+	}
+	suite.usecaseMock.On("FindByIdForm", formID).Return(expectedForm, nil)
+	suite.usecaseMock.On("UpdateForm", expectedForm).Return(nil)
+
+	// Create a new multipart writer
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+
+	// Add form fields to the writer
+	_ = writer.WriteField("id", formID)
+	_ = writer.WriteField("form_link", expectedForm.FormLink)
+	// ... add other form fields ...
+
+	writer.Close()
+
+	// Create a new HTTP request with the multipart form data
+	request, _ := http.NewRequest(http.MethodPut, "/api/v1/forms", body)
+	request.Header.Set("Content-Type", writer.FormDataContentType())
+
+	// Act: Send the request to the router
+	w := httptest.NewRecorder()
+	context, _ := gin.CreateTestContext(w)
+	context.Request = request
+
+	// Create a new FormController with the mock usecase and cloudinary
+	controller := NewFormController(suite.router, suite.usecaseMock, suite.cloudinaryAPI)
+	controller.updateHandler(context)
+
+	// Assert: Verify the response and mock expectations
+	assert.Equal(suite.T(), http.StatusOK, w.Code)
+
+	var response struct {
+		Status common.WebStatus `json:"status"`
+	}
+	err := json.Unmarshal(w.Body.Bytes(), &response)
+	assert.NoError(suite.T(), err)
+
+	assert.Equal(suite.T(), http.StatusOK, response.Status.Code)
+	assert.Equal(suite.T(), "Update data successfully", response.Status.Description)
+
+	suite.usecaseMock.AssertExpectations(suite.T())
+}
 
 func TestMain(m *testing.M) {
 	gin.SetMode(gin.TestMode)

@@ -1,0 +1,2930 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>api: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">interview_bootcamp/delivery/controller/api/auth_controller.go (0.0%)</option>
+				
+				<option value="file1">interview_bootcamp/delivery/controller/api/bootcamp_contoller.go (0.0%)</option>
+				
+				<option value="file2">interview_bootcamp/delivery/controller/api/candidate_controller.go (30.5%)</option>
+				
+				<option value="file3">interview_bootcamp/delivery/controller/api/form_controller.go (50.6%)</option>
+				
+				<option value="file4">interview_bootcamp/delivery/controller/api/hr_controller.go (0.0%)</option>
+				
+				<option value="file5">interview_bootcamp/delivery/controller/api/interview_process_controller.go (0.0%)</option>
+				
+				<option value="file6">interview_bootcamp/delivery/controller/api/interview_result_controller.go (0.0%)</option>
+				
+				<option value="file7">interview_bootcamp/delivery/controller/api/interviewer_controller.go (0.0%)</option>
+				
+				<option value="file8">interview_bootcamp/delivery/controller/api/result_controller.go (0.0%)</option>
+				
+				<option value="file9">interview_bootcamp/delivery/controller/api/status_controller.go (93.8%)</option>
+				
+				<option value="file10">interview_bootcamp/delivery/controller/api/user_role_controller.go (90.2%)</option>
+				
+				<option value="file11">interview_bootcamp/delivery/controller/api/users_controller.go (0.0%)</option>
+				
+				<option value="file12">interview_bootcamp/repository/bootcamp_repository.go (0.0%)</option>
+				
+				<option value="file13">interview_bootcamp/repository/candidate_respository.go (96.5%)</option>
+				
+				<option value="file14">interview_bootcamp/repository/form_repository.go (0.0%)</option>
+				
+				<option value="file15">interview_bootcamp/repository/hr_repository.go (97.4%)</option>
+				
+				<option value="file16">interview_bootcamp/repository/interview_proses_repository.go (0.0%)</option>
+				
+				<option value="file17">interview_bootcamp/repository/interview_result_respository.go (0.0%)</option>
+				
+				<option value="file18">interview_bootcamp/repository/interviewer_repository.go (0.0%)</option>
+				
+				<option value="file19">interview_bootcamp/repository/result_repository.go (0.0%)</option>
+				
+				<option value="file20">interview_bootcamp/repository/status_repository.go (96.2%)</option>
+				
+				<option value="file21">interview_bootcamp/repository/user_role_repository.go (97.1%)</option>
+				
+				<option value="file22">interview_bootcamp/repository/users_repository.go (80.9%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package api
+
+import (
+        "interview_bootcamp/model"
+        "interview_bootcamp/usecase"
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+)
+
+type AuthController struct {
+        router  *gin.Engine
+        usecase usecase.AuthUseCase
+}
+
+func (a *AuthController) loginHandler(c *gin.Context) <span class="cov0" title="0">{
+        var payload model.Users
+        if err := c.ShouldBindJSON(&amp;payload); err != nil </span><span class="cov0" title="0">{
+                c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">token, err := a.usecase.Login(payload.UserName, payload.Password)
+        if err != nil </span><span class="cov0" title="0">{
+                c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusCreated, gin.H{"token": token})</span>
+}
+
+func NewAuthController(r *gin.Engine, usecase usecase.AuthUseCase) *AuthController <span class="cov0" title="0">{
+        controller := AuthController{
+                router:  r,
+                usecase: usecase,
+        }
+        rg := r.Group("/api/v1")
+        rg.POST("/login", controller.loginHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package api
+
+import (
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+        "net/http"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+)
+
+type BootcampController struct {
+        router  *gin.Engine
+        usecase usecase.BootcampUseCase
+}
+
+func (b *BootcampController) createHandler(c *gin.Context) <span class="cov0" title="0">{
+        var bootcamp model.Bootcamp
+        if err := c.ShouldBindJSON(&amp;bootcamp); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">bootcamp.BootcampId = common.GenerateID()
+        if err := b.usecase.RegisterNewBootcamp(bootcamp); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusCreated, bootcamp)</span>
+}
+func (b *BootcampController) listHandler(c *gin.Context) <span class="cov0" title="0">{
+        page, _ := strconv.Atoi(c.Query("page"))
+        limit, _ := strconv.Atoi(c.Query("limit"))
+        paginationParam := dto.PaginationParam{
+                Page:  page,
+                Limit: limit,
+        }
+        bootcamps, paging, err := b.usecase.FindAllBootcamp(paginationParam)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        200,
+                "description": "Get All Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   bootcamps,
+                "paging": paging,
+        })</span>
+
+}
+func (b *BootcampController) getHandler(c *gin.Context) <span class="cov0" title="0">{
+        id := c.Param("id")
+        bootcamps, err := b.usecase.FindByIdBootcamp(id)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        http.StatusOK,
+                "description": "Get By Id Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   bootcamps,
+        })</span>
+
+}
+func (b *BootcampController) updateHandler(c *gin.Context) <span class="cov0" title="0">{
+        var bootcamp model.Bootcamp
+        if err := c.ShouldBindJSON(&amp;bootcamp); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">if err := b.usecase.UpdateBootcamp(bootcamp); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        http.StatusOK,
+                "description": "update data succesfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+        })</span>
+
+}
+func (b *BootcampController) deleteHandler(c *gin.Context) <span class="cov0" title="0">{
+        id := c.Param("id")
+        if err := b.usecase.DeleteBootcamp(id); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        http.StatusNoContent,
+                "description": "delete data succesfully",
+        }
+        c.JSON(http.StatusNoContent, gin.H{
+                "status": status,
+        })</span>
+
+}
+
+func NewBootcampController(r *gin.Engine, usecase usecase.BootcampUseCase) *BootcampController <span class="cov0" title="0">{
+        controller := BootcampController{
+                router:  r,
+                usecase: usecase,
+        }
+        rg := r.Group("/api/v1")
+        rg.POST("/bootcamps", controller.createHandler)
+        rg.GET("/bootcamps", controller.listHandler)
+        rg.GET("/bootcamps/:id", controller.getHandler)
+        rg.PUT("/bootcamps", controller.updateHandler)
+        rg.DELETE("/bootcamps/:id", controller.deleteHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package api
+
+import (
+        "bytes"
+        "context"
+        "fmt"
+        // "interview_bootcamp/delivery/middleware"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+        "io"
+        "net/http"
+        "strconv"
+
+        "github.com/cloudinary/cloudinary-go/v2"
+        "github.com/cloudinary/cloudinary-go/v2/api/uploader"
+        "github.com/gin-gonic/gin"
+)
+
+type CandidateController struct {
+        router           *gin.Engine
+        candidateUsecase usecase.CandidateUseCase
+        bootcampUsecase  usecase.BootcampUseCase
+        cloudinary       *cloudinary.Cloudinary
+}
+
+func (cc *CandidateController) createHandler(c *gin.Context) <span class="cov8" title="1">{
+        // Parse the form data
+        err := c.Request.ParseMultipartForm(10 &lt;&lt; 20) // Max 10MB file size
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": "Error parsing form data"})
+                return
+        }</span>
+
+        // Retrieve the form fields
+        <span class="cov8" title="1">fullName := c.PostForm("full_name")
+        phone := c.PostForm("phone")
+        email := c.PostForm("email")
+        dateOfBirth := c.PostForm("date_of_birth")
+        address := c.PostForm("address")
+        instansiPendidikan := c.PostForm("instansi_pendidikan")
+        hackerRank, _ := strconv.Atoi(c.PostForm("hackerrank_score"))
+        bootcampID := c.PostForm("bootcamp")
+
+        // Create a new candidate instance
+        candidate := model.Candidate{
+                CandidateID:        common.GenerateID(),
+                FullName:           fullName,
+                Phone:              phone,
+                Email:              email,
+                DateOfBirth:        dateOfBirth,
+                Address:            address,
+                InstansiPendidikan: instansiPendidikan,
+                HackerRank:         hackerRank,
+        }
+
+        // Create a new file upload form field
+        file, _, err := c.Request.FormFile("file")
+        if err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": "Error retrieving the file"})
+                return
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        // Read file content
+        fileContent, err := io.ReadAll(file)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error reading file content"})
+                return
+        }</span>
+
+        // Upload file to cloudinary
+        <span class="cov0" title="0">uploadResult, err := cc.cloudinary.Upload.Upload(
+                context.Background(), bytes.NewReader(fileContent),
+                uploader.UploadParams{
+                        PublicID: "candidates/" + candidate.CandidateID,
+                },
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                // Log the error for debugging
+                fmt.Println("Error uploading file to cloudinary:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error uploading file to cloudinary"})
+                return
+        }</span>
+        <span class="cov0" title="0">candidate.CvLink = uploadResult.SecureURL
+
+        // Fetch the Bootcamp details by its ID
+        bootcamp, err := cc.bootcampUsecase.GetBootcampByID(bootcampID)
+        if err != nil </span><span class="cov0" title="0">{
+                // Log the error for debugging
+                fmt.Println("Error fetching bootcamp details:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error fetching bootcamp details"})
+                return
+        }</span>
+        <span class="cov0" title="0">candidate.Bootcamp = bootcamp
+
+        // Register the new candidate
+        err = cc.candidateUsecase.RegisterNewCandidate(candidate)
+        if err != nil </span><span class="cov0" title="0">{
+                // Log the error for debugging
+                fmt.Println("Error registering new candidate:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error registering new candidate"})
+                return
+        }</span>
+
+        <span class="cov0" title="0">status := common.WebStatus{
+                Code:        http.StatusCreated,
+                Description: "Create Data Successfully",
+        }
+        c.JSON(http.StatusCreated, gin.H{
+                "status": status,
+        })</span>
+}
+
+func (cc *CandidateController) listHandler(c *gin.Context) <span class="cov0" title="0">{
+        page, _ := strconv.Atoi(c.Query("page"))
+        limit, _ := strconv.Atoi(c.Query("limit"))
+        paginationParam := dto.PaginationParam{
+                Page:  page,
+                Limit: limit,
+        }
+
+        candidates, paging, err := cc.candidateUsecase.FindAllCandidate(paginationParam)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := common.WebStatus{
+                Code:        http.StatusOK,
+                Description: "Get All Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   candidates,
+                "paging": paging,
+        })</span>
+}
+func (cc *CandidateController) getHandler(c *gin.Context) <span class="cov8" title="1">{
+        id := c.Param("id")
+        product, err := cc.candidateUsecase.FindByIdCandidate(id)
+        if err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov8" title="1">status := map[string]any{
+                "code":        http.StatusOK,
+                "description": "Get By Id Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   product,
+        })</span>
+
+}
+
+func (cc *CandidateController) updateHandler(c *gin.Context) <span class="cov0" title="0">{
+        // Parse the form data
+        err := c.Request.ParseMultipartForm(10 &lt;&lt; 20) // Max 10MB file size
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": "Error parsing form data"})
+                return
+        }</span>
+
+        // Retrieve the form fields
+        <span class="cov0" title="0">candidateID := c.PostForm("candidate_id")
+        fullName := c.PostForm("full_name")
+        phone := c.PostForm("phone")
+        email := c.PostForm("email")
+        dateOfBirth := c.PostForm("date_of_birth")
+        address := c.PostForm("address")
+        instansiPendidikan := c.PostForm("instansi_pendidikan")
+        hackerRank, _ := strconv.Atoi(c.PostForm("hackerrank_score"))
+        bootcampID := c.PostForm("bootcamp")
+
+        // Fetch the existing candidate by ID
+        existingCandidate, err := cc.candidateUsecase.FindByIdCandidate(candidateID)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        // Update the candidate's fields
+        <span class="cov0" title="0">existingCandidate.FullName = fullName
+        existingCandidate.Phone = phone
+        existingCandidate.Email = email
+        existingCandidate.DateOfBirth = dateOfBirth
+        existingCandidate.Address = address
+        existingCandidate.InstansiPendidikan = instansiPendidikan
+        existingCandidate.HackerRank = hackerRank
+
+        // Create a new file upload form field
+        file, _, err := c.Request.FormFile("file")
+        if err != nil </span>{<span class="cov0" title="0">
+                // If no new file is uploaded, proceed without updating the file
+        }</span> else<span class="cov0" title="0"> {
+                defer file.Close()
+
+                // Read file content
+                fileContent, err := io.ReadAll(file)
+                if err != nil </span><span class="cov0" title="0">{
+                        c.JSON(http.StatusInternalServerError, gin.H{"err": "Error reading file content"})
+                        return
+                }</span>
+
+                // Upload file to cloudinary
+                <span class="cov0" title="0">uploadResult, err := cc.cloudinary.Upload.Upload(
+                        context.Background(), bytes.NewReader(fileContent),
+                        uploader.UploadParams{
+                                PublicID: "candidates/" + candidateID,
+                        },
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        c.JSON(http.StatusInternalServerError, gin.H{"err": "Error uploading file to cloudinary"})
+                        return
+                }</span>
+                <span class="cov0" title="0">existingCandidate.CvLink = uploadResult.SecureURL</span>
+        }
+
+        // Fetch the Bootcamp details by its ID
+        <span class="cov0" title="0">bootcamp, err := cc.bootcampUsecase.GetBootcampByID(bootcampID)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error fetching bootcamp details"})
+                return
+        }</span>
+        <span class="cov0" title="0">existingCandidate.Bootcamp = bootcamp
+
+        // Update the candidate in the database
+        err = cc.candidateUsecase.UpdateCandidate(existingCandidate)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error updating candidate"})
+                return
+        }</span>
+
+        <span class="cov0" title="0">status := map[string]interface{}{
+                "code":        http.StatusOK,
+                "description": "Update data successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+        })</span>
+}
+
+func (cc *CandidateController) deleteHandler(c *gin.Context) <span class="cov8" title="1">{
+        id := c.Param("id")
+        if err := cc.candidateUsecase.DeleteCandidate(id); err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">status := map[string]any{
+                "code":        http.StatusNoContent,
+                "description": "delete data succesfully",
+        }
+        c.JSON(http.StatusNoContent, gin.H{
+                "status": status,
+        })</span>
+}
+
+func NewCandidateController(r *gin.Engine, candidateUsecase usecase.CandidateUseCase, bootcampUsecase usecase.BootcampUseCase, cloudinary *cloudinary.Cloudinary) *CandidateController <span class="cov8" title="1">{
+        controller := CandidateController{
+                router:           r,
+                candidateUsecase: candidateUsecase,
+                bootcampUsecase:  bootcampUsecase,
+                cloudinary:       cloudinary,
+        }
+        rg := r.Group("/api/v1")
+        rg.POST("/candidates", controller.createHandler)
+        // rg.GET("/candidates", middleware.AuthMiddleware("admin", "hr"), controller.listHandler)
+        rg.GET("/candidates")
+        rg.GET("/candidates/:id", controller.getHandler)
+        rg.PUT("/candidates", controller.updateHandler)
+        rg.DELETE("/candidates/:id", controller.deleteHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package api
+
+import (
+        "bytes"
+        "context"
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/utils/common"
+        "io"
+        "net/http"
+        "strconv"
+        "github.com/cloudinary/cloudinary-go/v2"
+        "github.com/cloudinary/cloudinary-go/v2/api/uploader"
+        "github.com/gin-gonic/gin"
+)
+
+
+type FormController struct {
+        router           *gin.Engine
+        usecase usecase.FormUseCase
+        cloudinary       *cloudinary.Cloudinary
+}
+
+
+func (f *FormController) createHandler(c *gin.Context) <span class="cov8" title="1">{
+        err := c.Request.ParseMultipartForm(10 &lt;&lt; 20)
+
+        if err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": "Error parsing form data"})
+                return
+        }</span>
+
+        <span class="cov8" title="1">var form model.Form
+        err = c.ShouldBind(&amp;form)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov8" title="1">form.FormID = common.GenerateID()
+
+        // Create a new file upload form field
+        file, _, err := c.Request.FormFile("file")
+        if err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": "Error retrieving the file"})
+                return
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        // Read file content
+        fileContent, err := io.ReadAll(file)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error reading file content"})
+                return
+        }</span>
+
+        // Upload file to cloudinary
+        <span class="cov0" title="0">uploadResult, err := f.cloudinary.Upload.Upload(
+                context.Background(), bytes.NewReader(fileContent),
+                uploader.UploadParams{
+                        PublicID: "forms/" + form.FormID,
+                },
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                // Log the error for debugging
+                fmt.Println("Error uploading file to cloudinary:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error uploading file to cloudinary"})
+                return
+        }</span>
+        <span class="cov0" title="0">form.FormLink = uploadResult.SecureURL
+
+        err = f.usecase.RegisterNewForm(form)
+        if err != nil </span><span class="cov0" title="0">{
+                // Log the error for debugging
+                fmt.Println("Error registering new candidate:", err)
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error registering new candidate"})
+                return
+        }</span>
+
+        <span class="cov0" title="0">status := common.WebStatus{
+                Code: http.StatusCreated,
+                Description: "Create Data Successfully",
+        }
+        c.JSON(http.StatusCreated, gin.H{
+                "status": status,
+        })</span>
+}
+
+func (f *FormController) listHandler(c *gin.Context) <span class="cov8" title="1">{
+        page, _ := strconv.Atoi(c.Query("page"))
+        limit, _ := strconv.Atoi(c.Query("limit"))
+        paginationParam := dto.PaginationParam{
+                Page:  page,
+                Limit: limit,
+        }
+
+        forms, paging, err := f.usecase.FindAllForm(paginationParam)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov8" title="1">status := common.WebStatus{
+                Code:        http.StatusOK,
+                Description: "Get All Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   forms,
+                "paging": paging,
+        })</span>
+}
+
+func (f *FormController) updateHandler(c *gin.Context) <span class="cov8" title="1">{
+        // Parse the form data
+        err := c.Request.ParseMultipartForm(10 &lt;&lt; 20) // Max 10MB file size
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": "Error parsing form data"})
+                return
+        }</span>
+
+        // Retrieve the form fields
+        <span class="cov8" title="1">formID := c.PostForm("id")
+
+        // Fetch the existing form by ID
+        existingForm, err := f.usecase.FindByIdForm(formID)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        // Create a new file upload form field
+        <span class="cov8" title="1">file, _, err := c.Request.FormFile("file")
+        if err != nil </span>{<span class="cov8" title="1">
+                // If no new file is uploaded, proceed without updating the file
+        }</span> else<span class="cov0" title="0"> {
+                defer file.Close()
+
+                // Read file content
+                fileContent, err := io.ReadAll(file)
+                if err != nil </span><span class="cov0" title="0">{
+                        c.JSON(http.StatusInternalServerError, gin.H{"err": "Error reading file content"})
+                        return
+                }</span>
+
+                // Upload file to cloudinary
+                <span class="cov0" title="0">uploadResult, err := f.cloudinary.Upload.Upload(
+                        context.Background(), bytes.NewReader(fileContent),
+                        uploader.UploadParams{
+                                PublicID: "forms/" + formID,
+                        },
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        c.JSON(http.StatusInternalServerError, gin.H{"err": "Error uploading file to cloudinary"})
+                        return
+                }</span>
+                <span class="cov0" title="0">existingForm.FormLink = uploadResult.SecureURL</span>
+        }
+
+        // Update the form in the database
+        <span class="cov8" title="1">err = f.usecase.UpdateForm(existingForm)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": "Error updating form"})
+                return
+        }</span>
+
+        <span class="cov8" title="1">status := map[string]interface{}{
+                "code":        http.StatusOK,
+                "description": "Update data successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+        })</span>
+}
+
+func (f *FormController) deleteHandler(c *gin.Context) <span class="cov8" title="1">{
+        id := c.Param("id")
+
+        if err := f.usecase.DeleteForm(id); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">status := map[string]any {
+                "code": http.StatusNoContent,
+                "description": "delete data succesfully",
+        }
+        c.JSON(http.StatusNoContent, gin.H{
+                "status": status,
+        })</span>
+}
+
+
+func NewFormController(r *gin.Engine, usecase usecase.FormUseCase, cloudinary *cloudinary.Cloudinary) *FormController <span class="cov8" title="1">{
+        controller := FormController{
+                router:      r,
+                usecase: usecase, // Change this line
+                cloudinary:  cloudinary,
+        }
+        rg := r.Group("/api/v1")
+        rg.POST("/forms", controller.createHandler)
+        rg.GET("/forms", controller.listHandler)
+        rg.DELETE("/forms/:id", controller.deleteHandler)
+        rg.PUT("/forms", controller.updateHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package api
+
+import (
+        "interview_bootcamp/model"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+)
+
+type HRRecruitmentController struct {
+        router               *gin.Engine
+        hrRecruitmentUsecase usecase.HRRecruitmentUsecase
+}
+
+// tambahan buat router
+func (c *HRRecruitmentController) GetRouter() *gin.Engine <span class="cov0" title="0">{
+        return c.router
+}</span>
+
+func (c *HRRecruitmentController) createHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        var hrRecruitment model.HRRecruitment
+        if err := ctx.ShouldBindJSON(&amp;hrRecruitment); err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        // Check if the HR recruitment record already exists
+        <span class="cov0" title="0">_, err := c.hrRecruitmentUsecase.Get(hrRecruitment.ID)
+        if err == nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusConflict, gin.H{"error": "HR recruitment record already exists"})
+                return
+        }</span>
+        <span class="cov0" title="0">hrRecruitment.ID = common.GenerateID()
+        err = c.hrRecruitmentUsecase.CreateHRRecruitment(hrRecruitment)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusCreated, hrRecruitment)</span>
+}
+
+func (c *HRRecruitmentController) updateHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        id := ctx.Param("id")
+        var hrRecruitment model.HRRecruitment
+        if err := ctx.ShouldBindJSON(&amp;hrRecruitment); err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">hrRecruitment.ID = id //perubahan
+        existingHRRecruitment, err := c.hrRecruitmentUsecase.Get(id)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusNotFound, gin.H{"error": "HR recruitment record not found"})
+                return
+        }</span>
+
+        <span class="cov0" title="0">if existingHRRecruitment.ID != hrRecruitment.ID </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusConflict, gin.H{"error": "Cannot update to a different HR recruitment record ID"})
+                return
+        }</span>
+        <span class="cov0" title="0">err = c.hrRecruitmentUsecase.UpdateHRRecruitment(hrRecruitment)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusOK, hrRecruitment)</span>
+}
+
+func (c *HRRecruitmentController) getHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        id := ctx.Param("id")
+        hrRecruitment, err := c.hrRecruitmentUsecase.Get(id)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusOK, hrRecruitment)</span>
+}
+
+func (c *HRRecruitmentController) listHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        hrRecruitments, err := c.hrRecruitmentUsecase.ListHRRecruitments()
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusOK, hrRecruitments)</span>
+}
+
+func (c *HRRecruitmentController) deleteHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        id := ctx.Param("id")
+        err := c.hrRecruitmentUsecase.DeleteHRRecruitment(id)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusNoContent, nil)</span>
+}
+
+func NewHRRecruitmentController(r *gin.Engine, usecase usecase.HRRecruitmentUsecase) *HRRecruitmentController <span class="cov0" title="0">{
+        controller := HRRecruitmentController{
+                router:               r,
+                hrRecruitmentUsecase: usecase,
+        }
+        //routernya kumpul sini
+        rg := r.Group("/api/v1")
+        rg.POST("/hr-recruitment", controller.createHandler)
+        rg.GET("/hr-recruitment", controller.listHandler)
+        rg.PUT("/hr-recruitment/:id", controller.updateHandler)
+        rg.GET("/hr-recruitment/:id", controller.getHandler)
+        rg.DELETE("/hr-recruitment/:id", controller.deleteHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package api
+
+import (
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+        "net/http"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+)
+
+type InterviewProcessController struct {
+        router             *gin.Engine
+        interviewProcessUC usecase.InterviewProcessUseCase
+}
+
+func (i *InterviewProcessController) createHandler(c *gin.Context) <span class="cov0" title="0">{
+        var interviewProcess model.InterviewProcess
+        if err := c.ShouldBindJSON(&amp;interviewProcess); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">interviewProcess.ID = common.GenerateID()
+        if err := i.interviewProcessUC.RegisterNewInterviewProcess(interviewProcess); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, interviewProcess)</span>
+}
+func (i *InterviewProcessController) listHandler(c *gin.Context) <span class="cov0" title="0">{
+        page, _ := strconv.Atoi(c.Query("page"))
+        limit, _ := strconv.Atoi(c.Query("limit"))
+        paginationParam := dto.PaginationParam{
+                Page:  page,
+                Limit: limit,
+        }
+        InterviewsP, paging, err := i.interviewProcessUC.FindAllInterviewProcess(paginationParam)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        200,
+                "description": "Get All Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   InterviewsP,
+                "paging": paging,
+        })</span>
+}
+func (i *InterviewProcessController) getHandler(c *gin.Context) <span class="cov0" title="0">{
+        id := c.Param("id")
+        interviewP, err := i.interviewProcessUC.FindByIdInterviewProcess(id)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        200,
+                "description": "Get By Id Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   interviewP,
+        })</span>
+}
+
+func NewInterviewProcessController(r *gin.Engine, usecase usecase.InterviewProcessUseCase) *InterviewProcessController <span class="cov0" title="0">{
+        controller := InterviewProcessController{
+                router:             r,
+                interviewProcessUC: usecase,
+        }
+
+        rg := r.Group("/api/v1")
+        rg.POST("/interviewprocess", controller.createHandler)
+        rg.GET("/interviewprocess", controller.listHandler)
+        rg.GET("/interviewprocess/:id", controller.getHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package api
+
+import (
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+        "net/http"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+)
+
+type InterviewResultController struct {
+        router            *gin.Engine
+        interviewResultUC usecase.InterviewResultUseCase
+}
+
+func (i *InterviewResultController) createHandler(c *gin.Context) <span class="cov0" title="0">{
+        var interviewResult model.InterviewResult
+        if err := c.ShouldBindJSON(&amp;interviewResult); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">interviewResult.Id = common.GenerateID()
+        if err := i.interviewResultUC.RegisterNewInterviewResult(interviewResult); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, interviewResult)</span>
+}
+func (i *InterviewResultController) listHandler(c *gin.Context) <span class="cov0" title="0">{
+        page, _ := strconv.Atoi(c.Query("page"))
+        limit, _ := strconv.Atoi(c.Query("limit"))
+        paginationParam := dto.PaginationParam{
+                Page:  page,
+                Limit: limit,
+        }
+        InterviewsP, paging, err := i.interviewResultUC.FindAllInterviewResult(paginationParam)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        200,
+                "description": "Get All Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   InterviewsP,
+                "paging": paging,
+        })</span>
+}
+func (i *InterviewResultController) getHandler(c *gin.Context) <span class="cov0" title="0">{
+        id := c.Param("id")
+        interviewResult, err := i.interviewResultUC.FindByIdInterviewResult(id)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        200,
+                "description": "Get By Id Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   interviewResult,
+        })</span>
+}
+
+func NewInterviewResultController(r *gin.Engine, usecase usecase.InterviewResultUseCase) *InterviewResultController <span class="cov0" title="0">{
+        controller := InterviewResultController{
+                router:            r,
+                interviewResultUC: usecase,
+        }
+
+        rg := r.Group("/api/v1")
+        rg.POST("/interviewresult", controller.createHandler)
+        rg.GET("/interviewresult", controller.listHandler)
+        rg.GET("/interviewresult/:id", controller.getHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package api
+
+import (
+        "interview_bootcamp/model"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+)
+
+type InterviewerController struct {
+        router  *gin.Engine
+        usecase usecase.InterviewerUseCase
+}
+
+func (i *InterviewerController) createHandler(c *gin.Context) <span class="cov0" title="0">{
+        var interviewer model.Interviewer
+        if err := c.ShouldBindJSON(&amp;interviewer); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">interviewer.InterviewerID = common.GenerateID()
+        if err := i.usecase.RegisterNewInterviewer(interviewer); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusCreated, interviewer)</span>
+}
+
+func (i *InterviewerController) listHandler(c *gin.Context) <span class="cov0" title="0">{
+        interviewers, err := i.usecase.FindAllInterviewer()
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(500, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        200,
+                "description": "get all data succesfully",
+        }
+        c.JSON(200, gin.H{
+                "status": status,
+                "data":   interviewers,
+        })</span>
+}
+
+func (i *InterviewerController) getHandler(c *gin.Context) <span class="cov0" title="0">{
+        id := c.Param("id")
+        interviewer, err := i.usecase.FindByIdInterviewer(id)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(500, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        200,
+                "description": "Get By Id Data Successfully",
+        }
+        c.JSON(200, gin.H{
+                "status": status,
+                "data":   interviewer,
+        })</span>
+
+}
+
+func (i *InterviewerController) updateHandler(c *gin.Context) <span class="cov0" title="0">{
+        var interviewer model.Interviewer
+        if err := c.ShouldBindJSON(&amp;interviewer); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        // Ensure that InterviewerID is provided in the JSON payload
+        <span class="cov0" title="0">if interviewer.InterviewerID == "" </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": "InterviewerID is required for updating"})
+                return
+        }</span>
+
+        <span class="cov0" title="0">if err := i.usecase.UpdateInterviewer(interviewer); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, interviewer)</span>
+}
+
+func (i *InterviewerController) deleteHandler(c *gin.Context) <span class="cov0" title="0">{
+        id := c.Param("id")
+        if err := i.usecase.DeleteInterviewer(id); err != nil </span><span class="cov0" title="0">{
+                c.JSON(500, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">c.String(204, "")</span>
+
+}
+
+func NewInterviewerController(r *gin.Engine, usecase usecase.InterviewerUseCase) *InterviewerController <span class="cov0" title="0">{
+        controller := InterviewerController{
+                router:  r,
+                usecase: usecase,
+        }
+        rg := r.Group("/api/v1")
+        rg.POST("/interviewers", controller.createHandler)
+        rg.GET("/interviewers", controller.listHandler)
+        rg.GET("/interviewers/:id", controller.getHandler)
+        rg.PUT("/interviewers", controller.updateHandler)
+        rg.DELETE("/interviewers/:id", controller.deleteHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package api
+
+import (
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+        "net/http"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+)
+
+type ResultController struct {
+        router  *gin.Engine
+        usecase usecase.ResultUseCase
+}
+
+func (r *ResultController) createHandler(c *gin.Context) <span class="cov0" title="0">{
+        var result model.Result
+        if err := c.ShouldBindJSON(&amp;result); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">result.ResultId = common.GenerateID()
+        if err := r.usecase.RegisterNewResult(result); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusCreated, result)</span>
+}
+func (r *ResultController) listHandler(c *gin.Context) <span class="cov0" title="0">{
+        page, _ := strconv.Atoi(c.Query("page"))
+        limit, _ := strconv.Atoi(c.Query("limit"))
+        paginationParam := dto.PaginationParam{
+                Page:  page,
+                Limit: limit,
+        }
+        results, paging, err := r.usecase.FindAllResult(paginationParam)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        200,
+                "description": "Get All Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   results,
+                "paging": paging,
+        })</span>
+
+}
+func (r *ResultController) getHandler(c *gin.Context) <span class="cov0" title="0">{
+        id := c.Param("id")
+        results, err := r.usecase.FindByIdResult(id)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        http.StatusOK,
+                "description": "Get By Id Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   results,
+        })</span>
+}
+func (r *ResultController) updateHandler(c *gin.Context) <span class="cov0" title="0">{
+        var results model.Result
+        if err := c.ShouldBindJSON(&amp;results); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">if err := r.usecase.UpdateResult(results); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        http.StatusOK,
+                "description": "update data succesfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+        })</span>
+}
+func (r *ResultController) deleteHandler(c *gin.Context) <span class="cov0" title="0">{
+        id := c.Param("id")
+        if err := r.usecase.DeleteResult(id); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">status := map[string]any{
+                "code":        http.StatusNoContent,
+                "description": "delete data succesfully",
+        }
+        c.JSON(http.StatusNoContent, gin.H{
+                "status": status,
+        })</span>
+}
+
+func NewResultController(r *gin.Engine, usecase usecase.ResultUseCase) *ResultController <span class="cov0" title="0">{
+        controller := ResultController{
+                router:  r,
+                usecase: usecase,
+        }
+        rg := r.Group("/api/v1")
+        rg.POST("/results", controller.createHandler)
+        rg.GET("/results", controller.listHandler)
+        rg.GET("/results/:id", controller.getHandler)
+        rg.PUT("/results", controller.updateHandler)
+        rg.DELETE("/results/:id", controller.deleteHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package api
+
+import (
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+        "net/http"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+)
+
+type StatusController struct {
+        router  *gin.Engine
+        usecase usecase.StatusUseCase
+}
+
+func (s *StatusController) createHandler(c *gin.Context) <span class="cov8" title="1">{
+        var status model.Status
+        if err := c.ShouldBindJSON(&amp;status); err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">status.StatusId = common.GenerateID()
+        if err := s.usecase.RegisterNewStatus(status); err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusCreated, status)</span>
+}
+func (s *StatusController) listHandler(c *gin.Context) <span class="cov8" title="1">{
+        page, _ := strconv.Atoi(c.Query("page"))
+        limit, _ := strconv.Atoi(c.Query("limit"))
+        paginationParam := dto.PaginationParam{
+                Page:  page,
+                Limit: limit,
+        }
+        statuss, paging, err := s.usecase.FindAllStatus(paginationParam)
+        if err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov8" title="1">status := map[string]any{
+                "code":        200,
+                "description": "Get All Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   statuss,
+                "paging": paging,
+        })</span>
+
+}
+func (s *StatusController) getHandler(c *gin.Context) <span class="cov8" title="1">{
+        id := c.Param("id")
+        statuss, err := s.usecase.FindByIdStatus(id)
+        if err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov8" title="1">status := map[string]any{
+                "code":        http.StatusOK,
+                "description": "Get By Id Data Successfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   statuss,
+        })</span>
+}
+func (s *StatusController) updateHandler(c *gin.Context) <span class="cov8" title="1">{
+        var statuss model.Status
+        if err := c.ShouldBindJSON(&amp;statuss); err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">if err := s.usecase.UpdateStatus(statuss); err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov8" title="1">status := map[string]any{
+                "code":        http.StatusOK,
+                "description": "update data succesfully",
+        }
+        c.JSON(http.StatusOK, gin.H{
+                "status": status,
+        })</span>
+}
+func (s *StatusController) deleteHandler(c *gin.Context) <span class="cov8" title="1">{
+        id := c.Param("id")
+        if err := s.usecase.DeleteStatus(id); err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">status := map[string]any{
+                "code":        http.StatusNoContent,
+                "description": "delete data succesfully",
+        }
+        c.JSON(http.StatusNoContent, gin.H{
+                "status": status,
+        })</span>
+}
+
+func NewStatusController(r *gin.Engine, usecase usecase.StatusUseCase) *StatusController <span class="cov8" title="1">{
+        controller := StatusController{
+                router:  r,
+                usecase: usecase,
+        }
+        rg := r.Group("/api/v1")
+        rg.POST("/statuss", controller.createHandler)
+        rg.GET("/statuss", controller.listHandler)
+        rg.GET("/statuss/:id", controller.getHandler)
+        rg.PUT("/statuss", controller.updateHandler)
+        rg.DELETE("/statuss/:id", controller.deleteHandler)
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package api
+
+import (
+        "interview_bootcamp/model"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+
+        "github.com/gin-gonic/gin"
+)
+
+type UserRoleController struct {
+        router     *gin.Engine
+        userRoleUC usecase.UserRolesUseCase
+}
+
+func (u *UserRoleController) createHandler(c *gin.Context) <span class="cov8" title="1">{
+        var userRole model.UserRoles
+        if err := c.ShouldBindJSON(&amp;userRole); err != nil </span><span class="cov8" title="1">{
+                c.JSON(400, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">userRole.Id = common.GenerateID()
+        if err := u.userRoleUC.RegisterNewUserRole(userRole); err != nil </span><span class="cov0" title="0">{
+                c.JSON(500, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">c.JSON(201, userRole)</span>
+}
+
+func (u *UserRoleController) listHandler(c *gin.Context) <span class="cov8" title="1">{
+        userRoles, err := u.userRoleUC.GetAllUserRoles()
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(500, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">c.JSON(200, userRoles)</span>
+}
+
+func (u *UserRoleController) getHandler(c *gin.Context) <span class="cov8" title="1">{
+        id := c.Param("id")
+        userRole, err := u.userRoleUC.GetUserRoleByID(id)
+        if err != nil </span><span class="cov8" title="1">{
+                c.JSON(500, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">c.JSON(200, userRole)</span>
+}
+
+func (u *UserRoleController) updateHandler(c *gin.Context) <span class="cov8" title="1">{
+        var userRole model.UserRoles
+        if err := c.ShouldBindJSON(&amp;userRole); err != nil </span><span class="cov8" title="1">{
+                c.JSON(400, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov8" title="1">if err := u.userRoleUC.UpdateUserRole(userRole); err != nil </span><span class="cov8" title="1">{
+                c.JSON(500, gin.H{"err": err.Error()})
+                return
+        }</span>
+        <span class="cov8" title="1">c.JSON(200, userRole)</span>
+
+}
+
+func (u *UserRoleController) deleteHandler(c *gin.Context) <span class="cov8" title="1">{
+        id := c.Param("id")
+        if err := u.userRoleUC.DeleteUserRole(id); err != nil </span><span class="cov8" title="1">{
+                c.JSON(500, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov8" title="1">c.String(204, "")</span>
+}
+
+func NewUserRoleController(r *gin.Engine, usecase usecase.UserRolesUseCase) *UserRoleController <span class="cov8" title="1">{
+        controller := UserRoleController{
+                router:     r,
+                userRoleUC: usecase,
+        }
+
+        rg := r.Group("/api/v1")
+        rg.POST("/user-roles", controller.createHandler)
+        rg.GET("/user-roles", controller.listHandler)
+        rg.GET("/user-roles/:id", controller.getHandler)
+        rg.PUT("/user-roles", controller.updateHandler)
+        rg.DELETE("/user-roles/:id", controller.deleteHandler)
+
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package api
+
+import (
+        "interview_bootcamp/delivery/middleware"
+        "interview_bootcamp/model"
+        "interview_bootcamp/usecase"
+        "interview_bootcamp/utils/common"
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+)
+
+type UserController struct {
+        router *gin.Engine
+        userUC usecase.UserUsecase
+}
+
+func (c *UserController) createHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        var user model.Users
+        if err := ctx.ShouldBindJSON(&amp;user); err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+                return
+        }</span>
+        <span class="cov0" title="0">user.Id = common.GenerateID()
+        err := c.userUC.RegisterNewUser(user)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        // Create the user response object
+        <span class="cov0" title="0">userResponse := map[string]interface{}{
+                "id":        user.Id,
+                "email":     user.Email,
+                "user_name": user.UserName,
+                "user_role": map[string]interface{}{
+                        "id":   user.UserRole.Id,
+                        "name": user.UserRole.Name,
+                },
+        }
+
+        ctx.JSON(http.StatusCreated, userResponse)</span>
+}
+
+func (u *UserController) listHandler(c *gin.Context) <span class="cov0" title="0">{
+        users, err := u.userUC.List()
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">status := map[string]interface{}{
+                "code":        200,
+                "description": "Get All Data Successfully",
+        }
+
+        userResponses := make([]map[string]interface{}, 0, len(users))
+        for _, user := range users </span><span class="cov0" title="0">{
+                userResponse := map[string]interface{}{
+                        "id":        user.Id,
+                        "email":     user.Email,
+                        "user_name": user.UserName,
+                        "user_role": map[string]interface{}{
+                                "id":   user.UserRole.Id,
+                                "name": user.UserRole.Name,
+                        },
+                }
+                userResponses = append(userResponses, userResponse)
+        }</span>
+
+        <span class="cov0" title="0">c.JSON(http.StatusOK, gin.H{
+                "status": status,
+                "data":   userResponses,
+        })</span>
+}
+
+func (c *UserController) getHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        id := ctx.Param("id")
+        user, err := c.userUC.GetUserByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusOK, user)</span>
+}
+
+func (c *UserController) getByUsernameHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        username := ctx.Param("user_name")
+        user, err := c.userUC.GetUserByUserName(username)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusOK, user)</span>
+}
+
+func (c *UserController) updateHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        id := ctx.Param("id")
+        var user model.Users
+        if err := ctx.ShouldBindJSON(&amp;user); err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">user.Id = id
+        err := c.userUC.UpdateUser(user)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusOK, user)</span>
+}
+
+func (c *UserController) deleteHandler(ctx *gin.Context) <span class="cov0" title="0">{
+        id := ctx.Param("id")
+        err := c.userUC.DeleteUser(id)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusNoContent, nil)</span>
+}
+
+func NewUserController(r *gin.Engine, usecase usecase.UserUsecase) *UserController <span class="cov0" title="0">{
+        controller := UserController{
+                router: r,
+                userUC: usecase,
+        }
+        // Register routes
+        rg := r.Group("/api/v1")
+        rg.POST("/users", controller.createHandler)
+        rg.GET("/users", middleware.AuthMiddleware("admin"), controller.listHandler)
+        rg.GET("/users/:id", controller.getHandler)
+        rg.GET("/users/by-username/:username", controller.getByUsernameHandler)
+        rg.PUT("/users/:id", controller.updateHandler) //bisa update asal role id and role name tetep sama
+        rg.DELETE("/users/:id", controller.deleteHandler)
+
+        return &amp;controller
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package repository
+
+import (
+        "database/sql"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/utils/common"
+)
+
+type BootcampRepository interface {
+        BaseRepository[model.Bootcamp]
+        BaseRepositoryPaging[model.Bootcamp]
+        GetByName(name string) (model.Bootcamp, error)
+        GetByID(id string) (model.Bootcamp, error)
+}
+
+type bootcampRepository struct {
+        db *sql.DB
+}
+
+func (b *bootcampRepository) Create(payload model.Bootcamp) error <span class="cov0" title="0">{
+        _, err := b.db.Exec("INSERT INTO bootcamp (id, name,start_date,end_date,location) VALUES ($1, $2, $3, $4, $5)", payload.BootcampId, payload.Name, payload.StartDate, payload.EndDate, payload.Location)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+func (b *bootcampRepository) GetByName(name string) (model.Bootcamp, error) <span class="cov0" title="0">{
+        var bootcamp model.Bootcamp
+        err := b.db.QueryRow("SELECT * FROM bootcamp WHERE name ILIKE $1", "%"+name+"%").Scan(&amp;bootcamp.BootcampId, &amp;bootcamp.Name, &amp;bootcamp.StartDate, &amp;bootcamp.EndDate, &amp;bootcamp.Location)
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Bootcamp{}, err
+        }</span>
+        <span class="cov0" title="0">return bootcamp, nil</span>
+}
+
+func (b *bootcampRepository) GetByID(id string) (model.Bootcamp, error) <span class="cov0" title="0">{
+        var bootcamp model.Bootcamp
+        err := b.db.QueryRow("SELECT * FROM bootcamp WHERE id = $1", id).
+                Scan(&amp;bootcamp.BootcampId, &amp;bootcamp.Name, &amp;bootcamp.StartDate, &amp;bootcamp.EndDate, &amp;bootcamp.Location)
+        return bootcamp, err
+}</span>
+
+func (b *bootcampRepository) List() ([]model.Bootcamp, error) <span class="cov0" title="0">{
+        rows, err := b.db.Query("SELECT * FROM bootcamp")
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">var bootcamps []model.Bootcamp
+        for rows.Next() </span><span class="cov0" title="0">{
+                var bootcamp model.Bootcamp
+                err := rows.Scan(&amp;bootcamp.BootcampId, &amp;bootcamp.Name, &amp;bootcamp.StartDate, &amp;bootcamp.EndDate, &amp;bootcamp.Location)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov0" title="0">bootcamps = append(bootcamps, bootcamp)</span>
+        }
+        <span class="cov0" title="0">return bootcamps, nil</span>
+}
+func (b *bootcampRepository) Get(id string) (model.Bootcamp, error) <span class="cov0" title="0">{
+        var bootcamp model.Bootcamp
+        row := b.db.QueryRow("SELECT * FROM bootcamp WHERE id= $1", id)
+        err := row.Scan(&amp;bootcamp.BootcampId, &amp;bootcamp.Name, &amp;bootcamp.StartDate, &amp;bootcamp.EndDate, &amp;bootcamp.Location)
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Bootcamp{}, err
+        }</span>
+        <span class="cov0" title="0">return bootcamp, nil</span>
+
+}
+func (b *bootcampRepository) Update(payload model.Bootcamp) error <span class="cov0" title="0">{
+        _, err := b.db.Exec("UPDATE bootcamp SET name = $2, start_date = $3, end_date = $4,location= $5  WHERE id = $1", payload.BootcampId, payload.Name, payload.StartDate, payload.EndDate, payload.Location)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+
+}
+func (b *bootcampRepository) Delete(id string) error <span class="cov0" title="0">{
+        _, err := b.db.Exec("DELETE FROM bootcamp WHERE id=$1", id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+func (b *bootcampRepository) Paging(requestPaging dto.PaginationParam) ([]model.Bootcamp, dto.Paging, error) <span class="cov0" title="0">{
+        var paginationQuery dto.PaginationQuery
+        paginationQuery = common.GetPaginationParams(requestPaging)
+        rows, err := b.db.Query("SELECT * FROM bootcamp  LIMIT $1 OFFSET $2", paginationQuery.Take, paginationQuery.Skip)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, dto.Paging{}, err
+        }</span>
+        <span class="cov0" title="0">var bootcamps []model.Bootcamp
+        for rows.Next() </span><span class="cov0" title="0">{
+                var bootcamp model.Bootcamp
+                err := rows.Scan(&amp;bootcamp.BootcampId, &amp;bootcamp.Name, &amp;bootcamp.StartDate, &amp;bootcamp.EndDate, &amp;bootcamp.Location)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, dto.Paging{}, err
+                }</span>
+                <span class="cov0" title="0">bootcamps = append(bootcamps, bootcamp)</span>
+        }
+
+        // count bootcamp
+        <span class="cov0" title="0">var totalRows int
+        row := b.db.QueryRow("SELECT COUNT(*) FROM bootcamp")
+        err = row.Scan(&amp;totalRows)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, dto.Paging{}, err
+        }</span>
+
+        <span class="cov0" title="0">return bootcamps, common.Paginate(paginationQuery.Page, paginationQuery.Take, totalRows), nil</span>
+}
+
+func NewBootcampRepository(db *sql.DB) BootcampRepository <span class="cov0" title="0">{
+        return &amp;bootcampRepository{db: db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package repository
+
+import (
+        "database/sql"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/utils/common"
+)
+
+type CandidateRepository interface {
+        BaseRepository[model.Candidate]
+        GetByPhoneNumber(phoneNumber string) (model.Candidate, error)
+        GetByEmail(email string) (model.Candidate, error)
+        BaseRepositoryPaging[model.Candidate]
+}
+
+type candidateRepository struct {
+        db *sql.DB
+}
+
+func (c *candidateRepository) Create(payload model.Candidate) error <span class="cov8" title="1">{
+        _, err := c.db.Exec("INSERT INTO candidate (id, full_name, phone,email, date_of_birth, address,cv_link,bootcamp_id,instansi_pendidikan,hackerrank_score) VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9,$10)", payload.CandidateID, payload.FullName, payload.Phone, payload.Email, payload.DateOfBirth, payload.Address, payload.CvLink, payload.Bootcamp.BootcampId, payload.InstansiPendidikan, payload.HackerRank)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+
+}
+
+// GetPhoneNumber implements employeeRepository.
+func (c *candidateRepository) GetByPhoneNumber(phoneNumber string) (model.Candidate, error) <span class="cov8" title="1">{
+        var candidate model.Candidate
+        err := c.db.QueryRow("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id WHERE phone ILIKE $1", "%"+phoneNumber+"%").Scan(&amp;candidate.CandidateID, &amp;candidate.FullName, &amp;candidate.Phone, &amp;candidate.Email, &amp;candidate.DateOfBirth, &amp;candidate.Address, &amp;candidate.CvLink, &amp;candidate.Bootcamp.BootcampId, &amp;candidate.Bootcamp.Name, &amp;candidate.Bootcamp.StartDate, &amp;candidate.Bootcamp.EndDate, &amp;candidate.Bootcamp.Location, &amp;candidate.InstansiPendidikan, &amp;candidate.HackerRank)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Candidate{}, err
+        }</span>
+        <span class="cov8" title="1">return candidate, nil</span>
+}
+
+func (c *candidateRepository) List() ([]model.Candidate, error) <span class="cov8" title="1">{
+        rows, err := c.db.Query("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id")
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">var candidates []model.Candidate
+        for rows.Next() </span><span class="cov8" title="1">{
+                var candidate model.Candidate
+                err := rows.Scan(&amp;candidate.CandidateID, &amp;candidate.FullName, &amp;candidate.Phone, &amp;candidate.Email, &amp;candidate.DateOfBirth, &amp;candidate.Address, &amp;candidate.CvLink, &amp;candidate.Bootcamp.BootcampId, &amp;candidate.Bootcamp.Name, &amp;candidate.Bootcamp.StartDate, &amp;candidate.Bootcamp.EndDate, &amp;candidate.Bootcamp.Location, &amp;candidate.InstansiPendidikan, &amp;candidate.HackerRank)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">candidates = append(candidates, candidate)</span>
+        }
+        <span class="cov8" title="1">return candidates, nil</span>
+}
+
+func (c *candidateRepository) Get(id string) (model.Candidate, error) <span class="cov8" title="1">{
+        var candidate model.Candidate
+        row := c.db.QueryRow("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id where c.id = $1", id)
+        err := row.Scan(&amp;candidate.CandidateID, &amp;candidate.FullName, &amp;candidate.Phone, &amp;candidate.Email, &amp;candidate.DateOfBirth, &amp;candidate.Address, &amp;candidate.CvLink, &amp;candidate.Bootcamp.BootcampId, &amp;candidate.Bootcamp.Name, &amp;candidate.Bootcamp.StartDate, &amp;candidate.Bootcamp.EndDate, &amp;candidate.Bootcamp.Location, &amp;candidate.InstansiPendidikan, &amp;candidate.HackerRank)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Candidate{}, err
+        }</span>
+        <span class="cov8" title="1">return candidate, nil</span>
+
+}
+
+func (c *candidateRepository) GetByEmail(email string) (model.Candidate, error) <span class="cov8" title="1">{
+        var candidate model.Candidate
+        err := c.db.QueryRow("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id WHERE c.email ILIKE $1", "%"+email+"%").Scan(&amp;candidate.CandidateID, &amp;candidate.FullName, &amp;candidate.Phone, &amp;candidate.Email, &amp;candidate.DateOfBirth, &amp;candidate.Address, &amp;candidate.CvLink, &amp;candidate.Bootcamp.BootcampId, &amp;candidate.Bootcamp.Name, &amp;candidate.Bootcamp.StartDate, &amp;candidate.Bootcamp.EndDate, &amp;candidate.Bootcamp.Location, &amp;candidate.InstansiPendidikan, &amp;candidate.HackerRank)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Candidate{}, err
+        }</span>
+        <span class="cov8" title="1">return candidate, nil</span>
+
+}
+
+func (c *candidateRepository) Update(payload model.Candidate) error <span class="cov8" title="1">{
+        _, err := c.db.Exec("UPDATE candidate SET full_name = $2, phone = $3, email = $4, date_of_birth = $5, address = $6,cv_link = $7,bootcamp_id = $8,instansi_pendidikan= $9,hackerrank_score = $10  WHERE id = $1", payload.CandidateID, payload.FullName, payload.Phone, payload.Email, payload.DateOfBirth, payload.Address, payload.CvLink, payload.Bootcamp.BootcampId, payload.InstansiPendidikan, payload.HackerRank)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+
+}
+
+func (c *candidateRepository) Delete(id string) error <span class="cov8" title="1">{
+        _, err := c.db.Exec("DELETE FROM candidate WHERE id=$1", id)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (c *candidateRepository) Paging(requestPaging dto.PaginationParam) ([]model.Candidate, dto.Paging, error) <span class="cov8" title="1">{
+        paginationQuery := common.GetPaginationParams(requestPaging)
+        rows, err := c.db.Query("SELECT c.id,c.full_name,c.phone,c.email,c.date_of_birth,c.address,c.cv_link,b.id,b.name,b.start_date,b.end_date,b.location,c.instansi_pendidikan,c.hackerrank_score from candidate c INNER JOIN bootcamp b on b.id = c.bootcamp_id LIMIT $1 OFFSET $2", paginationQuery.Take, paginationQuery.Skip)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, dto.Paging{}, err
+        }</span>
+        <span class="cov8" title="1">var candidates []model.Candidate
+        for rows.Next() </span><span class="cov8" title="1">{
+                var candidate model.Candidate
+                err := rows.Scan(&amp;candidate.CandidateID, &amp;candidate.FullName, &amp;candidate.Phone, &amp;candidate.Email, &amp;candidate.DateOfBirth, &amp;candidate.Address, &amp;candidate.CvLink, &amp;candidate.Bootcamp.BootcampId, &amp;candidate.Bootcamp.Name, &amp;candidate.Bootcamp.StartDate, &amp;candidate.Bootcamp.EndDate, &amp;candidate.Bootcamp.Location, &amp;candidate.InstansiPendidikan, &amp;candidate.HackerRank)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, dto.Paging{}, err
+                }</span>
+                <span class="cov8" title="1">candidates = append(candidates, candidate)</span>
+        }
+
+        <span class="cov8" title="1">var totalRows int
+        row := c.db.QueryRow("SELECT COUNT(*) FROM candidate")
+        err = row.Scan(&amp;totalRows)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, dto.Paging{}, err
+        }</span>
+
+        <span class="cov8" title="1">return candidates, common.Paginate(paginationQuery.Page, paginationQuery.Take, totalRows), nil</span>
+
+}
+
+// Constructor
+func NewCandidateRepository(db *sql.DB) CandidateRepository <span class="cov8" title="1">{
+        return &amp;candidateRepository{db: db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package repository
+
+import (
+        "database/sql"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/utils/common"
+)
+
+type FormRepository interface {
+        Create(payload model.Form) error
+        Get(id string) (model.Form, error)
+        Delete(id string) error
+        Update(payload model.Form) error
+        BaseRepositoryPaging[model.Form]
+}
+
+type formRepository struct {
+        db *sql.DB
+}
+
+func (f *formRepository) Create(payload model.Form) error <span class="cov0" title="0">{
+        _, err := f.db.Exec("INSERT INTO form (id, form_link) VALUES ($1, $2)", payload.FormID, payload.FormLink)
+        if err != nil </span><span class="cov0" title="0">{
+                return err 
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (f *formRepository) Get(id string) (model.Form, error) <span class="cov0" title="0">{
+        var form model.Form
+        err := f.db.QueryRow(
+                "SELECT id, form_link FROM form WHERE id = $1",
+                id,
+        ).Scan(&amp;form.FormID, &amp;form.FormLink)
+        return form, err
+}</span>
+
+func (f *formRepository) Paging(requestPaging dto.PaginationParam) ([]model.Form, dto.Paging, error) <span class="cov0" title="0">{
+        var paginationQuery dto.PaginationQuery
+        paginationQuery = common.GetPaginationParams(requestPaging)
+        rows, err := f.db.Query("SELECT * FROM form  LIMIT $1 OFFSET $2", paginationQuery.Take, paginationQuery.Skip)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, dto.Paging{}, err
+        }</span>
+        <span class="cov0" title="0">var forms []model.Form
+        for rows.Next() </span><span class="cov0" title="0">{
+                var form model.Form
+                err := rows.Scan(&amp;form.FormID, &amp;form.FormLink)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, dto.Paging{}, err
+                }</span>
+                <span class="cov0" title="0">forms = append(forms, form)</span>
+        }
+
+        // count bootcamp
+        <span class="cov0" title="0">var totalRows int
+        row := f.db.QueryRow("SELECT COUNT(*) FROM status")
+        err = row.Scan(&amp;totalRows)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, dto.Paging{}, err
+        }</span>
+
+        <span class="cov0" title="0">return forms, common.Paginate(paginationQuery.Page, paginationQuery.Take, totalRows), nil</span>
+
+}
+
+func (f *formRepository) Update(payload model.Form) error <span class="cov0" title="0">{
+        _, err := f.db.Exec(
+                "UPDATE form SET form_link = $2 WHERE id = $1",
+                payload.FormID, payload.FormLink,
+        )
+        return err
+}</span>
+
+func (f *formRepository) Delete(id string) error <span class="cov0" title="0">{
+        _, err := f.db.Exec("DELETE FROM form WHERE id=$1", id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+func NewFormRepository(db *sql.DB) FormRepository <span class="cov0" title="0">{
+        return &amp;formRepository{db: db}
+}</pre>
+		
+		<pre class="file" id="file15" style="display: none">package repository
+
+import (
+        "database/sql"
+        "interview_bootcamp/model"
+)
+
+type HRRecruitmentRepository interface {
+        BaseRepository[model.HRRecruitment]
+        GetByUserID(userID string) (model.HRRecruitment, error)
+}
+
+type hrRecruitmentRepository struct {
+        db *sql.DB
+}
+
+func (r *hrRecruitmentRepository) Create(hr model.HRRecruitment) error <span class="cov8" title="1">{
+        _, err := r.db.Exec("INSERT INTO hr_recruitment (id, full_name, user_id) VALUES ($1, $2, $3)",
+                hr.ID, hr.FullName, hr.UserID)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *hrRecruitmentRepository) Get(id string) (model.HRRecruitment, error) <span class="cov8" title="1">{
+        var hrRecruitment model.HRRecruitment
+        err := r.db.QueryRow(`
+                SELECT hr.id, hr.full_name, hr.user_id, u.id, u.email, u.username, ur.id, ur.name
+                FROM hr_recruitment hr
+                JOIN users u ON hr.user_id = u.id
+                JOIN user_roles ur ON u.role_id = ur.id
+                WHERE hr.id = $1`, id).Scan(
+                &amp;hrRecruitment.ID,
+                &amp;hrRecruitment.FullName,
+                &amp;hrRecruitment.UserID,
+                &amp;hrRecruitment.User.Id,
+                &amp;hrRecruitment.User.Email,
+                &amp;hrRecruitment.User.UserName,
+                &amp;hrRecruitment.User.UserRole.Id,
+                &amp;hrRecruitment.User.UserRole.Name,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return model.HRRecruitment{}, err
+        }</span>
+        <span class="cov8" title="1">return hrRecruitment, nil</span>
+}
+
+func (r *hrRecruitmentRepository) GetByUserID(userID string) (model.HRRecruitment, error) <span class="cov8" title="1">{
+        var hrRecruitment model.HRRecruitment
+        err := r.db.QueryRow(`
+                SELECT hr.id, hr.full_name, hr.user_id, u.id, u.email, u.username, ur.id, ur.name
+                FROM hr_recruitment hr
+                JOIN users u ON hr.user_id = u.id
+                JOIN user_roles ur ON u.role_id = ur.id
+                WHERE hr.user_id = $1`, userID).Scan(
+                &amp;hrRecruitment.ID,
+                &amp;hrRecruitment.FullName,
+                &amp;hrRecruitment.UserID,
+                &amp;hrRecruitment.User.Id,
+                &amp;hrRecruitment.User.Email,
+                &amp;hrRecruitment.User.UserName,
+                &amp;hrRecruitment.User.UserRole.Id,
+                &amp;hrRecruitment.User.UserRole.Name,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return model.HRRecruitment{}, err
+        }</span>
+        <span class="cov8" title="1">return hrRecruitment, nil</span>
+}
+
+func (r *hrRecruitmentRepository) List() ([]model.HRRecruitment, error) <span class="cov8" title="1">{
+        rows, err := r.db.Query(`
+                SELECT hr.id, hr.full_name, hr.user_id, u.id, u.email, u.username, ur.id, ur.name
+                FROM hr_recruitment hr
+                JOIN users u ON hr.user_id = u.id
+                JOIN user_roles ur ON u.role_id = ur.id`)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var hrRecruitments []model.HRRecruitment
+        for rows.Next() </span><span class="cov8" title="1">{
+                var hrRecruitment model.HRRecruitment
+                var user model.Users
+                var userRole model.UserRoles
+                err := rows.Scan(
+                        &amp;hrRecruitment.ID,
+                        &amp;hrRecruitment.FullName,
+                        &amp;hrRecruitment.UserID,
+                        &amp;user.Id,
+                        &amp;user.Email,
+                        &amp;user.UserName,
+                        &amp;userRole.Id,
+                        &amp;userRole.Name,
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">user.UserRole = userRole
+                hrRecruitment.User = user
+                hrRecruitments = append(hrRecruitments, hrRecruitment)</span>
+        }
+        <span class="cov8" title="1">return hrRecruitments, nil</span>
+}
+
+func (r *hrRecruitmentRepository) Update(hr model.HRRecruitment) error <span class="cov8" title="1">{
+        _, err := r.db.Exec(`
+                UPDATE hr_recruitment SET full_name = $2, user_id = $3
+                WHERE id = $1`,
+                hr.ID, hr.FullName, hr.UserID)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *hrRecruitmentRepository) Delete(id string) error <span class="cov8" title="1">{
+        _, err := r.db.Exec("DELETE FROM hr_recruitment WHERE id = $1", id)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func NewHRRecruitmentRepository(db *sql.DB) HRRecruitmentRepository <span class="cov8" title="1">{
+        return &amp;hrRecruitmentRepository{db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package repository
+
+import (
+        "database/sql"
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+)
+
+type InterviewProcessRepository interface {
+        Create(payload model.InterviewProcess) error
+        Get(id string) (dto.InterviewProcessResponseDto, error)
+        List(requestPaging dto.PaginationParam) ([]dto.InterviewProcessResponseDto, dto.Paging, error)
+}
+type interviewProcessRepository struct {
+        db *sql.DB
+}
+
+func (i *interviewProcessRepository) Create(payload model.InterviewProcess) error <span class="cov0" title="0">{
+        tx, err := i.db.Begin()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">defer func() </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov0" title="0">{
+                        tx.Rollback() // Rollback the transaction if there was an error
+                }</span>
+        }()
+
+        // Insert interview process
+        <span class="cov0" title="0">_, err = tx.Exec("INSERT INTO interviews_process (id, candidate_id, interviewer_id, interview_datetime, meeting_link, form_interview, status_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", payload.ID, payload.CandidateID, payload.InterviewerID, payload.InterviewDatetime, payload.MeetingLink, payload.FormInterview, payload.StatusID)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">err = tx.Commit() // Commit the transaction if everything is successful
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (i *interviewProcessRepository) Get(id string) (dto.InterviewProcessResponseDto, error) <span class="cov0" title="0">{
+        var interviewPrResponseDto dto.InterviewProcessResponseDto
+
+        sqlInterviewProcess := `
+        SELECT ip.id, ip.interview_datetime, ip.meeting_link, ip.form_interview,
+               c.id AS candidate_id, c.full_name AS candidate_full_name,
+               c.email AS candidate_email, c.date_of_birth AS candidate_date_of_birth,
+               c.address AS candidate_address, c.cv_link AS candidate_cv_link,
+               c.bootcamp_id AS candidate_bootcamp_id, c.instansi_pendidikan AS candidate_instansi_pendidikan,
+               c.hackerrank_score AS candidate_hacker_rank,
+               i.id AS interviewer_id, i.full_name AS interviewer_full_name, i.user_id AS interviewer_user_id,
+               s.id AS status_id, s.name AS status_name
+        FROM interviews_process AS ip
+        JOIN candidate AS c ON ip.candidate_id = c.id
+        JOIN interviewer AS i ON ip.interviewer_id = i.id
+        JOIN status AS s ON ip.status_id = s.id
+        WHERE ip.id = $1`
+
+        err := i.db.QueryRow(sqlInterviewProcess, id).Scan(
+                &amp;interviewPrResponseDto.ID, &amp;interviewPrResponseDto.InterviewDatetime, &amp;interviewPrResponseDto.MeetingLink,
+                &amp;interviewPrResponseDto.FormInterview,
+                &amp;interviewPrResponseDto.Candidate.CandidateID, &amp;interviewPrResponseDto.Candidate.FullName,
+                &amp;interviewPrResponseDto.Candidate.Email,
+                &amp;interviewPrResponseDto.Candidate.DateOfBirth, &amp;interviewPrResponseDto.Candidate.Address,
+                &amp;interviewPrResponseDto.Candidate.CvLink, &amp;interviewPrResponseDto.Candidate.Bootcamp.BootcampId,
+                &amp;interviewPrResponseDto.Candidate.InstansiPendidikan, &amp;interviewPrResponseDto.Candidate.HackerRank,
+                &amp;interviewPrResponseDto.Interviewer.InterviewerID, &amp;interviewPrResponseDto.Interviewer.FullName,
+                &amp;interviewPrResponseDto.Interviewer.UserID,
+                &amp;interviewPrResponseDto.Status.StatusId, &amp;interviewPrResponseDto.Status.Name,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return dto.InterviewProcessResponseDto{}, err
+        }</span>
+
+        // Add log statements to see retrieved data
+        <span class="cov0" title="0">fmt.Println("Retrieved Interview Process Data:", interviewPrResponseDto)
+
+        return interviewPrResponseDto, nil</span>
+}
+
+func (i *interviewProcessRepository) List(_ dto.PaginationParam) ([]dto.InterviewProcessResponseDto, dto.Paging, error) <span class="cov0" title="0">{
+        query := `
+        SELECT ip.id, ip.interview_datetime, ip.meeting_link, ip.form_interview,
+               c.id AS candidate_id, c.full_name AS candidate_full_name,
+               c.email AS candidate_email, c.date_of_birth AS candidate_date_of_birth,
+               c.address AS candidate_address, c.cv_link AS candidate_cv_link,
+               c.bootcamp_id AS candidate_bootcamp_id, c.instansi_pendidikan AS candidate_instansi_pendidikan,
+               c.hackerrank_score AS candidate_hacker_rank,
+               i.id AS interviewer_id, i.full_name AS interviewer_full_name, i.user_id AS interviewer_user_id,
+               s.id AS status_id, s.name AS status_name
+        FROM interviews_process AS ip
+        JOIN candidate AS c ON ip.candidate_id = c.id
+        JOIN interviewer AS i ON ip.interviewer_id = i.id
+        JOIN status AS s ON ip.status_id = s.id
+    `
+
+        rows, err := i.db.Query(query)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, dto.Paging{}, err
+        }</span>
+        <span class="cov0" title="0">defer rows.Close()
+
+        var interviewProcesses []dto.InterviewProcessResponseDto
+        for rows.Next() </span><span class="cov0" title="0">{
+                var interviewProcess dto.InterviewProcessResponseDto
+                err := rows.Scan(
+                        &amp;interviewProcess.ID, &amp;interviewProcess.InterviewDatetime, &amp;interviewProcess.MeetingLink,
+                        &amp;interviewProcess.FormInterview,
+                        &amp;interviewProcess.Candidate.CandidateID, &amp;interviewProcess.Candidate.FullName,
+                        &amp;interviewProcess.Candidate.Email,
+                        &amp;interviewProcess.Candidate.DateOfBirth, &amp;interviewProcess.Candidate.Address,
+                        &amp;interviewProcess.Candidate.CvLink, &amp;interviewProcess.Candidate.Bootcamp.BootcampId,
+                        &amp;interviewProcess.Candidate.InstansiPendidikan, &amp;interviewProcess.Candidate.HackerRank,
+                        &amp;interviewProcess.Interviewer.InterviewerID, &amp;interviewProcess.Interviewer.FullName,
+                        &amp;interviewProcess.Interviewer.UserID,
+                        &amp;interviewProcess.Status.StatusId, &amp;interviewProcess.Status.Name,
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, dto.Paging{}, err
+                }</span>
+                <span class="cov0" title="0">interviewProcesses = append(interviewProcesses, interviewProcess)</span>
+        }
+
+        <span class="cov0" title="0">return interviewProcesses, dto.Paging{}, nil</span>
+}
+
+func NewInterviewProcessRepository(db *sql.DB) InterviewProcessRepository <span class="cov0" title="0">{
+        return &amp;interviewProcessRepository{db: db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package repository
+
+import (
+        "database/sql"
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+)
+
+type InterviewResultRepository interface {
+        Create(payload model.InterviewResult) error
+        Get(id string) (dto.InterviewResultResponseDto, error)
+        List(requestPaging dto.PaginationParam) ([]dto.InterviewResultResponseDto, dto.Paging, error)
+}
+type interviewResultRepository struct {
+        db *sql.DB
+}
+
+func (i *interviewResultRepository) Create(payload model.InterviewResult) error <span class="cov0" title="0">{
+        tx, err := i.db.Begin()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">defer func() </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov0" title="0">{
+                        tx.Rollback() // Rollback the transaction if there was an error
+                }</span>
+        }()
+
+        // Insert interview Result
+        <span class="cov0" title="0">_, err = tx.Exec("INSERT INTO interview_result (id, interview_id, result_id, note) VALUES ($1, $2, $3, $4)", payload.Id, payload.InterviewId, payload.ResultId, payload.Note)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">err = tx.Commit() // Commit the transaction if everything is successful
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (i *interviewResultRepository) Get(id string) (dto.InterviewResultResponseDto, error) <span class="cov0" title="0">{
+        var InterviewResultResponseDto dto.InterviewResultResponseDto
+
+        sqlInterviewResult := `
+        SELECT ir.id, ir.note ,ip.id AS InterviewP_id,ip.candidate_id AS InterviewP_candidate_id,ip.interviewer_id AS InterviewP_interviewer_id ,ip.interview_datetime AS InterviewP_interview_datetime,ip.meeting_link AS InterviewP_meeting_link,ip.form_interview AS InterviewP_form_interview,ip.status_id AS InterviewP_status_id,r.id AS result_id ,r.name AS result_name
+             
+        FROM interview_result AS ir
+        JOIN interviews_process AS ip ON ir.interview_id = ip.id
+        JOIN result AS r ON ir.result_id = r.id
+        WHERE ip.id = $1`
+
+        err := i.db.QueryRow(sqlInterviewResult, id).Scan(
+                &amp;InterviewResultResponseDto.Id, &amp;InterviewResultResponseDto.Note,
+                &amp;InterviewResultResponseDto.InterviewP.ID,
+                &amp;InterviewResultResponseDto.InterviewP.CandidateID, &amp;InterviewResultResponseDto.InterviewP.InterviewerID,
+                &amp;InterviewResultResponseDto.InterviewP.InterviewDatetime,
+                &amp;InterviewResultResponseDto.InterviewP.MeetingLink, &amp;InterviewResultResponseDto.InterviewP.FormInterview,
+                &amp;InterviewResultResponseDto.InterviewP.StatusID,
+                &amp;InterviewResultResponseDto.Result.ResultId, &amp;InterviewResultResponseDto.Result.Name,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return dto.InterviewResultResponseDto{}, err
+        }</span>
+
+        // Add log statements to see retrieved data
+        <span class="cov0" title="0">fmt.Println("Retrieved Interview Result Data:", InterviewResultResponseDto)
+
+        return InterviewResultResponseDto, nil</span>
+}
+
+func (i *interviewResultRepository) List(_ dto.PaginationParam) ([]dto.InterviewResultResponseDto, dto.Paging, error) <span class="cov0" title="0">{
+        query := `SELECT ir.id, ir.note ,ip.id AS InterviewP_id,ip.candidate_id AS InterviewP_candidate_id,ip.interviewer_id AS InterviewP_interviewer_id ,ip.interview_datetime AS InterviewP_interview_datetime,ip.meeting_link AS InterviewP_meeting_link,ip.form_interview AS InterviewP_form_interview,ip.status_id AS InterviewP_status_id,r.id AS Result_id ,r.name AS Result_name
+             
+        FROM interview_result AS ir
+        JOIN interviews_process AS ip ON ir.interview_id = ip.id
+        JOIN result AS r ON ir.result_id = r.id`
+
+        rows, err := i.db.Query(query)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, dto.Paging{}, err
+        }</span>
+        <span class="cov0" title="0">defer rows.Close()
+
+        var interviewResults []dto.InterviewResultResponseDto
+        for rows.Next() </span><span class="cov0" title="0">{
+                var InterviewResult dto.InterviewResultResponseDto
+                err := rows.Scan(
+                        &amp;InterviewResult.Id, &amp;InterviewResult.Note,
+                        &amp;InterviewResult.InterviewP.ID,
+                        &amp;InterviewResult.InterviewP.CandidateID, &amp;InterviewResult.InterviewP.InterviewerID,
+                        &amp;InterviewResult.InterviewP.InterviewDatetime,
+                        &amp;InterviewResult.InterviewP.MeetingLink, &amp;InterviewResult.InterviewP.FormInterview,
+                        &amp;InterviewResult.InterviewP.StatusID,
+                        &amp;InterviewResult.Result.ResultId, &amp;InterviewResult.Result.Name,
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, dto.Paging{}, err
+                }</span>
+                <span class="cov0" title="0">interviewResults = append(interviewResults, InterviewResult)</span>
+        }
+
+        <span class="cov0" title="0">return interviewResults, dto.Paging{}, nil</span>
+}
+
+func NewInterviewResultRepository(db *sql.DB) InterviewResultRepository <span class="cov0" title="0">{
+        return &amp;interviewResultRepository{db: db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package repository
+
+import (
+        "database/sql"
+        "interview_bootcamp/model"
+)
+
+type InterviewerRepository interface {
+        BaseRepository[model.Interviewer]
+}
+
+type interviewerRepository struct {
+        db *sql.DB
+}
+
+func (i *interviewerRepository) Create(payload model.Interviewer) error <span class="cov0" title="0">{
+        _, err := i.db.Exec("INSERT INTO interviewer (id, full_name, user_id) VALUES ($1, $2, $3)", payload.InterviewerID, payload.FullName, payload.UserID)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (i *interviewerRepository) List() ([]model.Interviewer, error) <span class="cov0" title="0">{
+        rows, err := i.db.Query(`
+                SELECT i.id, i.full_name, u.id
+                FROM interviewer i
+                INNER JOIN users u ON u.id = i.user_id`)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">defer rows.Close()
+
+        var interviewers []model.Interviewer
+        for rows.Next() </span><span class="cov0" title="0">{
+                var interviewer model.Interviewer
+                err := rows.Scan(
+                        &amp;interviewer.InterviewerID,
+                        &amp;interviewer.FullName,
+                        &amp;interviewer.UserID,
+                )
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov0" title="0">interviewers = append(interviewers, interviewer)</span>
+        }
+        <span class="cov0" title="0">return interviewers, nil</span>
+}
+
+func (i *interviewerRepository) Get(id string) (model.Interviewer, error) <span class="cov0" title="0">{
+        var interviewer model.Interviewer
+        err := i.db.QueryRow("SELECT i.id, i.full_name, u.id FROM interviewer i INNER JOIN users u ON u.id = i.user_id WHERE i.id = $1", id).Scan(
+                &amp;interviewer.InterviewerID,
+                &amp;interviewer.FullName,
+                &amp;interviewer.UserID,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Interviewer{}, err
+        }</span>
+        <span class="cov0" title="0">return interviewer, nil</span>
+
+}
+
+func (i *interviewerRepository) Update(payload model.Interviewer) error <span class="cov0" title="0">{
+        _, err := i.db.Exec("UPDATE interviewer SET full_name = $2, user_id = $3 WHERE id = $1", payload.InterviewerID, payload.FullName, payload.UserID)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (i *interviewerRepository) Delete(id string) error <span class="cov0" title="0">{
+        _, err := i.db.Exec("DELETE FROM interviewer WHERE id = $1", id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+
+}
+
+// Constructor
+func NewInterviewerRepository(db *sql.DB) InterviewerRepository <span class="cov0" title="0">{
+        return &amp;interviewerRepository{db: db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">package repository
+
+import (
+        "database/sql"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/utils/common"
+)
+
+type ResultRepository interface {
+        BaseRepository[model.Result]
+        BaseRepositoryPaging[model.Result]
+        GetByName(name string) (model.Result, error)
+}
+type resultRepository struct {
+        db *sql.DB
+}
+
+func (r *resultRepository) Create(payload model.Result) error <span class="cov0" title="0">{
+        _, err := r.db.Exec("INSERT INTO result (id, name) VALUES ($1, $2)", payload.ResultId, payload.Name)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+func (r *resultRepository) GetByName(name string) (model.Result, error) <span class="cov0" title="0">{
+        var result model.Result
+        err := r.db.QueryRow("SELECT * FROM result WHERE name ILIKE $1", "%"+name+"%").Scan(&amp;result.ResultId, &amp;result.Name)
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Result{}, err
+        }</span>
+        <span class="cov0" title="0">return result, nil</span>
+}
+func (r *resultRepository) List() ([]model.Result, error) <span class="cov0" title="0">{
+        rows, err := r.db.Query("SELECT * FROM result")
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">var results []model.Result
+        for rows.Next() </span><span class="cov0" title="0">{
+                var result model.Result
+                err := rows.Scan(&amp;result.ResultId, &amp;result.Name)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov0" title="0">results = append(results, result)</span>
+        }
+        <span class="cov0" title="0">return results, nil</span>
+}
+func (r *resultRepository) Get(id string) (model.Result, error) <span class="cov0" title="0">{
+        var result model.Result
+        row := r.db.QueryRow("SELECT * FROM result WHERE id= $1", id)
+        err := row.Scan(&amp;result.ResultId, &amp;result.Name)
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Result{}, err
+        }</span>
+        <span class="cov0" title="0">return result, nil</span>
+}
+func (r *resultRepository) Update(payload model.Result) error <span class="cov0" title="0">{
+        _, err := r.db.Exec("UPDATE result SET name = $2 WHERE id = $1", payload.ResultId, payload.Name)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+func (r *resultRepository) Delete(id string) error <span class="cov0" title="0">{
+        _, err := r.db.Exec("DELETE FROM result WHERE id=$1", id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+func (r *resultRepository) Paging(requestPaging dto.PaginationParam) ([]model.Result, dto.Paging, error) <span class="cov0" title="0">{
+        var paginationQuery dto.PaginationQuery
+        paginationQuery = common.GetPaginationParams(requestPaging)
+        rows, err := r.db.Query("SELECT * FROM result  LIMIT $1 OFFSET $2", paginationQuery.Take, paginationQuery.Skip)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, dto.Paging{}, err
+        }</span>
+        <span class="cov0" title="0">var results []model.Result
+        for rows.Next() </span><span class="cov0" title="0">{
+                var result model.Result
+                err := rows.Scan(&amp;result.ResultId, &amp;result.Name)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, dto.Paging{}, err
+                }</span>
+                <span class="cov0" title="0">results = append(results, result)</span>
+        }
+
+        // count bootcamp
+        <span class="cov0" title="0">var totalRows int
+        row := r.db.QueryRow("SELECT COUNT(*) FROM result")
+        err = row.Scan(&amp;totalRows)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, dto.Paging{}, err
+        }</span>
+
+        <span class="cov0" title="0">return results, common.Paginate(paginationQuery.Page, paginationQuery.Take, totalRows), nil</span>
+
+}
+func NewResultRepository(db *sql.DB) ResultRepository <span class="cov0" title="0">{
+        return &amp;resultRepository{db: db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package repository
+
+import (
+        "database/sql"
+
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/utils/common"
+)
+
+type StatusRepository interface {
+        BaseRepository[model.Status]
+        BaseRepositoryPaging[model.Status]
+        GetByName(name string) (model.Status, error)
+}
+type statusRepository struct {
+        db *sql.DB
+}
+
+func (s *statusRepository) Create(payload model.Status) error <span class="cov8" title="1">{
+        _, err := s.db.Exec("INSERT INTO status (id, name) VALUES ($1, $2)", payload.StatusId, payload.Name)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+func (s *statusRepository) GetByName(name string) (model.Status, error) <span class="cov8" title="1">{
+        var status model.Status
+        err := s.db.QueryRow("SELECT * FROM status WHERE name ILIKE $1", "%"+name+"%").Scan(&amp;status.StatusId, &amp;status.Name)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Status{}, err
+        }</span>
+        <span class="cov8" title="1">return status, nil</span>
+}
+func (s *statusRepository) List() ([]model.Status, error) <span class="cov8" title="1">{
+        rows, err := s.db.Query("SELECT * FROM status")
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">var statuss []model.Status
+        for rows.Next() </span><span class="cov8" title="1">{
+                var status model.Status
+                err := rows.Scan(&amp;status.StatusId, &amp;status.Name)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">statuss = append(statuss, status)</span>
+        }
+        <span class="cov8" title="1">return statuss, nil</span>
+}
+func (s *statusRepository) Get(id string) (model.Status, error) <span class="cov8" title="1">{
+        var status model.Status
+        row := s.db.QueryRow("SELECT * FROM status WHERE id= $1", id)
+        err := row.Scan(&amp;status.StatusId, &amp;status.Name)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Status{}, err
+        }</span>
+        <span class="cov8" title="1">return status, nil</span>
+}
+func (s *statusRepository) Update(payload model.Status) error <span class="cov8" title="1">{
+        _, err := s.db.Exec("UPDATE status SET name = $2 WHERE id = $1", payload.StatusId, payload.Name)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+func (s *statusRepository) Delete(id string) error <span class="cov8" title="1">{
+        _, err := s.db.Exec("DELETE FROM status WHERE id=$1", id)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+func (s *statusRepository) Paging(requestPaging dto.PaginationParam) ([]model.Status, dto.Paging, error) <span class="cov8" title="1">{
+        var paginationQuery dto.PaginationQuery
+        paginationQuery = common.GetPaginationParams(requestPaging)
+        rows, err := s.db.Query("SELECT * FROM status  LIMIT $1 OFFSET $2", paginationQuery.Take, paginationQuery.Skip)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, dto.Paging{}, err
+        }</span>
+        <span class="cov8" title="1">var statuss []model.Status
+        for rows.Next() </span><span class="cov8" title="1">{
+                var status model.Status
+                err := rows.Scan(&amp;status.StatusId, &amp;status.Name)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, dto.Paging{}, err
+                }</span>
+                <span class="cov8" title="1">statuss = append(statuss, status)</span>
+        }
+
+        // count bootcamp
+        <span class="cov8" title="1">var totalRows int
+        row := s.db.QueryRow("SELECT COUNT(*) FROM status")
+        err = row.Scan(&amp;totalRows)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, dto.Paging{}, err
+        }</span>
+
+        <span class="cov8" title="1">return statuss, common.Paginate(paginationQuery.Page, paginationQuery.Take, totalRows), nil</span>
+
+}
+func NewStatusRepository(db *sql.DB) StatusRepository <span class="cov8" title="1">{
+        return &amp;statusRepository{db: db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file21" style="display: none">package repository
+
+import (
+        "database/sql"
+        "interview_bootcamp/model"
+)
+
+type UserRolesRepository interface {
+        BaseRepository[model.UserRoles]
+        GetByName(name string) (model.UserRoles, error)
+}
+
+type userRolesRepository struct {
+        db *sql.DB
+}
+
+func (r *userRolesRepository) Create(userRole model.UserRoles) error <span class="cov8" title="1">{
+        _, err := r.db.Exec("INSERT INTO user_roles (id, name) VALUES ($1, $2)",
+                userRole.Id, userRole.Name)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *userRolesRepository) List() ([]model.UserRoles, error) <span class="cov8" title="1">{
+        rows, err := r.db.Query("SELECT id, name FROM user_roles")
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var userRoles []model.UserRoles
+        for rows.Next() </span><span class="cov8" title="1">{
+                var userRole model.UserRoles
+                err := rows.Scan(&amp;userRole.Id, &amp;userRole.Name)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">userRoles = append(userRoles, userRole)</span>
+        }
+        <span class="cov8" title="1">return userRoles, nil</span>
+}
+
+// get by id
+func (r *userRolesRepository) Get(id string) (model.UserRoles, error) <span class="cov8" title="1">{
+        var userRole model.UserRoles
+        err := r.db.QueryRow("SELECT id, name FROM user_roles WHERE id = $1", id).Scan(&amp;userRole.Id, &amp;userRole.Name)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.UserRoles{}, err
+        }</span>
+        <span class="cov8" title="1">return userRole, nil</span>
+
+}
+
+// get role by name
+func (r *userRolesRepository) GetByName(name string) (model.UserRoles, error) <span class="cov8" title="1">{
+        var userRole model.UserRoles
+        // Use ILIKE for case-insensitive search
+        err := r.db.QueryRow("SELECT id, name FROM user_roles WHERE name ILIKE $1", "%"+name+"%").Scan(&amp;userRole.Id, &amp;userRole.Name)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.UserRoles{}, err
+        }</span>
+        <span class="cov8" title="1">return userRole, nil</span>
+}
+
+func (r *userRolesRepository) Update(userRole model.UserRoles) error <span class="cov8" title="1">{
+        _, err := r.db.Exec("UPDATE user_roles SET name = $2 WHERE id = $1",
+                userRole.Id, userRole.Name)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *userRolesRepository) Delete(id string) error <span class="cov8" title="1">{
+        _, err := r.db.Exec("DELETE FROM user_roles WHERE id = $1", id)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+
+}
+
+func NewUserRolesRepository(db *sql.DB) UserRolesRepository <span class="cov8" title="1">{
+        return &amp;userRolesRepository{db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file22" style="display: none">package repository
+
+import (
+        "database/sql"
+        "fmt"
+        "interview_bootcamp/model"
+
+        "golang.org/x/crypto/bcrypt"
+)
+
+type UserRepository interface {
+        BaseRepository[model.Users]
+        GetByEmail(email string) (model.Users, error)
+        GetByUserName(username string) (model.Users, error)
+        GetUsernamePassword(username string, password string) (model.Users, error)
+}
+
+type userRepository struct {
+        db *sql.DB
+}
+
+func (r *userRepository) Create(user model.Users) error <span class="cov8" title="1">{
+        _, err := r.db.Exec("INSERT INTO users (id, email, username, password, role_id) VALUES ($1, $2, $3, $4, $5)",
+                user.Id, user.Email, user.UserName, user.Password, user.UserRole.Id)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *userRepository) List() ([]model.Users, error) <span class="cov8" title="1">{
+        rows, err := r.db.Query(`
+                SELECT u.id, u.email, u.username, r.id, r.name as role_name
+                FROM users u
+                JOIN user_roles r ON u.role_id = r.id`)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var users []model.Users
+        for rows.Next() </span><span class="cov8" title="1">{
+                var user model.Users
+                err := rows.Scan(&amp;user.Id, &amp;user.Email, &amp;user.UserName, &amp;user.UserRole.Id, &amp;user.UserRole.Name)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">users = append(users, user)</span>
+        }
+        <span class="cov8" title="1">return users, nil</span>
+}
+
+func (r *userRepository) Get(id string) (model.Users, error) <span class="cov8" title="1">{
+        var user model.Users
+        err := r.db.QueryRow(`
+                SELECT u.id, u.email, u.username, r.id, r.name
+                FROM users u
+                JOIN user_roles r ON u.role_id = r.id
+                WHERE u.id = $1`, id).Scan(
+                &amp;user.Id,
+                &amp;user.Email,
+                &amp;user.UserName,
+                &amp;user.UserRole.Id,
+                &amp;user.UserRole.Name,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Users{}, err
+        }</span>
+        <span class="cov8" title="1">return user, nil</span>
+}
+
+func (r *userRepository) GetByEmail(email string) (model.Users, error) <span class="cov8" title="1">{
+        var user model.Users
+        err := r.db.QueryRow(`
+                SELECT u.id, u.email, u.username, r.id, r.name
+                FROM users u
+                JOIN user_roles r ON u.role_id = r.id
+                WHERE u.email ILIKE $1`, "%"+email+"%").Scan(
+                &amp;user.Id,
+                &amp;user.Email,
+                &amp;user.UserName,
+                &amp;user.UserRole.Id,
+                &amp;user.UserRole.Name,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Users{}, err
+        }</span>
+        <span class="cov8" title="1">return user, nil</span>
+}
+
+func (r *userRepository) GetByUserName(userName string) (model.Users, error) <span class="cov8" title="1">{
+        var user model.Users
+        err := r.db.QueryRow(`
+                SELECT u.id, u.email, u.username,u.password, r.id, r.name
+                FROM users u
+                JOIN user_roles r ON u.role_id = r.id
+                WHERE u.username ILIKE $1`, "%"+userName+"%").Scan(
+                &amp;user.Id,
+                &amp;user.Email,
+                &amp;user.UserName,
+                &amp;user.Password,
+                &amp;user.UserRole.Id,
+                &amp;user.UserRole.Name,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Users{}, err
+        }</span>
+        <span class="cov0" title="0">return user, nil</span>
+}
+
+func (r *userRepository) Update(payload model.Users) error <span class="cov8" title="1">{
+        _, err := r.db.Exec(`
+                UPDATE users SET email = $2, username = $3, role_id = $4
+                WHERE id = $1`,
+                payload.Id, payload.Email, payload.UserName, payload.UserRole.Id)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *userRepository) Delete(id string) error <span class="cov8" title="1">{
+        _, err := r.db.Exec("DELETE FROM users WHERE id=$1", id)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (u *userRepository) GetUsernamePassword(username string, password string) (model.Users, error) <span class="cov0" title="0">{
+
+        user, err := u.GetByUserName(username)
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Users{}, err
+        }</span>
+
+        <span class="cov0" title="0">err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Users{}, fmt.Errorf("failed to verivy password hash : %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return user, nil</span>
+}
+
+func NewUserRepository(db *sql.DB) UserRepository <span class="cov8" title="1">{
+        return &amp;userRepository{db}
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

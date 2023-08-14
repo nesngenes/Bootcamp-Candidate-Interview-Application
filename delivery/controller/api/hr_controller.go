@@ -14,11 +14,6 @@ type HRRecruitmentController struct {
 	hrRecruitmentUsecase usecase.HRRecruitmentUsecase
 }
 
-// tambahan buat router
-func (c *HRRecruitmentController) GetRouter() *gin.Engine {
-	return c.router
-}
-
 func (c *HRRecruitmentController) createHandler(ctx *gin.Context) {
 	var hrRecruitment model.HRRecruitment
 	if err := ctx.ShouldBindJSON(&hrRecruitment); err != nil {

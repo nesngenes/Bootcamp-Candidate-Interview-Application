@@ -1,19 +1,9 @@
 package security
 
-import (
-	"time"
-
-	"github.com/golang-jwt/jwt/v5"
-)
-
-type TokenConfig struct {
-	ApplicationName     string
-	JwtSigntureKey      string
-	JwtSigningMethod    *jwt.SigningMethodHMAC
-	AccessTokenLifeTime time.Duration
-}
+import "github.com/golang-jwt/jwt/v5"
 
 type TokenMyClaims struct {
 	jwt.RegisteredClaims
-	Username string `json: "username"`
+	Username string `json:"username"`
+	Role     string `json:"role"`
 }

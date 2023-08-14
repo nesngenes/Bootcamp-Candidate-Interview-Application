@@ -52,6 +52,7 @@ func (s *Server) setupControllers() {
 	api.NewBootcampController(s.engine, s.useCaseManager.BootcampUseCase())
 	api.NewInterviewerController(s.engine, s.useCaseManager.InterviewerUseCase())
 	api.NewInterviewProcessController(s.engine, s.useCaseManager.InterviewProcessUseCase())
+	api.NewInterviewResultController(s.engine, s.useCaseManager.InterviewResultUseCase())
 	api.NewResultController(s.engine, s.useCaseManager.ResultUseCase())
 	api.NewResumeController(s.engine, s.useCaseManager.ResumeUseCase(), cloudinaryInstance) // Pass cloudinaryInstance
 	api.NewUserRoleController(s.engine, s.useCaseManager.UserRolesUseCase())                //user role controller

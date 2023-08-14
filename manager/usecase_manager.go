@@ -20,6 +20,7 @@ type UseCaseManager interface {
 	StatusUseCase() usecase.StatusUseCase
 	AuthUseCase() usecase.AuthUseCase
 	FormUseCase() usecase.FormUseCase
+	InterviewResultUseCase() usecase.InterviewResultUseCase
 }
 
 type useCaseManager struct {
@@ -48,6 +49,11 @@ func (u *useCaseManager) FormUseCase() usecase.FormUseCase {
 func (u *useCaseManager) InterviewProcessUseCase() usecase.InterviewProcessUseCase {
 	return usecase.NewInterviewProcessUseCase(u.repoManager.InterviewProcessRepo(), u.CandidateUseCase(), u.InterviewerUseCase(), u.StatusUseCase())
 }
+
+func (u *useCaseManager) InterviewResultUseCase() usecase.InterviewResultUseCase {
+	return usecase.NewInterviewResultUseCase(u.repoManager.InterviewResultRepo(), u.InterviewProcessUseCase(), u.ResultUseCase())
+}
+
 
 func (u *useCaseManager) InterviewerUseCase() usecase.InterviewerUseCase {
 	return usecase.NewInterviewerUseCase(u.repoManager.InterviewerRepo())

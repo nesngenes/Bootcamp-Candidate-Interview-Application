@@ -72,14 +72,13 @@ func (r *userRepository) Get(id string) (model.Users, error) {
 func (r *userRepository) GetByEmail(email string) (model.Users, error) {
 	var user model.Users
 	err := r.db.QueryRow(`
-		SELECT u.id, u.email, u.username, u.password, r.id, r.name
+		SELECT u.id, u.email, u.username, r.id, r.name
 		FROM users u
 		JOIN user_roles r ON u.role_id = r.id
 		WHERE u.email ILIKE $1`, "%"+email+"%").Scan(
 		&user.Id,
 		&user.Email,
 		&user.UserName,
-		&user.Password,
 		&user.UserRole.Id,
 		&user.UserRole.Name,
 	)

@@ -56,6 +56,7 @@ func (s *Server) setupControllers() {
 	api.NewResumeController(s.engine, s.useCaseManager.ResumeUseCase(), cloudinaryInstance) // Pass cloudinaryInstance
 	api.NewUserRoleController(s.engine, s.useCaseManager.UserRolesUseCase())                //user role controller
 	api.NewUserController(s.engine, s.useCaseManager.UsersUseCase())
+	api.NewHRRecruitmentController(s.engine, s.useCaseManager.HRRecruitmentUsecase())
 	api.NewStatusController(s.engine, s.useCaseManager.StatusUseCase())
 	api.NewAuthController(s.engine, s.useCaseManager.AuthUseCase())
 	api.NewFormController(s.engine, s.useCaseManager.FormUseCase(), cloudinaryInstance)

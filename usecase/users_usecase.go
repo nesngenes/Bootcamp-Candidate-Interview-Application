@@ -24,27 +24,27 @@ type userUsecase struct {
 }
 
 func (u *userUsecase) RegisterNewUser(payload model.Users) error {
-	// cek klo kosong
 	if payload.Email == "" || payload.UserName == "" || payload.Password == "" {
 		return fmt.Errorf("email, username, and password are required fields")
 	}
 
-	// cek kali username ada yang sama
 	existingUserByUsername, err := u.userRepo.GetByUserName(payload.UserName)
 	if err == nil && existingUserByUsername.UserName == payload.UserName {
 		return fmt.Errorf("user with username %s already exists", payload.UserName)
 	}
 
-	// Check if a user with the given email already exists
 	existingUserByEmail, err := u.userRepo.GetByEmail(payload.Email)
 	if err == nil && existingUserByEmail.Email == payload.Email {
 		return fmt.Errorf("user with email %s already exists", payload.Email)
 	}
 
-	bytes, _ := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
+	// Hash the password using bcrypt
+	bytes, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return fmt.Errorf("failed to hash password: %v", err)
+	}
 	payload.Password = string(bytes)
 
-	// Create the new user
 	err = u.userRepo.Create(payload)
 	if err != nil {
 		return fmt.Errorf("failed to register new user: %v", err)

@@ -41,7 +41,6 @@ func (b *bootcampRepository) GetByID(id string) (model.Bootcamp, error) {
 	return bootcamp, err
 }
 
-
 func (b *bootcampRepository) List() ([]model.Bootcamp, error) {
 	rows, err := b.db.Query("SELECT * FROM bootcamp")
 	if err != nil {

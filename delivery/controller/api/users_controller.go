@@ -28,17 +28,50 @@ func (c *UserController) createHandler(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, user)
+	// Create the user response object
+	userResponse := map[string]interface{}{
+		"id":        user.Id,
+		"email":     user.Email,
+		"user_name": user.UserName,
+		"user_role": map[string]interface{}{
+			"id":   user.UserRole.Id,
+			"name": user.UserRole.Name,
+		},
+	}
+
+	ctx.JSON(http.StatusCreated, userResponse)
 }
 
-func (c *UserController) listHandler(ctx *gin.Context) {
-	users, err := c.userUC.List()
+func (u *UserController) listHandler(c *gin.Context) {
+	users, err := u.userUC.List()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, users)
+	status := map[string]interface{}{
+		"code":        200,
+		"description": "Get All Data Successfully",
+	}
+
+	userResponses := make([]map[string]interface{}, 0, len(users))
+	for _, user := range users {
+		userResponse := map[string]interface{}{
+			"id":        user.Id,
+			"email":     user.Email,
+			"user_name": user.UserName,
+			"user_role": map[string]interface{}{
+				"id":   user.UserRole.Id,
+				"name": user.UserRole.Name,
+			},
+		}
+		userResponses = append(userResponses, userResponse)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": status,
+		"data":   userResponses,
+	})
 }
 
 func (c *UserController) getHandler(ctx *gin.Context) {
@@ -53,7 +86,7 @@ func (c *UserController) getHandler(ctx *gin.Context) {
 }
 
 func (c *UserController) getByUsernameHandler(ctx *gin.Context) {
-	username := ctx.Param("username")
+	username := ctx.Param("user_name")
 	user, err := c.userUC.GetUserByUserName(username)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -104,7 +137,6 @@ func NewUserController(r *gin.Engine, usecase usecase.UserUsecase) *UserControll
 	rg.GET("/users/:id", controller.getHandler)
 	rg.GET("/users/by-username/:username", controller.getByUsernameHandler)
 	rg.PUT("/users/:id", controller.updateHandler) //bisa update asal role id and role name tetep sama
-
 	rg.DELETE("/users/:id", controller.deleteHandler)
 
 	return &controller

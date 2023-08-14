@@ -14,12 +14,13 @@ type RepoManager interface {
 	StatusRepo() repository.StatusRepository
 	ResumeRepo() repository.ResumeRepository
 	FormRepo() repository.FormRepository
+	UserRolesRepo() repository.UserRolesRepository         //user role
+	UsersRepo() repository.UserRepository                  // user
+	HRRecruitmentRepo() repository.HRRecruitmentRepository //hr
 	InterviewerRepo() repository.InterviewerRepository
 	InterviewProcessRepo() repository.InterviewProcessRepository
 	ResultRepo() repository.ResultRepository
 	CloudinaryInstance() *cloudinary.Cloudinary
-	UserRolesRepo() repository.UserRolesRepository //user role
-	UsersRepo() repository.UserRepository          // user
 }
 
 type repoManager struct {
@@ -69,6 +70,11 @@ func (r *repoManager) UserRolesRepo() repository.UserRolesRepository {
 // user
 func (r *repoManager) UsersRepo() repository.UserRepository {
 	return repository.NewUserRepository(r.infra.Conn())
+}
+
+// hr
+func (r *repoManager) HRRecruitmentRepo() repository.HRRecruitmentRepository {
+	return repository.NewHRRecruitmentRepository(r.infra.Conn())
 }
 
 func NewRepoManager(infra InfraManager) RepoManager {

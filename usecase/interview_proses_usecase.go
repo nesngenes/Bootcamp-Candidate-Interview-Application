@@ -5,6 +5,7 @@ import (
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/repository"
+	"interview_bootcamp/usecase/email" // Add this import
 )
 
 type InterviewProcessUseCase interface {
@@ -18,6 +19,7 @@ type interviewProcessUseCase struct {
 	intUseCase    InterviewerUseCase
 	statusUseCase StatusUseCase
 	formUseCase   FormUseCase
+	emailService  email.EmailService // Add this field
 }
 
 
@@ -48,6 +50,17 @@ func (i *interviewProcessUseCase) RegisterNewInterviewProcess(newInterviewProces
 	err = i.repo.Create(newInterviewProcess)
 	if err != nil {
 		return fmt.Errorf("failed to register new interview process: %v", err)
+	}
+
+    // Send interview email to the candidate
+	candidateEmail := candidate.Email
+	interviewDetails := fmt.Sprintf("Interviewer: %s<br>Interview Date: %s<br>Meeting Link: %s",
+	interviewer.FullName, newInterviewProcess.InterviewDatetime, newInterviewProcess.MeetingLink)
+
+	err = i.emailService.SendInterviewEmail(candidateEmail, interviewDetails)
+	if err != nil {
+		// You can log the error or take other actions
+		return fmt.Errorf("failed to send interview email: %v", err)
 	}
 
 	return nil

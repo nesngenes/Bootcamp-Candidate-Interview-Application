@@ -11,11 +11,11 @@ import (
 	"interview_bootcamp/model"
 )
 
-type repoMock struct {
+type userRepoMock struct {
 	mock.Mock
 }
 
-func (r *repoMock) Create(userRole model.UserRoles) error {
+func (r *userRepoMock) Create(userRole model.UserRoles) error {
 	args := r.Called(userRole)
 	if args.Get(0) != nil {
 		return args.Error(0)
@@ -23,7 +23,7 @@ func (r *repoMock) Create(userRole model.UserRoles) error {
 	return nil
 }
 
-func (r *repoMock) List() ([]model.UserRoles, error) {
+func (r *userRepoMock) List() ([]model.UserRoles, error) {
 	args := r.Called()
 	if args.Get(1) != nil {
 		return nil, args.Error(1)
@@ -31,7 +31,7 @@ func (r *repoMock) List() ([]model.UserRoles, error) {
 	return args.Get(0).([]model.UserRoles), nil
 }
 
-func (r *repoMock) Get(id string) (model.UserRoles, error) {
+func (r *userRepoMock) Get(id string) (model.UserRoles, error) {
 	args := r.Called(id)
 	if args.Get(1) != nil {
 		return model.UserRoles{}, args.Error(1)
@@ -39,7 +39,7 @@ func (r *repoMock) Get(id string) (model.UserRoles, error) {
 	return args.Get(0).(model.UserRoles), nil
 }
 
-func (r *repoMock) GetByName(name string) (model.UserRoles, error) {
+func (r *userRepoMock) GetByName(name string) (model.UserRoles, error) {
 	args := r.Called(name)
 	if args.Get(1) != nil {
 		return model.UserRoles{}, args.Error(1)
@@ -47,7 +47,7 @@ func (r *repoMock) GetByName(name string) (model.UserRoles, error) {
 	return args.Get(0).(model.UserRoles), nil
 }
 
-func (r *repoMock) Update(userRole model.UserRoles) error {
+func (r *userRepoMock) Update(userRole model.UserRoles) error {
 	args := r.Called(userRole)
 	if args.Get(0) != nil {
 		return args.Error(0)
@@ -55,7 +55,7 @@ func (r *repoMock) Update(userRole model.UserRoles) error {
 	return nil
 }
 
-func (r *repoMock) Delete(id string) error {
+func (r *userRepoMock) Delete(id string) error {
 	args := r.Called(id)
 	if args.Get(0) != nil {
 		return args.Error(0)
@@ -65,12 +65,12 @@ func (r *repoMock) Delete(id string) error {
 
 type UserRoleUseCaseTestSuite struct {
 	suite.Suite
-	repoMock *repoMock
+	repoMock *userRepoMock
 	usecase  UserRolesUseCase
 }
 
 func (suite *UserRoleUseCaseTestSuite) SetupTest() {
-	suite.repoMock = new(repoMock)
+	suite.repoMock = new(userRepoMock)
 	suite.usecase = NewUserRolesUseCase(suite.repoMock)
 }
 

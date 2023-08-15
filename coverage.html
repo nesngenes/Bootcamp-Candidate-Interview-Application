@@ -59,9 +59,9 @@
 				
 				<option value="file1">interview_bootcamp/delivery/controller/api/bootcamp_contoller.go (0.0%)</option>
 				
-				<option value="file2">interview_bootcamp/delivery/controller/api/candidate_controller.go (30.5%)</option>
+				<option value="file2">interview_bootcamp/delivery/controller/api/candidate_controller.go (38.1%)</option>
 				
-				<option value="file3">interview_bootcamp/delivery/controller/api/form_controller.go (50.6%)</option>
+				<option value="file3">interview_bootcamp/delivery/controller/api/form_controller.go (30.9%)</option>
 				
 				<option value="file4">interview_bootcamp/delivery/controller/api/hr_controller.go (0.0%)</option>
 				
@@ -83,7 +83,7 @@
 				
 				<option value="file13">interview_bootcamp/repository/candidate_respository.go (96.5%)</option>
 				
-				<option value="file14">interview_bootcamp/repository/form_repository.go (0.0%)</option>
+				<option value="file14">interview_bootcamp/repository/form_repository.go (84.4%)</option>
 				
 				<option value="file15">interview_bootcamp/repository/hr_repository.go (97.4%)</option>
 				
@@ -100,6 +100,30 @@
 				<option value="file21">interview_bootcamp/repository/user_role_repository.go (97.1%)</option>
 				
 				<option value="file22">interview_bootcamp/repository/users_repository.go (80.9%)</option>
+				
+				<option value="file23">interview_bootcamp/usecase/auth_usecase.go (0.0%)</option>
+				
+				<option value="file24">interview_bootcamp/usecase/bootcamp_usecase.go (0.0%)</option>
+				
+				<option value="file25">interview_bootcamp/usecase/candidate_usecase.go (87.8%)</option>
+				
+				<option value="file26">interview_bootcamp/usecase/form_usecase.go (82.1%)</option>
+				
+				<option value="file27">interview_bootcamp/usecase/hr_usecase.go (0.0%)</option>
+				
+				<option value="file28">interview_bootcamp/usecase/interview_proses_usecase.go (0.0%)</option>
+				
+				<option value="file29">interview_bootcamp/usecase/interview_result_usecase.go (0.0%)</option>
+				
+				<option value="file30">interview_bootcamp/usecase/interviewer_usecase.go (0.0%)</option>
+				
+				<option value="file31">interview_bootcamp/usecase/result_usecase.go (0.0%)</option>
+				
+				<option value="file32">interview_bootcamp/usecase/status_usecase.go (100.0%)</option>
+				
+				<option value="file33">interview_bootcamp/usecase/user_role_usecase.go (0.0%)</option>
+				
+				<option value="file34">interview_bootcamp/usecase/users_usecase.go (0.0%)</option>
 				
 				</select>
 			</div>
@@ -395,7 +419,7 @@ func (cc *CandidateController) createHandler(c *gin.Context) <span class="cov8" 
         })</span>
 }
 
-func (cc *CandidateController) listHandler(c *gin.Context) <span class="cov0" title="0">{
+func (cc *CandidateController) listHandler(c *gin.Context) <span class="cov8" title="1">{
         page, _ := strconv.Atoi(c.Query("page"))
         limit, _ := strconv.Atoi(c.Query("limit"))
         paginationParam := dto.PaginationParam{
@@ -404,11 +428,11 @@ func (cc *CandidateController) listHandler(c *gin.Context) <span class="cov0" ti
         }
 
         candidates, paging, err := cc.candidateUsecase.FindAllCandidate(paginationParam)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
                 return
         }</span>
-        <span class="cov0" title="0">status := common.WebStatus{
+        <span class="cov8" title="1">status := common.WebStatus{
                 Code:        http.StatusOK,
                 Description: "Get All Data Successfully",
         }
@@ -418,6 +442,7 @@ func (cc *CandidateController) listHandler(c *gin.Context) <span class="cov0" ti
                 "paging": paging,
         })</span>
 }
+
 func (cc *CandidateController) getHandler(c *gin.Context) <span class="cov8" title="1">{
         id := c.Param("id")
         product, err := cc.candidateUsecase.FindByIdCandidate(id)
@@ -549,7 +574,7 @@ func NewCandidateController(r *gin.Engine, candidateUsecase usecase.CandidateUse
         rg := r.Group("/api/v1")
         rg.POST("/candidates", controller.createHandler)
         // rg.GET("/candidates", middleware.AuthMiddleware("admin", "hr"), controller.listHandler)
-        rg.GET("/candidates")
+        rg.GET("/candidates", controller.listHandler)
         rg.GET("/candidates/:id", controller.getHandler)
         rg.PUT("/candidates", controller.updateHandler)
         rg.DELETE("/candidates/:id", controller.deleteHandler)
@@ -583,25 +608,25 @@ type FormController struct {
 }
 
 
-func (f *FormController) createHandler(c *gin.Context) <span class="cov8" title="1">{
+func (f *FormController) createHandler(c *gin.Context) <span class="cov0" title="0">{
         err := c.Request.ParseMultipartForm(10 &lt;&lt; 20)
 
-        if err != nil </span><span class="cov8" title="1">{
+        if err != nil </span><span class="cov0" title="0">{
                 c.JSON(http.StatusBadRequest, gin.H{"err": "Error parsing form data"})
                 return
         }</span>
 
-        <span class="cov8" title="1">var form model.Form
+        <span class="cov0" title="0">var form model.Form
         err = c.ShouldBind(&amp;form)
         if err != nil </span><span class="cov0" title="0">{
                 c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
                 return
         }</span>
-        <span class="cov8" title="1">form.FormID = common.GenerateID()
+        <span class="cov0" title="0">form.FormID = common.GenerateID()
 
         // Create a new file upload form field
         file, _, err := c.Request.FormFile("file")
-        if err != nil </span><span class="cov8" title="1">{
+        if err != nil </span><span class="cov0" title="0">{
                 c.JSON(http.StatusBadRequest, gin.H{"err": "Error retrieving the file"})
                 return
         }</span>
@@ -732,7 +757,7 @@ func (f *FormController) updateHandler(c *gin.Context) <span class="cov8" title=
         })</span>
 }
 
-func (f *FormController) deleteHandler(c *gin.Context) <span class="cov8" title="1">{
+func (f *FormController) deleteHandler(c *gin.Context) <span class="cov0" title="0">{
         id := c.Param("id")
 
         if err := f.usecase.DeleteForm(id); err != nil </span><span class="cov0" title="0">{
@@ -740,7 +765,7 @@ func (f *FormController) deleteHandler(c *gin.Context) <span class="cov8" title=
                 return
         }</span>
 
-        <span class="cov8" title="1">status := map[string]any {
+        <span class="cov0" title="0">status := map[string]any {
                 "code": http.StatusNoContent,
                 "description": "delete data succesfully",
         }
@@ -894,7 +919,6 @@ import (
         "interview_bootcamp/utils/common"
         "net/http"
         "strconv"
-
         "github.com/gin-gonic/gin"
 )
 
@@ -918,6 +942,7 @@ func (i *InterviewProcessController) createHandler(c *gin.Context) <span class="
 
         <span class="cov0" title="0">c.JSON(http.StatusOK, interviewProcess)</span>
 }
+
 func (i *InterviewProcessController) listHandler(c *gin.Context) <span class="cov0" title="0">{
         page, _ := strconv.Atoi(c.Query("page"))
         limit, _ := strconv.Atoi(c.Query("limit"))
@@ -1916,12 +1941,12 @@ type formRepository struct {
         db *sql.DB
 }
 
-func (f *formRepository) Create(payload model.Form) error <span class="cov0" title="0">{
+func (f *formRepository) Create(payload model.Form) error <span class="cov8" title="1">{
         _, err := f.db.Exec("INSERT INTO form (id, form_link) VALUES ($1, $2)", payload.FormID, payload.FormLink)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err 
         }</span>
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 func (f *formRepository) Get(id string) (model.Form, error) <span class="cov0" title="0">{
@@ -1933,28 +1958,28 @@ func (f *formRepository) Get(id string) (model.Form, error) <span class="cov0" t
         return form, err
 }</span>
 
-func (f *formRepository) Paging(requestPaging dto.PaginationParam) ([]model.Form, dto.Paging, error) <span class="cov0" title="0">{
+func (f *formRepository) Paging(requestPaging dto.PaginationParam) ([]model.Form, dto.Paging, error) <span class="cov8" title="1">{
         var paginationQuery dto.PaginationQuery
         paginationQuery = common.GetPaginationParams(requestPaging)
         rows, err := f.db.Query("SELECT * FROM form  LIMIT $1 OFFSET $2", paginationQuery.Take, paginationQuery.Skip)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, dto.Paging{}, err
         }</span>
-        <span class="cov0" title="0">var forms []model.Form
-        for rows.Next() </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">var forms []model.Form
+        for rows.Next() </span><span class="cov8" title="1">{
                 var form model.Form
                 err := rows.Scan(&amp;form.FormID, &amp;form.FormLink)
                 if err != nil </span><span class="cov0" title="0">{
                         return nil, dto.Paging{}, err
                 }</span>
-                <span class="cov0" title="0">forms = append(forms, form)</span>
+                <span class="cov8" title="1">forms = append(forms, form)</span>
         }
 
         // count bootcamp
-        <span class="cov0" title="0">var totalRows int
+        <span class="cov8" title="1">var totalRows int
         row := f.db.QueryRow("SELECT COUNT(*) FROM status")
         err = row.Scan(&amp;totalRows)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, dto.Paging{}, err
         }</span>
 
@@ -1962,7 +1987,7 @@ func (f *formRepository) Paging(requestPaging dto.PaginationParam) ([]model.Form
 
 }
 
-func (f *formRepository) Update(payload model.Form) error <span class="cov0" title="0">{
+func (f *formRepository) Update(payload model.Form) error <span class="cov8" title="1">{
         _, err := f.db.Exec(
                 "UPDATE form SET form_link = $2 WHERE id = $1",
                 payload.FormID, payload.FormLink,
@@ -1970,15 +1995,15 @@ func (f *formRepository) Update(payload model.Form) error <span class="cov0" tit
         return err
 }</span>
 
-func (f *formRepository) Delete(id string) error <span class="cov0" title="0">{
+func (f *formRepository) Delete(id string) error <span class="cov8" title="1">{
         _, err := f.db.Exec("DELETE FROM form WHERE id=$1", id)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func NewFormRepository(db *sql.DB) FormRepository <span class="cov0" title="0">{
+func NewFormRepository(db *sql.DB) FormRepository <span class="cov8" title="1">{
         return &amp;formRepository{db: db}
 }</pre>
 		
@@ -2132,31 +2157,32 @@ type interviewProcessRepository struct {
 }
 
 func (i *interviewProcessRepository) Create(payload model.InterviewProcess) error <span class="cov0" title="0">{
-        tx, err := i.db.Begin()
+    tx, err := i.db.Begin()
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+
+    <span class="cov0" title="0">defer func() </span><span class="cov0" title="0">{
         if err != nil </span><span class="cov0" title="0">{
-                return err
+            tx.Rollback() // Rollback the transaction if there was an error
         }</span>
+    }()
 
-        <span class="cov0" title="0">defer func() </span><span class="cov0" title="0">{
-                if err != nil </span><span class="cov0" title="0">{
-                        tx.Rollback() // Rollback the transaction if there was an error
-                }</span>
-        }()
+    // Insert interview process
+    <span class="cov0" title="0">_, err = tx.Exec("INSERT INTO interviews_process (id, candidate_id, interviewer_id, interview_datetime, meeting_link, form_interview, status_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", payload.ID, payload.CandidateID, payload.InterviewerID, payload.InterviewDatetime, payload.MeetingLink, payload.FormLink, payload.StatusID)
 
-        // Insert interview process
-        <span class="cov0" title="0">_, err = tx.Exec("INSERT INTO interviews_process (id, candidate_id, interviewer_id, interview_datetime, meeting_link, form_interview, status_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", payload.ID, payload.CandidateID, payload.InterviewerID, payload.InterviewDatetime, payload.MeetingLink, payload.FormInterview, payload.StatusID)
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
 
-        if err != nil </span><span class="cov0" title="0">{
-                return err
-        }</span>
+    <span class="cov0" title="0">err = tx.Commit() // Commit the transaction if everything is successful
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
 
-        <span class="cov0" title="0">err = tx.Commit() // Commit the transaction if everything is successful
-        if err != nil </span><span class="cov0" title="0">{
-                return err
-        }</span>
-
-        <span class="cov0" title="0">return nil</span>
+    <span class="cov0" title="0">return nil</span>
 }
+
 
 func (i *interviewProcessRepository) Get(id string) (dto.InterviewProcessResponseDto, error) <span class="cov0" title="0">{
         var interviewPrResponseDto dto.InterviewProcessResponseDto
@@ -2178,7 +2204,7 @@ func (i *interviewProcessRepository) Get(id string) (dto.InterviewProcessRespons
 
         err := i.db.QueryRow(sqlInterviewProcess, id).Scan(
                 &amp;interviewPrResponseDto.ID, &amp;interviewPrResponseDto.InterviewDatetime, &amp;interviewPrResponseDto.MeetingLink,
-                &amp;interviewPrResponseDto.FormInterview,
+                &amp;interviewPrResponseDto.FormLink,
                 &amp;interviewPrResponseDto.Candidate.CandidateID, &amp;interviewPrResponseDto.Candidate.FullName,
                 &amp;interviewPrResponseDto.Candidate.Email,
                 &amp;interviewPrResponseDto.Candidate.DateOfBirth, &amp;interviewPrResponseDto.Candidate.Address,
@@ -2225,7 +2251,7 @@ func (i *interviewProcessRepository) List(_ dto.PaginationParam) ([]dto.Intervie
                 var interviewProcess dto.InterviewProcessResponseDto
                 err := rows.Scan(
                         &amp;interviewProcess.ID, &amp;interviewProcess.InterviewDatetime, &amp;interviewProcess.MeetingLink,
-                        &amp;interviewProcess.FormInterview,
+                        &amp;interviewProcess.FormLink,
                         &amp;interviewProcess.Candidate.CandidateID, &amp;interviewProcess.Candidate.FullName,
                         &amp;interviewProcess.Candidate.Email,
                         &amp;interviewProcess.Candidate.DateOfBirth, &amp;interviewProcess.Candidate.Address,
@@ -2895,6 +2921,990 @@ func (u *userRepository) GetUsernamePassword(username string, password string) (
 
 func NewUserRepository(db *sql.DB) UserRepository <span class="cov8" title="1">{
         return &amp;userRepository{db}
+}</span>
+</pre>
+		
+		<pre class="file" id="file23" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/utils/security"
+)
+
+type AuthUseCase interface {
+        Login(username string, password string) (string, error)
+}
+
+type authUseCase struct {
+        usecase UserUsecase
+        roleUC  UserRolesUseCase
+}
+
+func (a *authUseCase) Login(username string, password string) (string, error) <span class="cov0" title="0">{
+        user, err := a.usecase.FindByUsernamePassword(username, password)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("invalid username or password")
+        }</span>
+
+        <span class="cov0" title="0">role, _ := a.roleUC.GetUserRoleByID(user.UserRole.Id)
+        user.UserRole = role
+
+        token, err := security.CreateAccessToken(user)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", fmt.Errorf("failed to generate token")
+        }</span>
+        <span class="cov0" title="0">return token, nil</span>
+}
+
+func NewAuthUseCase(usecase UserUsecase, roleUC UserRolesUseCase) AuthUseCase <span class="cov0" title="0">{
+        return &amp;authUseCase{usecase: usecase, roleUC: roleUC}
+}</span>
+</pre>
+		
+		<pre class="file" id="file24" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/repository"
+)
+
+type BootcampUseCase interface {
+        RegisterNewBootcamp(payload model.Bootcamp) error
+        FindAllBootcamp(requesPaging dto.PaginationParam) ([]model.Bootcamp, dto.Paging, error)
+        FindByIdBootcamp(id string) (model.Bootcamp, error)
+        UpdateBootcamp(payload model.Bootcamp) error
+        DeleteBootcamp(id string) error
+        GetBootcampByID(id string) (model.Bootcamp, error)
+}
+type bootcampUseCase struct {
+        repo repository.BootcampRepository
+}
+
+func (b *bootcampUseCase) RegisterNewBootcamp(payload model.Bootcamp) error <span class="cov0" title="0">{
+        if payload.Name == "" || payload.Location == "" || payload.StartDate.String() == "" || payload.EndDate.String() == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("name ,location strat_date and end_date required fields")
+        }</span>
+        <span class="cov0" title="0">isExistCandidate, _ := b.repo.GetByName(payload.Name)
+        if isExistCandidate.Name == payload.Name </span><span class="cov0" title="0">{
+                return fmt.Errorf("candidate with name %s exists", payload.Name)
+        }</span>
+        <span class="cov0" title="0">err := b.repo.Create(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to create new botcamp: %v", err)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (b *bootcampUseCase) GetBootcampByID(id string) (model.Bootcamp, error) <span class="cov0" title="0">{
+        bootcamp, err := b.repo.GetByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Bootcamp{}, fmt.Errorf("bootcamp with id %s not found", id)
+        }</span>
+        <span class="cov0" title="0">return bootcamp, nil</span>
+}
+
+func (b *bootcampUseCase) FindAllBootcamp(requesPaging dto.PaginationParam) ([]model.Bootcamp, dto.Paging, error) <span class="cov0" title="0">{
+        return b.repo.Paging(requesPaging)
+}</span>
+
+func (b *bootcampUseCase) FindByIdBootcamp(id string) (model.Bootcamp, error) <span class="cov0" title="0">{
+        bootcamp, err := b.repo.Get(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Bootcamp{}, fmt.Errorf("bootcamp with id %s not found", id)
+        }</span>
+        <span class="cov0" title="0">return bootcamp, nil</span>
+}
+func (b *bootcampUseCase) UpdateBootcamp(payload model.Bootcamp) error <span class="cov0" title="0">{
+        if payload.Name == "" || payload.Location == "" || payload.StartDate.String() == "" || payload.EndDate.String() == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("name ,location strat_date and end_date required fields")
+        }</span>
+
+        <span class="cov0" title="0">err := b.repo.Update(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to update bootcamp: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+func (b *bootcampUseCase) DeleteBootcamp(id string) error <span class="cov0" title="0">{
+        bootcamp, err := b.FindByIdBootcamp(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("bootcamp with ID %s not found", id)
+        }</span>
+
+        <span class="cov0" title="0">err = b.repo.Delete(bootcamp.BootcampId)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to delete bootcamp: %v", err.Error())
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+func NewBootcampUseCase(repo repository.BootcampRepository) BootcampUseCase <span class="cov0" title="0">{
+        return &amp;bootcampUseCase{repo: repo}
+}</span>
+</pre>
+		
+		<pre class="file" id="file25" style="display: none">package usecase
+
+import (
+        "context"
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/repository"
+
+        "github.com/cloudinary/cloudinary-go/v2"
+        "github.com/cloudinary/cloudinary-go/v2/api/uploader"
+)
+
+type CandidateUseCase interface {
+        RegisterNewCandidate(payload model.Candidate) error
+        FindAllCandidate(dto.PaginationParam) ([]model.Candidate, dto.Paging, error)
+        FindByIdCandidate(id string) (model.Candidate, error)
+        UpdateCandidate(payload model.Candidate) error
+        DeleteCandidate(id string) error
+}
+
+type candidateUseCase struct {
+        repo       repository.CandidateRepository
+        bootcampUC BootcampUseCase
+        cloudinary *cloudinary.Cloudinary
+}
+
+// RegisterNewCandidate implements CandidateUseCase.
+func (c *candidateUseCase) RegisterNewCandidate(payload model.Candidate) error <span class="cov8" title="1">{
+        //pengecekan nama tidak boleh kosong
+        if payload.FullName == "" &amp;&amp; payload.Phone == "" &amp;&amp; payload.Email == "" &amp;&amp; payload.Address == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("fullname, email, phone, address, date of birth required fields")
+        }</span>
+
+        // pengecekan email tidak boleh sama
+        <span class="cov8" title="1">isExistCandidateEmail, _ := c.repo.GetByEmail(payload.Email)
+        if isExistCandidateEmail.Email == payload.Email </span><span class="cov8" title="1">{
+                return fmt.Errorf("candidate with email %s exists", payload.Email)
+        }</span>
+
+        //pengecekan phone number tidak boleh sama
+        <span class="cov8" title="1">isExistCandidatePhone, _ := c.repo.GetByPhoneNumber(payload.Phone)
+        if isExistCandidatePhone.Phone == payload.Phone </span><span class="cov8" title="1">{
+                return fmt.Errorf("candidate with phoone %s exists", payload.Phone)
+        }</span>
+
+        <span class="cov8" title="1">_, err := c.bootcampUC.FindByIdBootcamp(payload.Bootcamp.BootcampId)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("bootcamp with ID %s not found", payload.Bootcamp.BootcampId)
+        }</span>
+
+        <span class="cov8" title="1">err = c.repo.Create(payload)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to create new candidate: %v", err)
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+// FindAllCandidate implements CandidateUseCase.
+func (c *candidateUseCase) FindAllCandidate(requesPaging dto.PaginationParam) ([]model.Candidate, dto.Paging, error) <span class="cov8" title="1">{
+        return c.repo.Paging(requesPaging)
+}</span>
+
+// FindByIdCandidate implements CandidateUseCase.
+func (c *candidateUseCase) FindByIdCandidate(id string) (model.Candidate, error) <span class="cov8" title="1">{
+        candidate, err := c.repo.Get(id)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Candidate{}, fmt.Errorf("candidate with id %s not found", id)
+        }</span>
+        <span class="cov8" title="1">return candidate, nil</span>
+}
+
+// DeleteCandidate implements CandidateUseCase.
+func (c *candidateUseCase) DeleteCandidate(id string) error <span class="cov8" title="1">{
+        candidate, err := c.FindByIdCandidate(id)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("candidate with ID %s not found", id)
+        }</span>
+
+        <span class="cov8" title="1">err = c.repo.Delete(candidate.CandidateID)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to delete candidate: %v", err.Error())
+        }</span>
+
+        // Hapus file dari cloudinary
+        <span class="cov0" title="0">publicID := "candidates/" + candidate.CandidateID
+        _, err = c.cloudinary.Upload.Destroy(context.Background(), uploader.DestroyParams{
+                PublicID: publicID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to delete file from Cloudinary: %v", err)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// UpdateCandidate implements CandidateUseCase.
+func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error <span class="cov8" title="1">{
+
+        if payload.Phone == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("kolom nomor harus di isi")
+        }</span>
+
+        <span class="cov8" title="1">_, err := c.bootcampUC.FindByIdBootcamp(payload.Bootcamp.BootcampId)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("bootcamp with ID %s not found", payload.Bootcamp.BootcampId)
+        }</span>
+
+        <span class="cov8" title="1">err = c.repo.Update(payload)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("gagal memperbarui nomor: %v", err)
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func NewCandidateUseCase(repo repository.CandidateRepository, bootcampUC BootcampUseCase, cloudinary *cloudinary.Cloudinary) CandidateUseCase <span class="cov8" title="1">{
+        return &amp;candidateUseCase{
+                repo:       repo,
+                bootcampUC: bootcampUC,
+                cloudinary: cloudinary,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file26" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/repository"
+        "github.com/cloudinary/cloudinary-go/v2"
+    "github.com/cloudinary/cloudinary-go/v2/api/uploader"
+        "interview_bootcamp/model/dto"
+        "context"
+)
+
+type FormUseCase interface {
+        RegisterNewForm(payload model.Form) error
+        DeleteForm(id string) error
+        FindByIdForm(id string) (model.Form, error)
+    UpdateForm(payload model.Form) error
+        FindAllForm(dto.PaginationParam) ([]model.Form, dto.Paging, error)
+}
+
+type formUseCase struct {
+        repo repository.FormRepository
+        cloudinary *cloudinary.Cloudinary
+}
+
+func (f *formUseCase) RegisterNewForm(payload model.Form) error <span class="cov8" title="1">{
+        err := f.repo.Create(payload)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to create new form: %v", err)
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (f *formUseCase) FindByIdForm(id string) (model.Form, error) <span class="cov8" title="1">{
+    form, err := f.repo.Get(id) // Implement a method to retrieve a form by its ID from the repository
+    if err != nil </span><span class="cov8" title="1">{
+        return model.Form{}, fmt.Errorf("failed to retrieve form: %v", err)
+    }</span>
+    <span class="cov8" title="1">return form, nil</span>
+}
+
+func (f *formUseCase) FindAllForm(requestPaging dto.PaginationParam) ([]model.Form, dto.Paging, error) <span class="cov8" title="1">{
+        forms, paging, err := f.repo.Paging(requestPaging)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, dto.Paging{}, fmt.Errorf("failed to retrieve forms: %v", err)
+        }</span>
+        <span class="cov8" title="1">return forms, paging, nil</span>
+}
+
+func (f *formUseCase) DeleteForm(id string) error <span class="cov8" title="1">{
+        form, err := f.FindByIdForm(id)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("form with ID %s not found", id)
+        }</span>
+
+        <span class="cov8" title="1">err = f.repo.Delete(form.FormID)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to delete form: %v", err.Error())
+        }</span>
+
+        // Hapus file dari cloudinary
+        <span class="cov0" title="0">publicID := "forms/" + form.FormID
+        _, err = f.cloudinary.Upload.Destroy(context.Background(), uploader.DestroyParams{
+                PublicID: publicID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to delete file from Cloudinary: %v", err)
+        }</span>        
+        <span class="cov0" title="0">return nil</span>
+}
+
+// UpdateForm implements FormUseCase.
+func (f *formUseCase) UpdateForm(payload model.Form) error <span class="cov8" title="1">{
+        err := f.repo.Update(payload)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to update form: %v", err)
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func NewFormUseCase(repo repository.FormRepository, cloudinary *cloudinary.Cloudinary) FormUseCase <span class="cov8" title="1">{
+        return &amp;formUseCase{
+                repo: repo,
+                cloudinary: cloudinary,
+        }
+}</pre>
+		
+		<pre class="file" id="file27" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/repository"
+)
+
+type HRRecruitmentUsecase interface {
+        CreateHRRecruitment(payload model.HRRecruitment) error
+        Get(id string) (model.HRRecruitment, error)
+        ListHRRecruitments() ([]model.HRRecruitment, error)
+        UpdateHRRecruitment(payload model.HRRecruitment) error
+        DeleteHRRecruitment(id string) error
+}
+
+type hrRecruitmentUsecase struct {
+        hrRecruitmentRepo repository.HRRecruitmentRepository
+        userRepo          repository.UserRepository
+}
+
+func (u *hrRecruitmentUsecase) CreateHRRecruitment(payload model.HRRecruitment) error <span class="cov0" title="0">{
+        // Check if the new user ID is already in use by another HR recruitment record
+        _, err := u.userRepo.Get(payload.UserID)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("user with ID %s not found", payload.UserID)
+        }</span>
+
+        <span class="cov0" title="0">existingHRRecruitment, err := u.hrRecruitmentRepo.GetByUserID(payload.UserID)
+        if err == nil &amp;&amp; existingHRRecruitment.ID != "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("user ID %s is already in use by another HR recruitment record", payload.UserID)
+        }</span>
+
+        <span class="cov0" title="0">return u.hrRecruitmentRepo.Create(payload)</span>
+}
+
+func (u *hrRecruitmentUsecase) Get(id string) (model.HRRecruitment, error) <span class="cov0" title="0">{
+        hrRecruitment, err := u.hrRecruitmentRepo.Get(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return model.HRRecruitment{}, err
+        }</span>
+
+        <span class="cov0" title="0">return hrRecruitment, nil</span>
+}
+
+func (u *hrRecruitmentUsecase) ListHRRecruitments() ([]model.HRRecruitment, error) <span class="cov0" title="0">{
+        return u.hrRecruitmentRepo.List()
+}</span>
+
+func (u *hrRecruitmentUsecase) UpdateHRRecruitment(payload model.HRRecruitment) error <span class="cov0" title="0">{
+        // Check if the HR recruitment record exists
+        _, err := u.hrRecruitmentRepo.Get(payload.ID)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("HR recruitment record with ID %s not found", payload.ID) //brarti user_id nya emg ga ada.
+        }</span>
+
+        // Check if the new user ID is already in use by another HR recruitment record
+        <span class="cov0" title="0">otherHRRecruitment, err := u.hrRecruitmentRepo.GetByUserID(payload.UserID)
+        if err == nil &amp;&amp; otherHRRecruitment.ID != payload.ID </span><span class="cov0" title="0">{
+                return fmt.Errorf("user ID %s is already in use by another HR recruitment record", payload.UserID) //ada hr lain yang udah make user_id nya
+        }</span>
+
+        // Update the HR recruitment record
+        <span class="cov0" title="0">err = u.hrRecruitmentRepo.Update(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to update HR recruitment record: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (u *hrRecruitmentUsecase) DeleteHRRecruitment(id string) error <span class="cov0" title="0">{
+        return u.hrRecruitmentRepo.Delete(id)
+}</span>
+
+func NewHRRecruitmentUsecase(hrRecruitmentRepo repository.HRRecruitmentRepository, userRepo repository.UserRepository) HRRecruitmentUsecase <span class="cov0" title="0">{
+        return &amp;hrRecruitmentUsecase{
+                hrRecruitmentRepo: hrRecruitmentRepo,
+                userRepo:          userRepo,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file28" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/repository"
+)
+
+type InterviewProcessUseCase interface {
+        RegisterNewInterviewProcess(payload model.InterviewProcess) error
+        FindByIdInterviewProcess(id string) (dto.InterviewProcessResponseDto, error)
+        FindAllInterviewProcess(requestPaging dto.PaginationParam) ([]dto.InterviewProcessResponseDto, dto.Paging, error)
+}
+type interviewProcessUseCase struct {
+        repo          repository.InterviewProcessRepository
+        canUseCase    CandidateUseCase
+        intUseCase    InterviewerUseCase
+        statusUseCase StatusUseCase
+        formUseCase   FormUseCase
+}
+
+
+func (i *interviewProcessUseCase) RegisterNewInterviewProcess(newInterviewProcess model.InterviewProcess) error <span class="cov0" title="0">{
+        // get candidate
+        candidate, err := i.canUseCase.FindByIdCandidate(newInterviewProcess.CandidateID)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("candidate with ID %s not found", newInterviewProcess.CandidateID)
+        }</span>
+        <span class="cov0" title="0">interviewer, err := i.intUseCase.FindByIdInterviewer(newInterviewProcess.InterviewerID)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("interviewer with ID %s not found", newInterviewProcess.InterviewerID)
+        }</span>
+        <span class="cov0" title="0">status, err := i.statusUseCase.FindByIdStatus(newInterviewProcess.StatusID)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("status with ID %s not found", newInterviewProcess.StatusID)
+        }</span>
+        <span class="cov0" title="0">form, err := i.formUseCase.FindByIdForm(newInterviewProcess.FormID) // Retrieve the form using Form.ID
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("form with ID %s not found", newInterviewProcess.FormID)
+        }</span>
+
+        <span class="cov0" title="0">newInterviewProcess.CandidateID = candidate.CandidateID
+        newInterviewProcess.InterviewerID = interviewer.InterviewerID
+        newInterviewProcess.StatusID = status.StatusId
+        newInterviewProcess.FormLink = form.FormLink // Set the FormLink based on the retrieved form
+
+        err = i.repo.Create(newInterviewProcess)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to register new interview process: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (i *interviewProcessUseCase) FindAllInterviewProcess(requestPaging dto.PaginationParam) ([]dto.InterviewProcessResponseDto, dto.Paging, error) <span class="cov0" title="0">{
+        return i.repo.List(requestPaging)
+}</span>
+func (i *interviewProcessUseCase) FindByIdInterviewProcess(id string) (dto.InterviewProcessResponseDto, error) <span class="cov0" title="0">{
+        var interviewPrResponseDto dto.InterviewProcessResponseDto
+        interviewPrResponse, err := i.repo.Get(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return dto.InterviewProcessResponseDto{}, fmt.Errorf("failed get by id interviewProcess: %v", err.Error())
+        }</span>
+
+        <span class="cov0" title="0">interviewPrResponseDto = interviewPrResponse
+        return interviewPrResponseDto, nil</span>
+
+}
+func NewInterviewProcessUseCase(repo repository.InterviewProcessRepository, canUseCase CandidateUseCase, intUseCase InterviewerUseCase, statusUseCase StatusUseCase, formUseCase FormUseCase) InterviewProcessUseCase <span class="cov0" title="0">{
+        return &amp;interviewProcessUseCase{
+                repo:          repo,
+                canUseCase:    canUseCase,
+                intUseCase:    intUseCase,
+                statusUseCase: statusUseCase,
+                formUseCase:   formUseCase,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file29" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/repository"
+)
+
+type InterviewResultUseCase interface {
+        RegisterNewInterviewResult(payload model.InterviewResult) error
+        FindByIdInterviewResult(id string) (dto.InterviewResultResponseDto, error)
+        FindAllInterviewResult(requestPaging dto.PaginationParam) ([]dto.InterviewResultResponseDto, dto.Paging, error)
+}
+type interviewResultUseCase struct {
+        repo                    repository.InterviewResultRepository
+        interviewProcessUseCase interviewProcessUseCase
+        resultUseCase           ResultUseCase
+}
+
+func (i *interviewResultUseCase) RegisterNewInterviewResult(newInterviewResult model.InterviewResult) error <span class="cov0" title="0">{
+        // get candidate
+        InterviewP, err := i.interviewProcessUseCase.FindByIdInterviewProcess(newInterviewResult.InterviewId)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("interviewProcess with ID %s not found", newInterviewResult.InterviewId)
+        }</span>
+        <span class="cov0" title="0">result, err := i.resultUseCase.FindByIdResult(newInterviewResult.ResultId)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("result with ID %s not found", newInterviewResult.ResultId)
+        }</span>
+
+        <span class="cov0" title="0">newInterviewResult.InterviewId = InterviewP.ID
+        newInterviewResult.ResultId = result.ResultId
+
+        err = i.repo.Create(newInterviewResult)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to register new interview Result %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+func (i *interviewResultUseCase) FindAllInterviewResult(requestPaging dto.PaginationParam) ([]dto.InterviewResultResponseDto, dto.Paging, error) <span class="cov0" title="0">{
+        return i.repo.List(requestPaging)
+}</span>
+func (i *interviewResultUseCase) FindByIdInterviewResult(id string) (dto.InterviewResultResponseDto, error) <span class="cov0" title="0">{
+        var interviewResultResponseDto dto.InterviewResultResponseDto
+        interviewResultResponse, err := i.repo.Get(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return dto.InterviewResultResponseDto{}, fmt.Errorf("failed get by id interviewResult: %v", err.Error())
+        }</span>
+
+        <span class="cov0" title="0">interviewResultResponseDto = interviewResultResponse
+        return interviewResultResponseDto, nil</span>
+
+}
+
+func NewInterviewResultUseCase(repo repository.InterviewResultRepository, interviewPUseCase InterviewProcessUseCase, resultUseCase ResultUseCase) InterviewResultUseCase <span class="cov0" title="0">{
+        return &amp;interviewResultUseCase{
+                repo:                    repo,
+                interviewProcessUseCase: interviewProcessUseCase{},
+                resultUseCase:           resultUseCase,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file30" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/repository"
+)
+
+type InterviewerUseCase interface {
+        RegisterNewInterviewer(payload model.Interviewer) error
+        FindAllInterviewer() ([]model.Interviewer, error)
+        FindByIdInterviewer(id string) (model.Interviewer, error)
+        UpdateInterviewer(payload model.Interviewer) error
+        DeleteInterviewer(id string) error
+}
+
+type interviewerUseCase struct {
+        repo repository.InterviewerRepository
+}
+
+// RegisterNewInterviewer implements InterviewerUseCase.
+func (i *interviewerUseCase) RegisterNewInterviewer(payload model.Interviewer) error <span class="cov0" title="0">{
+        //pengecekan field tidak boleh kosong
+        if payload.InterviewerID == "" &amp;&amp; payload.FullName == "" &amp;&amp; payload.UserID == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("id, full name, user id required fields")
+        }</span>
+
+        <span class="cov0" title="0">err := i.repo.Create(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to create new interviewer: %v", err)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// FindAllInterviewer implements InterviewerUseCase.
+func (i *interviewerUseCase) FindAllInterviewer() ([]model.Interviewer, error) <span class="cov0" title="0">{
+        return i.repo.List()
+}</span>
+
+// FindByIdInterviewer implements InterviewerUseCase.
+func (i *interviewerUseCase) FindByIdInterviewer(id string) (model.Interviewer, error) <span class="cov0" title="0">{
+        return i.repo.Get(id)
+}</span>
+
+// DeleteInterviewer implements InterviewerUseCase.
+func (i *interviewerUseCase) DeleteInterviewer(id string) error <span class="cov0" title="0">{
+        interviewer, err := i.FindByIdInterviewer(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("interviewer with ID %s not found", id)
+        }</span>
+
+        <span class="cov0" title="0">err = i.repo.Delete(interviewer.InterviewerID)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to delete interviewer: %v", err.Error())
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// UpdateInterviewer implements InterviewerUseCase.
+func (i *interviewerUseCase) UpdateInterviewer(payload model.Interviewer) error <span class="cov0" title="0">{
+        if payload.InterviewerID == "" || payload.FullName == "" || payload.UserID == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("id, full name , user id are required fields")
+        }</span>
+
+        <span class="cov0" title="0">err := i.repo.Update(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to update interviewer: %v", err.Error())
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+
+}
+
+func NewInterviewerUseCase(repo repository.InterviewerRepository) InterviewerUseCase <span class="cov0" title="0">{
+        return &amp;interviewerUseCase{repo: repo}
+}</span>
+</pre>
+		
+		<pre class="file" id="file31" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/repository"
+)
+
+type ResultUseCase interface {
+        RegisterNewResult(payload model.Result) error
+        FindAllResult(requesPaging dto.PaginationParam) ([]model.Result, dto.Paging, error)
+        FindByIdResult(id string) (model.Result, error)
+        UpdateResult(payload model.Result) error
+        DeleteResult(id string) error
+}
+type resultUseCase struct {
+        repo repository.ResultRepository
+}
+
+func (r *resultUseCase) RegisterNewResult(payload model.Result) error <span class="cov0" title="0">{
+        if payload.Name == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("name  required fields")
+        }</span>
+        <span class="cov0" title="0">isExistResult, _ := r.repo.GetByName(payload.Name)
+        if isExistResult.Name == payload.Name </span><span class="cov0" title="0">{
+                return fmt.Errorf("ERR result with name %s exits", payload.Name)
+        }</span>
+        <span class="cov0" title="0">err := r.repo.Create(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to create new result: %v", err)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+func (r *resultUseCase) FindAllResult(requesPaging dto.PaginationParam) ([]model.Result, dto.Paging, error) <span class="cov0" title="0">{
+        return r.repo.Paging(requesPaging)
+}</span>
+func (r *resultUseCase) FindByIdResult(id string) (model.Result, error) <span class="cov0" title="0">{
+        result, err := r.repo.Get(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return model.Result{}, fmt.Errorf("result with id %s not found", id)
+        }</span>
+        <span class="cov0" title="0">return result, nil</span>
+}
+func (r *resultUseCase) UpdateResult(payload model.Result) error <span class="cov0" title="0">{
+        if payload.Name == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("name  required fields")
+        }</span>
+
+        <span class="cov0" title="0">err := r.repo.Update(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to update result: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+func (r *resultUseCase) DeleteResult(id string) error <span class="cov0" title="0">{
+        result, err := r.FindByIdResult(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("result with ID %s not found", id)
+        }</span>
+
+        <span class="cov0" title="0">err = r.repo.Delete(result.ResultId)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to delete result: %v", err.Error())
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+func NewResultUseCase(repo repository.ResultRepository) ResultUseCase <span class="cov0" title="0">{
+        return &amp;resultUseCase{repo: repo}
+}</span>
+</pre>
+		
+		<pre class="file" id="file32" style="display: none">package usecase
+
+import (
+        "fmt"
+
+        "interview_bootcamp/model"
+        "interview_bootcamp/model/dto"
+        "interview_bootcamp/repository"
+)
+
+type StatusUseCase interface {
+        RegisterNewStatus(payload model.Status) error
+        FindAllStatus(requesPaging dto.PaginationParam) ([]model.Status, dto.Paging, error)
+        FindByIdStatus(id string) (model.Status, error)
+        UpdateStatus(payload model.Status) error
+        DeleteStatus(id string) error
+}
+type statusUseCase struct {
+        repo repository.StatusRepository
+}
+
+func (s *statusUseCase) RegisterNewStatus(payload model.Status) error <span class="cov8" title="1">{
+        if payload.Name == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("name  required fields")
+        }</span>
+        <span class="cov8" title="1">isExistStatus, _ := s.repo.GetByName(payload.Name)
+        if isExistStatus.Name == payload.Name </span><span class="cov8" title="1">{
+                return fmt.Errorf("ERR status with name %s exits", payload.Name)
+        }</span>
+        <span class="cov8" title="1">err := s.repo.Create(payload)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to create new status: %v", err)
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+func (s *statusUseCase) FindAllStatus(requesPaging dto.PaginationParam) ([]model.Status, dto.Paging, error) <span class="cov8" title="1">{
+        return s.repo.Paging(requesPaging)
+}</span>
+func (s *statusUseCase) FindByIdStatus(id string) (model.Status, error) <span class="cov8" title="1">{
+        status, err := s.repo.Get(id)
+        if err != nil </span><span class="cov8" title="1">{
+                return model.Status{}, fmt.Errorf("status with id %s not found", id)
+        }</span>
+        <span class="cov8" title="1">return status, nil</span>
+}
+func (s *statusUseCase) UpdateStatus(payload model.Status) error <span class="cov8" title="1">{
+        if payload.Name == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("name  required fields")
+        }</span>
+
+        <span class="cov8" title="1">err := s.repo.Update(payload)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to update status: %v", err)
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+func (s *statusUseCase) DeleteStatus(id string) error <span class="cov8" title="1">{
+        status, err := s.FindByIdStatus(id)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("status with ID %s not found", id)
+        }</span>
+
+        <span class="cov8" title="1">err = s.repo.Delete(status.StatusId)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("failed to delete status: %v", err.Error())
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+func NewStatusUseCase(repo repository.StatusRepository) StatusUseCase <span class="cov8" title="1">{
+        return &amp;statusUseCase{repo: repo}
+}</span>
+</pre>
+		
+		<pre class="file" id="file33" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/repository"
+)
+
+type UserRolesUseCase interface {
+        RegisterNewUserRole(payload model.UserRoles) error
+        GetAllUserRoles() ([]model.UserRoles, error)
+        GetUserRoleByID(id string) (model.UserRoles, error)
+        UpdateUserRole(payload model.UserRoles) error
+        DeleteUserRole(id string) error
+}
+
+type userRolesUseCase struct {
+        repo repository.UserRolesRepository
+}
+
+func (u *userRolesUseCase) RegisterNewUserRole(payload model.UserRoles) error <span class="cov0" title="0">{
+        // check for empty field
+        if payload.Name == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("name is a required field")
+        }</span>
+
+        // Check if user role with the same name already exists
+        <span class="cov0" title="0">isExistUserRole, _ := u.repo.GetByName(payload.Name)
+        if isExistUserRole.Name == payload.Name </span><span class="cov0" title="0">{
+                return fmt.Errorf("user role with name %s already exists", payload.Name)
+        }</span>
+
+        <span class="cov0" title="0">err := u.repo.Create(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to register new user role: %v", err)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (u *userRolesUseCase) GetAllUserRoles() ([]model.UserRoles, error) <span class="cov0" title="0">{
+        return u.repo.List()
+}</span>
+
+func (u *userRolesUseCase) GetUserRoleByID(id string) (model.UserRoles, error) <span class="cov0" title="0">{
+        return u.repo.Get(id)
+}</span>
+
+func (u *userRolesUseCase) UpdateUserRole(payload model.UserRoles) error <span class="cov0" title="0">{
+        if payload.Name == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("name is required field")
+        }</span>
+
+        <span class="cov0" title="0">isExistRole, _ := u.repo.GetByName(payload.Name)
+        if isExistRole.Name == payload.Name &amp;&amp; isExistRole.Id != payload.Id </span><span class="cov0" title="0">{
+                return fmt.Errorf("user role with name %s exists", payload.Name)
+        }</span>
+
+        <span class="cov0" title="0">err := u.repo.Update(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to update user role: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+
+}
+
+func (u *userRolesUseCase) DeleteUserRole(id string) error <span class="cov0" title="0">{
+        user, err := u.GetUserRoleByID(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("user role with ID %s not found", id)
+        }</span>
+
+        <span class="cov0" title="0">err = u.repo.Delete(user.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to delete user role: %v", err)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+
+}
+
+func NewUserRolesUseCase(repo repository.UserRolesRepository) UserRolesUseCase <span class="cov0" title="0">{
+        return &amp;userRolesUseCase{repo: repo}
+}</span>
+</pre>
+		
+		<pre class="file" id="file34" style="display: none">package usecase
+
+import (
+        "fmt"
+        "interview_bootcamp/model"
+        "interview_bootcamp/repository"
+
+        "golang.org/x/crypto/bcrypt"
+)
+
+type UserUsecase interface {
+        RegisterNewUser(payload model.Users) error
+        List() ([]model.Users, error)
+        GetUserByEmail(email string) (model.Users, error)
+        GetUserByUserName(userName string) (model.Users, error)
+        GetUserByID(id string) (model.Users, error)
+        UpdateUser(payload model.Users) error
+        DeleteUser(id string) error
+        FindByUsernamePassword(username string, password string) (model.Users, error)
+}
+
+type userUsecase struct {
+        userRepo repository.UserRepository
+}
+
+func (u *userUsecase) RegisterNewUser(payload model.Users) error <span class="cov0" title="0">{
+        if payload.Email == "" || payload.UserName == "" || payload.Password == "" </span><span class="cov0" title="0">{
+                return fmt.Errorf("email, username, and password are required fields")
+        }</span>
+
+        <span class="cov0" title="0">existingUserByUsername, err := u.userRepo.GetByUserName(payload.UserName)
+        if err == nil &amp;&amp; existingUserByUsername.UserName == payload.UserName </span><span class="cov0" title="0">{
+                return fmt.Errorf("user with username %s already exists", payload.UserName)
+        }</span>
+
+        <span class="cov0" title="0">existingUserByEmail, err := u.userRepo.GetByEmail(payload.Email)
+        if err == nil &amp;&amp; existingUserByEmail.Email == payload.Email </span><span class="cov0" title="0">{
+                return fmt.Errorf("user with email %s already exists", payload.Email)
+        }</span>
+
+        // Hash the password using bcrypt
+        <span class="cov0" title="0">bytes, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to hash password: %v", err)
+        }</span>
+        <span class="cov0" title="0">payload.Password = string(bytes)
+
+        err = u.userRepo.Create(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to register new user: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (u *userUsecase) List() ([]model.Users, error) <span class="cov0" title="0">{
+        return u.userRepo.List()
+}</span>
+
+func (u *userUsecase) GetUserByEmail(email string) (model.Users, error) <span class="cov0" title="0">{
+        return u.userRepo.GetByEmail(email)
+}</span>
+
+func (u *userUsecase) GetUserByUserName(userName string) (model.Users, error) <span class="cov0" title="0">{
+        return u.userRepo.GetByUserName(userName)
+}</span>
+
+func (u *userUsecase) GetUserByID(id string) (model.Users, error) <span class="cov0" title="0">{
+        return u.userRepo.Get(id)
+}</span>
+
+func (u *userUsecase) UpdateUser(payload model.Users) error <span class="cov0" title="0">{
+        // Check if the user exists
+        existingUser, err := u.userRepo.Get(payload.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error checking for existing user: %v", err)
+        }</span>
+
+        //Check if the updated username or email conflicts with existing users
+        <span class="cov0" title="0">if payload.UserName != existingUser.UserName </span><span class="cov0" title="0">{
+                existingUserByUsername, err := u.userRepo.GetByUserName(payload.UserName)
+                if err == nil &amp;&amp; existingUserByUsername.Id != payload.Id </span><span class="cov0" title="0">{
+                        return fmt.Errorf("user with username %s already exists", payload.UserName)
+                }</span>
+        }
+
+        <span class="cov0" title="0">if payload.Email != existingUser.Email </span><span class="cov0" title="0">{
+                existingUserByEmail, err := u.userRepo.GetByEmail(payload.Email)
+                if err == nil &amp;&amp; existingUserByEmail.Id != payload.Id </span><span class="cov0" title="0">{
+                        return fmt.Errorf("user with email %s already exists", payload.Email)
+                }</span>
+        }
+
+        // Update the user
+        <span class="cov0" title="0">err = u.userRepo.Update(payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to update user: %v", err)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+func (u *userUsecase) FindByUsernamePassword(username string, password string) (model.Users, error) <span class="cov0" title="0">{
+        return u.userRepo.GetUsernamePassword(username, password)
+}</span>
+
+func (u *userUsecase) DeleteUser(id string) error <span class="cov0" title="0">{
+        return u.userRepo.Delete(id)
+}</span>
+
+func NewUserUsecase(userRepo repository.UserRepository) UserUsecase <span class="cov0" title="0">{
+        return &amp;userUsecase{
+                userRepo: userRepo,
+        }
 }</span>
 </pre>
 		

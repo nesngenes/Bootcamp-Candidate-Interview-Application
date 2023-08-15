@@ -10,20 +10,11 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type userRepoMock struct {
+type userssRepoMock struct {
 	mock.Mock
 }
 
-// GetUsernamePassword implements repository.UserRepository.
-func (u *userRepoMock) GetUsernamePassword(username string, password string) (model.Users, error) {
-	args := u.Called(username, password)
-	if args.Get(1) != nil {
-		return model.Users{}, args.Error(1)
-	}
-	return args.Get(0).(model.Users), nil
-}
-
-func (u *userRepoMock) Create(user model.Users) error {
+func (u *userssRepoMock) Create(user model.Users) error {
 	args := u.Called(user)
 	if args.Get(0) != nil {
 		return args.Error(0)
@@ -31,7 +22,7 @@ func (u *userRepoMock) Create(user model.Users) error {
 	return nil
 }
 
-func (u *userRepoMock) List() ([]model.Users, error) {
+func (u *userssRepoMock) List() ([]model.Users, error) {
 	args := u.Called()
 	if args.Get(1) != nil {
 		return nil, args.Error(1)
@@ -39,7 +30,7 @@ func (u *userRepoMock) List() ([]model.Users, error) {
 	return args.Get(0).([]model.Users), nil
 }
 
-func (u *userRepoMock) Get(id string) (model.Users, error) {
+func (u *userssRepoMock) Get(id string) (model.Users, error) {
 	args := u.Called(id)
 	if args.Get(1) != nil {
 		return model.Users{}, args.Error(1)
@@ -47,7 +38,7 @@ func (u *userRepoMock) Get(id string) (model.Users, error) {
 	return args.Get(0).(model.Users), nil
 }
 
-func (u *userRepoMock) GetByEmail(email string) (model.Users, error) {
+func (u *userssRepoMock) GetByEmail(email string) (model.Users, error) {
 	args := u.Called(email)
 	if args.Get(1) != nil {
 		return model.Users{}, args.Error(1)
@@ -55,7 +46,7 @@ func (u *userRepoMock) GetByEmail(email string) (model.Users, error) {
 	return args.Get(0).(model.Users), nil
 }
 
-func (u *userRepoMock) GetByUserName(username string) (model.Users, error) {
+func (u *userssRepoMock) GetByUserName(username string) (model.Users, error) {
 	args := u.Called(username)
 	if args.Get(1) != nil {
 		return model.Users{}, args.Error(1)
@@ -63,7 +54,12 @@ func (u *userRepoMock) GetByUserName(username string) (model.Users, error) {
 	return args.Get(0).(model.Users), nil
 }
 
-func (u *userRepoMock) Update(payload model.Users) error {
+func (u *userssRepoMock) GetUsernamePassword(userName string, password string) (model.Users, error) {
+	args := u.Called(userName, password)
+	return args.Get(0).(model.Users), args.Error(1)
+}
+
+func (u *userssRepoMock) Update(payload model.Users) error {
 	args := u.Called(payload)
 	if args.Get(0) != nil {
 		return args.Error(0)
@@ -71,7 +67,7 @@ func (u *userRepoMock) Update(payload model.Users) error {
 	return nil
 }
 
-func (u *userRepoMock) Delete(id string) error {
+func (u *userssRepoMock) Delete(id string) error {
 	args := u.Called(id)
 	if args.Get(0) != nil {
 		return args.Error(0)
@@ -85,13 +81,13 @@ type userUsecaseMock struct {
 
 type UserUsecaseTestSuite struct {
 	suite.Suite
-	repoMock    *userRepoMock
+	repoMock    *userssRepoMock
 	usecaseMock *userUsecaseMock
 	usecase     UserUsecase
 }
 
 func (suite *UserUsecaseTestSuite) SetupTest() {
-	suite.repoMock = new(userRepoMock)
+	suite.repoMock = new(userssRepoMock)
 	suite.usecaseMock = new(userUsecaseMock)
 	suite.usecase = NewUserUsecase(suite.repoMock)
 }

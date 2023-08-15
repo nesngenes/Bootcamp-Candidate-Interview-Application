@@ -1,12 +1,14 @@
 package api
 
 import (
+	"interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
 	"net/http"
 	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -77,8 +79,8 @@ func NewInterviewProcessController(r *gin.Engine, usecase usecase.InterviewProce
 	}
 
 	rg := r.Group("/api/v1")
-	rg.POST("/interviewprocess", controller.createHandler)
-	rg.GET("/interviewprocess", controller.listHandler)
-	rg.GET("/interviewprocess/:id", controller.getHandler)
+	rg.POST("/interviewprocess", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.createHandler)
+	rg.GET("/interviewprocess", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.listHandler)
+	rg.GET("/interviewprocess/:id", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.getHandler)
 	return &controller
 }

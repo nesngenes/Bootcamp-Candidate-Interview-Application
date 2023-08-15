@@ -148,9 +148,9 @@ func (suite *UserRepositoryTestSuite) TestDelete_Fail() {
 func (suite *UserRepositoryTestSuite) TestGetByUserName_Success() {
 	expectedUser := userDummy[0]
 
-	rows := sqlmock.NewRows([]string{"id", "email", "username", "id", "name"})
+	rows := sqlmock.NewRows([]string{"id", "email", "username", "password", "id", "name"})
 	rows.AddRow(
-		expectedUser.Id, expectedUser.Email, expectedUser.UserName,
+		expectedUser.Id, expectedUser.Email, expectedUser.UserName, expectedUser.Password,
 		expectedUser.UserRole.Id, expectedUser.UserRole.Name,
 	)
 

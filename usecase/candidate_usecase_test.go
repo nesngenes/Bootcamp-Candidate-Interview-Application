@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type repoMock struct {
+type candidateRepoMock struct {
 	mock.Mock
 }
 
@@ -26,7 +26,7 @@ func NewCloudinaryMock() *CloudinaryMock {
 	return &CloudinaryMock{}
 }
 
-func (r *repoMock) Create(payload model.Candidate) error {
+func (r *candidateRepoMock) Create(payload model.Candidate) error {
 	args := r.Called(payload)
 	if args.Get(0) != nil {
 		return args.Error(0)
@@ -34,7 +34,7 @@ func (r *repoMock) Create(payload model.Candidate) error {
 	return nil
 }
 
-func (r *repoMock) List() ([]model.Candidate, error) {
+func (r *candidateRepoMock) List() ([]model.Candidate, error) {
 	args := r.Called()
 	if args.Get(1) != nil {
 		return nil, args.Error(1)
@@ -42,21 +42,21 @@ func (r *repoMock) List() ([]model.Candidate, error) {
 	return args.Get(0).([]model.Candidate), nil
 }
 
-func (r *repoMock) Get(id string) (model.Candidate, error) {
+func (r *candidateRepoMock) Get(id string) (model.Candidate, error) {
 	args := r.Called(id)
 	if args.Get(1) != nil {
 		return model.Candidate{}, args.Error(1)
 	}
 	return args.Get(0).(model.Candidate), nil
 }
-func (r *repoMock) GetByPhoneNumber(phoneNumber string) (model.Candidate, error) {
+func (r *candidateRepoMock) GetByPhoneNumber(phoneNumber string) (model.Candidate, error) {
 	args := r.Called(phoneNumber)
 	if args.Get(1) != nil {
 		return model.Candidate{}, args.Error(1)
 	}
 	return args.Get(0).(model.Candidate), nil
 }
-func (r *repoMock) GetByEmail(email string) (model.Candidate, error) {
+func (r *candidateRepoMock) GetByEmail(email string) (model.Candidate, error) {
 	args := r.Called(email)
 	if args.Get(1) != nil {
 		return model.Candidate{}, args.Error(1)
@@ -64,7 +64,7 @@ func (r *repoMock) GetByEmail(email string) (model.Candidate, error) {
 	return args.Get(0).(model.Candidate), nil
 }
 
-func (r *repoMock) Update(payload model.Candidate) error {
+func (r *candidateRepoMock) Update(payload model.Candidate) error {
 	args := r.Called(payload)
 	if args.Get(0) != nil {
 		return args.Error(0)
@@ -72,14 +72,14 @@ func (r *repoMock) Update(payload model.Candidate) error {
 	return nil
 }
 
-func (r *repoMock) Delete(id string) error {
+func (r *candidateRepoMock) Delete(id string) error {
 	args := r.Called(id)
 	if args.Get(0) != nil {
 		return args.Error(0)
 	}
 	return nil
 }
-func (r *repoMock) Paging(requestPaging dto.PaginationParam) ([]model.Candidate, dto.Paging, error) {
+func (r *candidateRepoMock) Paging(requestPaging dto.PaginationParam) ([]model.Candidate, dto.Paging, error) {
 	args := r.Called(requestPaging)
 	if args.Get(2) != nil {
 		return nil, dto.Paging{}, args.Error(2)
@@ -127,17 +127,17 @@ func (u *usecaseMock) UpdateBootcamp(payload model.Bootcamp) error {
 
 type CandidateUseCaseTestSuite struct {
 	suite.Suite
-	repoMock       *repoMock
-	usecaseMock    *usecaseMock
-	cloudinaryMock *CloudinaryMock
-	usecase        CandidateUseCase
+	candidateRepoMock *candidateRepoMock
+	usecaseMock       *usecaseMock
+	cloudinaryMock    *CloudinaryMock
+	usecase           CandidateUseCase
 }
 
 func (suite *CandidateUseCaseTestSuite) SetupTest() {
-	suite.repoMock = new(repoMock)
+	suite.candidateRepoMock = new(candidateRepoMock)
 	suite.usecaseMock = new(usecaseMock)
 	suite.cloudinaryMock = NewCloudinaryMock()
-	suite.usecase = NewCandidateUseCase(suite.repoMock, suite.usecaseMock, &suite.cloudinaryMock.Cloudinary)
+	suite.usecase = NewCandidateUseCase(suite.candidateRepoMock, suite.usecaseMock, &suite.cloudinaryMock.Cloudinary)
 }
 
 func TestCandidateUsecaseTestSuite(t *testing.T) {
@@ -190,10 +190,10 @@ var bootcampDummy = model.Bootcamp{
 
 func (suite *CandidateUseCaseTestSuite) TestRegisterNewProduct_Success() {
 	dmProduct := candidateDummy[0]
-	suite.repoMock.On("GetByEmail", dmProduct.Email).Return(model.Candidate{}, fmt.Errorf("error"))
-	suite.repoMock.On("GetByPhoneNumber", dmProduct.Phone).Return(model.Candidate{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("GetByEmail", dmProduct.Email).Return(model.Candidate{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("GetByPhoneNumber", dmProduct.Phone).Return(model.Candidate{}, fmt.Errorf("error"))
 	suite.usecaseMock.On("FindByIdBootcamp", dmProduct.Bootcamp.BootcampId).Return(bootcampDummy, nil)
-	suite.repoMock.On("Create", dmProduct).Return(nil)
+	suite.candidateRepoMock.On("Create", dmProduct).Return(nil)
 	err := suite.usecase.RegisterNewCandidate(dmProduct)
 	assert.Nil(suite.T(), err)
 }
@@ -209,7 +209,7 @@ func (suite *CandidateUseCaseTestSuite) TestRegisterNewCandidate_EmptyFields() {
 func (suite *CandidateUseCaseTestSuite) TestRegisterNewCandidate_DuplicateEmail() {
 	duplicateEmailCandidate := candidateDummy[0]
 
-	suite.repoMock.On("GetByEmail", duplicateEmailCandidate.Email).Return(duplicateEmailCandidate, nil)
+	suite.candidateRepoMock.On("GetByEmail", duplicateEmailCandidate.Email).Return(duplicateEmailCandidate, nil)
 
 	err := suite.usecase.RegisterNewCandidate(duplicateEmailCandidate)
 
@@ -221,9 +221,9 @@ func (suite *CandidateUseCaseTestSuite) TestRegisterNewCandidate_DuplicateEmail(
 func (suite *CandidateUseCaseTestSuite) TestRegisterNewCandidate_DuplicatePhoneNumber() {
 	duplicatePhoneCandidate := candidateDummy[0]
 
-	suite.repoMock.On("GetByEmail", duplicatePhoneCandidate.Email).Return(model.Candidate{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("GetByEmail", duplicatePhoneCandidate.Email).Return(model.Candidate{}, fmt.Errorf("error"))
 
-	suite.repoMock.On("GetByPhoneNumber", duplicatePhoneCandidate.Phone).Return(duplicatePhoneCandidate, nil)
+	suite.candidateRepoMock.On("GetByPhoneNumber", duplicatePhoneCandidate.Phone).Return(duplicatePhoneCandidate, nil)
 
 	err := suite.usecase.RegisterNewCandidate(duplicatePhoneCandidate)
 
@@ -235,9 +235,9 @@ func (suite *CandidateUseCaseTestSuite) TestRegisterNewCandidate_DuplicatePhoneN
 func (suite *CandidateUseCaseTestSuite) TestRegisterNewCandidate_BootcampNotFound() {
 	nonExistentBootcampCandidate := candidateDummy[0]
 
-	suite.repoMock.On("GetByEmail", nonExistentBootcampCandidate.Email).Return(model.Candidate{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("GetByEmail", nonExistentBootcampCandidate.Email).Return(model.Candidate{}, fmt.Errorf("error"))
 
-	suite.repoMock.On("GetByPhoneNumber", nonExistentBootcampCandidate.Phone).Return(model.Candidate{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("GetByPhoneNumber", nonExistentBootcampCandidate.Phone).Return(model.Candidate{}, fmt.Errorf("error"))
 
 	suite.usecaseMock.On("FindByIdBootcamp", nonExistentBootcampCandidate.Bootcamp.BootcampId).Return(model.Bootcamp{}, fmt.Errorf("error"))
 
@@ -252,13 +252,13 @@ func (suite *CandidateUseCaseTestSuite) TestRegisterNewCandidate_BootcampNotFoun
 func (suite *CandidateUseCaseTestSuite) TestRegisterNewCandidate_Fail() {
 	failedCreateCandidate := candidateDummy[0]
 
-	suite.repoMock.On("GetByEmail", failedCreateCandidate.Email).Return(model.Candidate{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("GetByEmail", failedCreateCandidate.Email).Return(model.Candidate{}, fmt.Errorf("error"))
 
-	suite.repoMock.On("GetByPhoneNumber", failedCreateCandidate.Phone).Return(model.Candidate{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("GetByPhoneNumber", failedCreateCandidate.Phone).Return(model.Candidate{}, fmt.Errorf("error"))
 
 	suite.usecaseMock.On("FindByIdBootcamp", failedCreateCandidate.Bootcamp.BootcampId).Return(bootcampDummy, nil)
 
-	suite.repoMock.On("Create", failedCreateCandidate).Return(fmt.Errorf("error"))
+	suite.candidateRepoMock.On("Create", failedCreateCandidate).Return(fmt.Errorf("error"))
 
 	err := suite.usecase.RegisterNewCandidate(failedCreateCandidate)
 
@@ -280,7 +280,7 @@ func (suite *CandidateUseCaseTestSuite) TestFindAllCandidate_Success() {
 		Page: 1,
 	}
 
-	suite.repoMock.On("Paging", requestPaging).Return(dummy, expectedPaging, nil)
+	suite.candidateRepoMock.On("Paging", requestPaging).Return(dummy, expectedPaging, nil)
 
 	candidates, paging, err := suite.usecase.FindAllCandidate(requestPaging)
 
@@ -295,7 +295,7 @@ func (suite *CandidateUseCaseTestSuite) TestFindAllCandidate_Fail() {
 	requestPaging := dto.PaginationParam{
 		Page: 1,
 	}
-	suite.repoMock.On("Paging", requestPaging).Return(nil, dto.Paging{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("Paging", requestPaging).Return(nil, dto.Paging{}, fmt.Errorf("error"))
 
 	candidates, paging, err := suite.usecase.FindAllCandidate(requestPaging)
 
@@ -309,7 +309,7 @@ func (suite *CandidateUseCaseTestSuite) TestFindAllCandidate_Fail() {
 func (suite *CandidateUseCaseTestSuite) TestFindByIdCandidate_Success() {
 	dummy := candidateDummy[0]
 
-	suite.repoMock.On("Get", dummy.CandidateID).Return(dummy, nil)
+	suite.candidateRepoMock.On("Get", dummy.CandidateID).Return(dummy, nil)
 
 	candidate, err := suite.usecase.FindByIdCandidate(dummy.CandidateID)
 
@@ -320,7 +320,7 @@ func (suite *CandidateUseCaseTestSuite) TestFindByIdCandidate_Success() {
 
 func (suite *CandidateUseCaseTestSuite) TestFindByIdCandidate_NotFound() {
 
-	suite.repoMock.On("Get", "1234").Return(model.Candidate{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("Get", "1234").Return(model.Candidate{}, fmt.Errorf("error"))
 
 	candidate, err := suite.usecase.FindByIdCandidate("1234")
 
@@ -334,8 +334,8 @@ func (suite *CandidateUseCaseTestSuite) TestFindByIdCandidate_NotFound() {
 // func (suite *CandidateUseCaseTestSuite) TestDeleteCandidate_Success() {
 
 // 	dummy := candidateDummy[0]
-// 	suite.repoMock.On("Get", dummy.CandidateID).Return(dummy, nil)
-// 	suite.repoMock.On("Delete", dummy.CandidateID).Return(nil)
+// 	suite.candidateRepoMock.On("Get", dummy.CandidateID).Return(dummy, nil)
+// 	suite.candidateRepoMock.On("Delete", dummy.CandidateID).Return(nil)
 
 // 	err := suite.usecase.DeleteCandidate(dummy.CandidateID)
 
@@ -343,7 +343,7 @@ func (suite *CandidateUseCaseTestSuite) TestFindByIdCandidate_NotFound() {
 //	}
 func (suite *CandidateUseCaseTestSuite) TestDeleteCandidate_CandidateNotFound() {
 	nonExistentCandidateID := "1234"
-	suite.repoMock.On("Get", nonExistentCandidateID).Return(model.Candidate{}, fmt.Errorf("error"))
+	suite.candidateRepoMock.On("Get", nonExistentCandidateID).Return(model.Candidate{}, fmt.Errorf("error"))
 
 	// Call method yang ingin diuji
 	err := suite.usecase.DeleteCandidate(nonExistentCandidateID)
@@ -357,8 +357,8 @@ func (suite *CandidateUseCaseTestSuite) TestDeleteCandidate_CandidateNotFound() 
 func (suite *CandidateUseCaseTestSuite) TestDeleteCandidate_Failure() {
 
 	candidateToDelete := candidateDummy[0]
-	suite.repoMock.On("Get", candidateToDelete.CandidateID).Return(candidateToDelete, nil)
-	suite.repoMock.On("Delete", candidateToDelete.CandidateID).Return(fmt.Errorf("error"))
+	suite.candidateRepoMock.On("Get", candidateToDelete.CandidateID).Return(candidateToDelete, nil)
+	suite.candidateRepoMock.On("Delete", candidateToDelete.CandidateID).Return(fmt.Errorf("error"))
 
 	err := suite.usecase.DeleteCandidate(candidateToDelete.CandidateID)
 
@@ -370,7 +370,7 @@ func (suite *CandidateUseCaseTestSuite) TestDeleteCandidate_Failure() {
 func (suite *CandidateUseCaseTestSuite) TestUpdateCandidate_Success() {
 	updatedCandidate := candidateDummy[0]
 	suite.usecaseMock.On("FindByIdBootcamp", updatedCandidate.Bootcamp.BootcampId).Return(bootcampDummy, nil)
-	suite.repoMock.On("Update", updatedCandidate).Return(nil)
+	suite.candidateRepoMock.On("Update", updatedCandidate).Return(nil)
 
 	err := suite.usecase.UpdateCandidate(updatedCandidate)
 
@@ -402,7 +402,7 @@ func (suite *CandidateUseCaseTestSuite) TestUpdateCandidate_EmptyPhone() {
 func (suite *CandidateUseCaseTestSuite) TestUpdateCandidate_Failure() {
 	updatedCandidate := candidateDummy[0]
 	suite.usecaseMock.On("FindByIdBootcamp", updatedCandidate.Bootcamp.BootcampId).Return(bootcampDummy, nil)
-	suite.repoMock.On("Update", updatedCandidate).Return(fmt.Errorf("error"))
+	suite.candidateRepoMock.On("Update", updatedCandidate).Return(fmt.Errorf("error"))
 
 	err := suite.usecase.UpdateCandidate(updatedCandidate)
 

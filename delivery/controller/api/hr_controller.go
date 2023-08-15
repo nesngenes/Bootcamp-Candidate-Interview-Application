@@ -1,6 +1,7 @@
 package api
 
 import (
+	"interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
@@ -109,7 +110,7 @@ func NewHRRecruitmentController(r *gin.Engine, usecase usecase.HRRecruitmentUsec
 	}
 	//routernya kumpul sini
 	rg := r.Group("/api/v1")
-	rg.POST("/hr-recruitment", controller.createHandler)
+	rg.POST("/hr-recruitment", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.createHandler)
 	rg.GET("/hr-recruitment", controller.listHandler)
 	rg.PUT("/hr-recruitment/:id", controller.updateHandler)
 	rg.GET("/hr-recruitment/:id", controller.getHandler)

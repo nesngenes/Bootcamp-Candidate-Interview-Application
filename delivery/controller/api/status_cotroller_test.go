@@ -88,10 +88,11 @@ func TestStatusControllerTestSuite(t *testing.T) {
 
 func (suite *StatusControllerTestSuite) TestCreateHandler_Success() {
 	payload := model.Status{
-		StatusId: "1",
-		Name:     "New Status",
+		Name: "New Status",
 	}
-	suite.usecaseMock.On("RegisterNewStatus", payload).Return(nil)
+	suite.usecaseMock.On("RegisterNewStatus", mock.MatchedBy(func(arg model.Status) bool {
+		return arg.Name == payload.Name
+	})).Return(nil)
 	requestBody, _ := json.Marshal(payload)
 	req := httptest.NewRequest("POST", "/api/v1/statuss", strings.NewReader(string(requestBody)))
 	req.Header.Set("Content-Type", "application/json")

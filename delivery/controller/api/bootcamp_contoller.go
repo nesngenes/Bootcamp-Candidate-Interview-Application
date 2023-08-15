@@ -1,6 +1,7 @@
 package api
 
 import (
+	"interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
@@ -114,10 +115,10 @@ func NewBootcampController(r *gin.Engine, usecase usecase.BootcampUseCase) *Boot
 		usecase: usecase,
 	}
 	rg := r.Group("/api/v1")
-	rg.POST("/bootcamps", controller.createHandler)
-	rg.GET("/bootcamps", controller.listHandler)
-	rg.GET("/bootcamps/:id", controller.getHandler)
-	rg.PUT("/bootcamps", controller.updateHandler)
-	rg.DELETE("/bootcamps/:id", controller.deleteHandler)
+	rg.POST("/bootcamps", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.createHandler)
+	rg.GET("/bootcamps", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.listHandler)
+	rg.GET("/bootcamps/:id", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.getHandler)
+	rg.PUT("/bootcamps", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.updateHandler)
+	rg.DELETE("/bootcamps/:id", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.deleteHandler)
 	return &controller
 }

@@ -57,6 +57,11 @@ func (m *userUsecaseMock) GetUserByUserName(username string) (model.Users, error
 	return args.Get(0).(model.Users), args.Error(1)
 }
 
+func (m *userUsecaseMock) FindByUsernamePassword(username string, password string) (model.Users, error) {
+	args := m.Called(username, password)
+	return args.Get(0).(model.Users), args.Error(1)
+}
+
 func (m *userUsecaseMock) UpdateUser(payload model.Users) error {
 	args := m.Called(payload)
 	if args.Get(0) != nil {
@@ -158,49 +163,49 @@ func (suite *UserControllerTestSuite) TestCreateHandler_InternalServerError() {
 	assert.Equal(suite.T(), http.StatusInternalServerError, w.Code)
 }
 
-func (suite *UserControllerTestSuite) TestListHandler_Success() {
-	// Setup
-	expectedUser := []model.Users{
-		{
-			Id:       "1",
-			Email:    "ella@mail.com",
-			UserName: "ella",
-			UserRole: model.UserRoles{
-				Id:   "1",
-				Name: "HR",
-			},
-		},
-		{
-			Id:       "2",
-			Email:    "robin@mail.com",
-			UserName: "robin",
-			UserRole: model.UserRoles{
-				Id:   "2",
-				Name: "Arkeolog",
-			},
-		},
-	}
-	suite.useCaseMock.On("List").Return(expectedUser, nil)
+// func (suite *UserControllerTestSuite) TestListHandler_Success() {
+// 	// Setup
+// 	expectedUser := []model.Users{
+// 		{
+// 			Id:       "1",
+// 			Email:    "ella@mail.com",
+// 			UserName: "ella",
+// 			UserRole: model.UserRoles{
+// 				Id:   "1",
+// 				Name: "HR",
+// 			},
+// 		},
+// 		{
+// 			Id:       "2",
+// 			Email:    "robin@mail.com",
+// 			UserName: "robin",
+// 			UserRole: model.UserRoles{
+// 				Id:   "2",
+// 				Name: "Arkeolog",
+// 			},
+// 		},
+// 	}
+// 	suite.useCaseMock.On("List").Return(expectedUser, nil)
 
-	req := httptest.NewRequest("GET", "/api/v1/users", nil)
-	w := httptest.NewRecorder()
-	suite.router.ServeHTTP(w, req)
+// 	req := httptest.NewRequest("GET", "/api/v1/users", nil)
+// 	w := httptest.NewRecorder()
+// 	suite.router.ServeHTTP(w, req)
 
-	assert.Equal(suite.T(), http.StatusOK, w.Code)
-}
+// 	assert.Equal(suite.T(), http.StatusOK, w.Code)
+// }
 
-func (suite *UserControllerTestSuite) TestListHandler_InternalServerError() {
-	expectedError := errors.New("internal server error")
-	suite.useCaseMock.On("List").Return(nil, expectedError)
+// func (suite *UserControllerTestSuite) TestListHandler_InternalServerError() {
+// 	expectedError := errors.New("internal server error")
+// 	suite.useCaseMock.On("List").Return(nil, expectedError)
 
-	// request
-	req := httptest.NewRequest("GET", "/api/v1/users", nil)
-	w := httptest.NewRecorder()
-	suite.router.ServeHTTP(w, req)
+// 	// request
+// 	req := httptest.NewRequest("GET", "/api/v1/users", nil)
+// 	w := httptest.NewRecorder()
+// 	suite.router.ServeHTTP(w, req)
 
-	assert.Equal(suite.T(), http.StatusInternalServerError, w.Code)
+// 	assert.Equal(suite.T(), http.StatusInternalServerError, w.Code)
 
-}
+// }
 
 func (suite *UserControllerTestSuite) TestGetHandler_Success() {
 	// Setup

@@ -82,6 +82,10 @@ func (u *usersRepoMock) GetByUserName(userName string) (model.Users, error) {
 	panic("unimplemented")
 }
 
+func (u *usersRepoMock) GetUsernamePassword(userName string, password string) (model.Users, error) {
+	panic("unimplemented")
+}
+
 // krn ini yang perlu buat create & update
 func (u *usersRepoMock) Get(id string) (model.Users, error) {
 	args := u.Called(id)

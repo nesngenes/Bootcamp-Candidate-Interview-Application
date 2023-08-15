@@ -1,13 +1,14 @@
 package usecase
 
 import (
+	"context"
 	"fmt"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/repository"
+
 	"github.com/cloudinary/cloudinary-go/v2"
-    "github.com/cloudinary/cloudinary-go/v2/api/uploader"
-	"context"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 )
 
 type CandidateUseCase interface {
@@ -82,13 +83,13 @@ func (c *candidateUseCase) DeleteCandidate(id string) error {
 	}
 
 	// Hapus file dari cloudinary
-	 publicID := "candidates/" + candidate.CandidateID
-	 _, err = c.cloudinary.Upload.Destroy(context.Background(), uploader.DestroyParams{
-		 PublicID: publicID,
-	 })
-	 if err != nil {
-		 return fmt.Errorf("failed to delete file from Cloudinary: %v", err)
-	 }
+	publicID := "candidates/" + candidate.CandidateID
+	_, err = c.cloudinary.Upload.Destroy(context.Background(), uploader.DestroyParams{
+		PublicID: publicID,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to delete file from Cloudinary: %v", err)
+	}
 	return nil
 }
 
@@ -114,7 +115,7 @@ func (c *candidateUseCase) UpdateCandidate(payload model.Candidate) error {
 
 func NewCandidateUseCase(repo repository.CandidateRepository, bootcampUC BootcampUseCase, cloudinary *cloudinary.Cloudinary) CandidateUseCase {
 	return &candidateUseCase{
-		repo: repo, 
+		repo:       repo,
 		bootcampUC: bootcampUC,
 		cloudinary: cloudinary,
 	}

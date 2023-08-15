@@ -2,15 +2,14 @@ package common
 
 import (
 	"interview_bootcamp/model/dto"
-	"interview_bootcamp/utils/execptions"
 	"math"
 	"os"
 	"strconv"
 )
 
 func GetPaginationParams(params dto.PaginationParam) dto.PaginationQuery {
-	err := LoadEnv()
-	execptions.CheckErr(err)
+	// err := LoadEnv()
+	// execptions.CheckErr(err)
 
 	var (
 		page, take, skip int

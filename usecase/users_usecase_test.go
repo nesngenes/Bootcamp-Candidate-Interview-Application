@@ -54,6 +54,11 @@ func (u *userssRepoMock) GetByUserName(username string) (model.Users, error) {
 	return args.Get(0).(model.Users), nil
 }
 
+func (u *userssRepoMock) GetUsernamePassword(userName string, password string) (model.Users, error) {
+	args := u.Called(userName, password)
+	return args.Get(0).(model.Users), args.Error(1)
+}
+
 func (u *userssRepoMock) Update(payload model.Users) error {
 	args := u.Called(payload)
 	if args.Get(0) != nil {

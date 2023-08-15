@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	// "interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
@@ -135,6 +136,7 @@ func (cc *CandidateController) listHandler(c *gin.Context) {
 		"paging": paging,
 	})
 }
+
 func (cc *CandidateController) getHandler(c *gin.Context) {
 	id := c.Param("id")
 	product, err := cc.candidateUsecase.FindByIdCandidate(id)
@@ -265,6 +267,7 @@ func NewCandidateController(r *gin.Engine, candidateUsecase usecase.CandidateUse
 	}
 	rg := r.Group("/api/v1")
 	rg.POST("/candidates", controller.createHandler)
+	// rg.GET("/candidates", middleware.AuthMiddleware("admin", "hr"), controller.listHandler)
 	rg.GET("/candidates", controller.listHandler)
 	rg.GET("/candidates/:id", controller.getHandler)
 	rg.PUT("/candidates", controller.updateHandler)

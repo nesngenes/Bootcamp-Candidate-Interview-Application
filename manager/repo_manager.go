@@ -12,11 +12,14 @@ type RepoManager interface {
 	CandidateRepo() repository.CandidateRepository
 	BootcampRepo() repository.BootcampRepository
 	StatusRepo() repository.StatusRepository
-	ResumeRepo() repository.ResumeRepository
+	FormRepo() repository.FormRepository
 	UserRolesRepo() repository.UserRolesRepository         //user role
 	UsersRepo() repository.UserRepository                  // user
 	HRRecruitmentRepo() repository.HRRecruitmentRepository //hr
 	InterviewerRepo() repository.InterviewerRepository
+	InterviewProcessRepo() repository.InterviewProcessRepository
+	InterviewResultRepo() repository.InterviewResultRepository
+	ResultRepo() repository.ResultRepository
 	CloudinaryInstance() *cloudinary.Cloudinary
 }
 
@@ -36,12 +39,21 @@ func (r *repoManager) StatusRepo() repository.StatusRepository {
 	return repository.NewStatusRepository(r.infra.Conn())
 }
 
-func (r *repoManager) ResumeRepo() repository.ResumeRepository {
-	return repository.NewResumeRepository(r.infra.Conn())
+func (r *repoManager) FormRepo() repository.FormRepository {
+	return repository.NewFormRepository(r.infra.Conn())
 }
 
+func (r *repoManager) InterviewProcessRepo() repository.InterviewProcessRepository {
+	return repository.NewInterviewProcessRepository(r.infra.Conn())
+}
+func (r *repoManager) InterviewResultRepo() repository.InterviewResultRepository {
+	return repository.NewInterviewResultRepository(r.infra.Conn())
+}
 func (r *repoManager) InterviewerRepo() repository.InterviewerRepository {
 	return repository.NewInterviewerRepository(r.infra.Conn())
+}
+func (r *repoManager) ResultRepo() repository.ResultRepository {
+	return repository.NewResultRepository(r.infra.Conn())
 }
 
 func (r *repoManager) CloudinaryInstance() *cloudinary.Cloudinary {

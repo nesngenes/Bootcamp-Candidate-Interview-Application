@@ -1,6 +1,7 @@
 package api
 
 import (
+	"interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
@@ -132,7 +133,7 @@ func NewUserController(r *gin.Engine, usecase usecase.UserUsecase) *UserControll
 	// Register routes
 	rg := r.Group("/api/v1")
 	rg.POST("/users", controller.createHandler)
-	rg.GET("/users", controller.listHandler)
+	rg.GET("/users", middleware.AuthMiddleware("admin"), controller.listHandler)
 	rg.GET("/users/:id", controller.getHandler)
 	rg.GET("/users/by-username/:username", controller.getByUsernameHandler)
 	rg.PUT("/users/:id", controller.updateHandler) //bisa update asal role id and role name tetep sama

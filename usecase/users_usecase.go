@@ -16,6 +16,7 @@ type UserUsecase interface {
 	GetUserByID(id string) (model.Users, error)
 	UpdateUser(payload model.Users) error
 	DeleteUser(id string) error
+	FindByUsernamePassword(username string, password string) (model.Users, error)
 }
 
 type userUsecase struct {
@@ -96,6 +97,9 @@ func (u *userUsecase) UpdateUser(payload model.Users) error {
 		return fmt.Errorf("failed to update user: %v", err)
 	}
 	return nil
+}
+func (u *userUsecase) FindByUsernamePassword(username string, password string) (model.Users, error) {
+	return u.userRepo.GetUsernamePassword(username, password)
 }
 
 func (u *userUsecase) DeleteUser(id string) error {

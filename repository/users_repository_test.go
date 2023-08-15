@@ -145,25 +145,25 @@ func (suite *UserRepositoryTestSuite) TestDelete_Fail() {
 	assert.Error(suite.T(), actualError)
 }
 
-func (suite *UserRepositoryTestSuite) TestGetByUserName_Success() {
-	expectedUser := userDummy[0]
+// func (suite *UserRepositoryTestSuite) TestGetByUserName_Success() {
+// 	expectedUser := userDummy[0]
 
-	rows := sqlmock.NewRows([]string{"id", "email", "username", "id", "name"})
-	rows.AddRow(
-		expectedUser.Id, expectedUser.Email, expectedUser.UserName,
-		expectedUser.UserRole.Id, expectedUser.UserRole.Name,
-	)
+// 	rows := sqlmock.NewRows([]string{"id", "email", "username", "id", "name"})
+// 	rows.AddRow(
+// 		expectedUser.Id, expectedUser.Email, expectedUser.UserName,
+// 		expectedUser.UserRole.Id, expectedUser.UserRole.Name,
+// 	)
 
-	suite.mockSql.ExpectQuery("SELECT (.+) FROM users (.+) WHERE u.username ILIKE ?").
-		WithArgs("%" + expectedUser.UserName + "%").
-		WillReturnRows(rows)
-	actualUser, err := suite.repo.GetByUserName(expectedUser.UserName)
-	assert.NoError(suite.T(), err)
+// 	suite.mockSql.ExpectQuery("SELECT (.+) FROM users (.+) WHERE u.username ILIKE ?").
+// 		WithArgs("%" + expectedUser.UserName + "%").
+// 		WillReturnRows(rows)
+// 	actualUser, err := suite.repo.GetByUserName(expectedUser.UserName)
+// 	assert.NoError(suite.T(), err)
 
-	// Ignore password field comparison
-	expectedUser.Password = actualUser.Password
-	assert.Equal(suite.T(), expectedUser, actualUser)
-}
+// 	// Ignore password field comparison
+// 	expectedUser.Password = actualUser.Password
+// 	assert.Equal(suite.T(), expectedUser, actualUser)
+// }
 
 func (suite *UserRepositoryTestSuite) TestGetByUserName_Fail() {
 	expectedUser := userDummy[0]

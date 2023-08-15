@@ -8,7 +8,9 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	// "interview_bootcamp/model/dto"
 
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -101,20 +103,30 @@ func (suite *UserRoleControllerTestSuite) TestCreateHandler_BadRequest() {
 }
 
 func (suite *UserRoleControllerTestSuite) TestCreateHandler_InternalServerError() {
-	// Setup
 	payload := model.UserRoles{
-		Name: "Test Role",
+		Name: "New UserRoles",
 	}
-	expectedError := errors.New("internal server error")
-	suite.useCaseMock.On("RegisterNewUserRole", payload).Return(expectedError)
+
+	expectedError := fmt.Errorf("internal server error")
+	suite.useCaseMock.On("RegisterNewUserRole", mock.MatchedBy(func(arg model.UserRoles) bool {
+		return arg.Name == payload.Name
+	})).Return(expectedError)
 
 	requestBody, _ := json.Marshal(payload)
-	req := httptest.NewRequest("POST", "/api/v1/user-roles", bytes.NewReader(requestBody))
+
+	req := httptest.NewRequest("POST", "/api/v1/user-roles", strings.NewReader(string(requestBody)))
 	req.Header.Set("Content-Type", "application/json")
+
 	w := httptest.NewRecorder()
+
 	suite.router.ServeHTTP(w, req)
 
 	assert.Equal(suite.T(), http.StatusInternalServerError, w.Code)
+
+	// Verify the mock method call with any UserRoleId value
+	suite.useCaseMock.AssertCalled(suite.T(), "RegisterNewUserRole", mock.MatchedBy(func(arg model.UserRoles) bool {
+		return arg.Name == payload.Name
+	}))
 }
 func (suite *UserRoleControllerTestSuite) TestListHandler_Success() {
 	// Setup
@@ -133,16 +145,14 @@ func (suite *UserRoleControllerTestSuite) TestListHandler_Success() {
 
 func (suite *UserRoleControllerTestSuite) TestListHandler_InternalServerError() {
 	expectedError := errors.New("internal server error")
-	suite.useCaseMock.On("GetAllUserRoles").Return(nil, expectedError)
+	suite.useCaseMock.On("GetAllUserRoles").Return([]model.UserRoles{}, expectedError)
 
 	// request
 	req := httptest.NewRequest("GET", "/api/v1/user-roles", nil)
 	w := httptest.NewRecorder()
 	suite.router.ServeHTTP(w, req)
 
-	//
 	assert.Equal(suite.T(), http.StatusInternalServerError, w.Code)
-
 }
 
 func (suite *UserRoleControllerTestSuite) TestGetHandler_Success() {

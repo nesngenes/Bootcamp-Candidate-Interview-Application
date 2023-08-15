@@ -273,23 +273,44 @@ func (suite *HRRecruitmentControllerTestSuite) TestUpdateHR_NotFound() {
 }
 
 func (suite *HRRecruitmentControllerTestSuite) TestUpdateHR_InternalServerError() {
-	// Setup
-	expectedError := errors.New("internal server error")
-	payload := model.HRRecruitment{
-		ID:       "123",
-		FullName: "Nama Lengkap",
+	// Setup the mock expectation for Get method call
+	expectedHRRecruitment := model.HRRecruitment{
+		ID:       "user123",
+		FullName: "Athanasia",
 		UserID:   "user123",
+		User: model.Users{
+			Id:       "user123",
+			Email:    "athanasia@example.com",
+			UserName: "athanasia",
+			Password: "password",
+			UserRole: model.UserRoles{
+				Id:   "role123",
+				Name: "HR",
+			},
+		},
 	}
-	suite.useCaseMock.On("UpdateHRRecruitment", payload).Return(expectedError)
+	suite.useCaseMock.On("Get", "user123").Return(expectedHRRecruitment, nil)
 
-	//request
-	requestBody, _ := json.Marshal(payload)
-	req := httptest.NewRequest("PUT", "/api/v1/hr-recruitment/1", bytes.NewReader(requestBody))
+	// Setup the mock expectation for UpdateHRRecruitment method call
+	expectedError := errors.New("internal server error")
+	suite.useCaseMock.On("UpdateHRRecruitment", expectedHRRecruitment).Return(expectedError)
+
+	// Create the request payload
+	payloadJSON, _ := json.Marshal(expectedHRRecruitment)
+
+	// Make the HTTP request
+	req := httptest.NewRequest("PUT", "/api/v1/hr-recruitment/"+expectedHRRecruitment.ID, bytes.NewBuffer(payloadJSON))
 	req.Header.Set("Content-Type", "application/json")
+
 	w := httptest.NewRecorder()
 	suite.router.ServeHTTP(w, req)
 
+	// Assert the response status code
 	assert.Equal(suite.T(), http.StatusInternalServerError, w.Code)
+
+	// Assert that the mock methods were called
+	suite.useCaseMock.AssertCalled(suite.T(), "Get", expectedHRRecruitment.ID)
+	suite.useCaseMock.AssertCalled(suite.T(), "UpdateHRRecruitment", expectedHRRecruitment)
 }
 
 func (suite *HRRecruitmentControllerTestSuite) TestDeleteHandler_Success() {

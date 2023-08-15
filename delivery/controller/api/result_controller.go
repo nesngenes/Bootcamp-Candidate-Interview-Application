@@ -1,7 +1,7 @@
 package api
 
 import (
-	"interview_bootcamp/delivery/middleware"
+	// "interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
@@ -112,10 +112,17 @@ func NewResultController(r *gin.Engine, usecase usecase.ResultUseCase) *ResultCo
 		usecase: usecase,
 	}
 	rg := r.Group("/api/v1")
-	rg.POST("/results", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.createHandler)
-	rg.GET("/results", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.listHandler)
-	rg.GET("/results/:id", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.getHandler)
-	rg.PUT("/results", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.updateHandler)
-	rg.DELETE("/results/:id", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.deleteHandler)
+	// rg.POST("/results", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.createHandler)
+	// rg.GET("/results", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.listHandler)
+	// rg.GET("/results/:id", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.getHandler)
+	// rg.PUT("/results", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.updateHandler)
+	// rg.DELETE("/results/:id", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.deleteHandler)
+
+	rg.POST("/results", controller.createHandler)
+	rg.GET("/results", controller.listHandler)
+	rg.GET("/results/:id", controller.getHandler)
+	rg.PUT("/results", controller.updateHandler)
+	rg.DELETE("/results/:id", controller.deleteHandler)
+
 	return &controller
 }

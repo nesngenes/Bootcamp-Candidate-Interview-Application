@@ -1,7 +1,7 @@
 package api
 
 import (
-	"interview_bootcamp/delivery/middleware"
+	// "interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
@@ -82,11 +82,17 @@ func NewUserRoleController(r *gin.Engine, usecase usecase.UserRolesUseCase) *Use
 	}
 
 	rg := r.Group("/api/v1")
+	// rg.POST("/user-roles", controller.createHandler)
+	// rg.GET("/user-roles", controller.listHandler)
+	// rg.GET("/user-roles/:id", controller.getHandler)
+	// rg.PUT("/user-roles", middleware.AuthMiddleware("admin"), controller.updateHandler)
+	// rg.DELETE("/user-roles/:id", middleware.AuthMiddleware("admin"), controller.deleteHandler)
+
 	rg.POST("/user-roles", controller.createHandler)
 	rg.GET("/user-roles", controller.listHandler)
 	rg.GET("/user-roles/:id", controller.getHandler)
-	rg.PUT("/user-roles", middleware.AuthMiddleware("admin"), controller.updateHandler)
-	rg.DELETE("/user-roles/:id", middleware.AuthMiddleware("admin"), controller.deleteHandler)
+	rg.PUT("/user-roles", controller.updateHandler)
+	rg.DELETE("/user-roles/:id", controller.deleteHandler)
 
 	return &controller
 }

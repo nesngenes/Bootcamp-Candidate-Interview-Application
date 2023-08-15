@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"interview_bootcamp/delivery/middleware"
+	// "interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
@@ -197,9 +197,14 @@ func NewFormController(r *gin.Engine, usecase usecase.FormUseCase, cloudinary *c
 		cloudinary: cloudinary,
 	}
 	rg := r.Group("/api/v1")
-	rg.POST("/forms", middleware.AuthMiddleware("admin", "interviewer"), controller.createHandler)
-	rg.GET("/forms", middleware.AuthMiddleware("admin", "interviewer", "hr_recruitment"), controller.listHandler)
-	rg.DELETE("/forms/:id", middleware.AuthMiddleware("admin", "interviewer"), controller.deleteHandler)
-	rg.PUT("/forms", middleware.AuthMiddleware("admin", "interviewer"), controller.updateHandler)
+	// rg.POST("/forms", middleware.AuthMiddleware("admin", "interviewer"), controller.createHandler)
+	// rg.GET("/forms", middleware.AuthMiddleware("admin", "interviewer", "hr_recruitment"), controller.listHandler)
+	// rg.DELETE("/forms/:id", middleware.AuthMiddleware("admin", "interviewer"), controller.deleteHandler)
+	// rg.PUT("/forms", middleware.AuthMiddleware("admin", "interviewer"), controller.updateHandler)
+
+	rg.POST("/forms", controller.createHandler)
+	rg.GET("/forms", controller.listHandler)
+	rg.DELETE("/forms/:id", controller.deleteHandler)
+	rg.PUT("/forms", controller.updateHandler)
 	return &controller
 }

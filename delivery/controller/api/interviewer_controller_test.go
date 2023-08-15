@@ -114,13 +114,13 @@ func (suite *InterviewerControllerTestSuite) TestCreateHandler_BadRequest() {
 
 func (suite *InterviewerControllerTestSuite) TestCreateHandler_InternalServerError() {
 	payload := model.Interviewer{
-		InterviewerID: "1",
-		FullName:      "John Doe",
-		UserID:        "1",
+		FullName: "John Doe",
 	}
 
 	expectedError := fmt.Errorf("internal server error")
-	suite.interviewerUsecaseMock.On("RegisterNewInterviewer", payload).Return(expectedError)
+	suite.interviewerUsecaseMock.On("RegisterNewInterviewer", mock.MatchedBy(func(arg model.Interviewer) bool {
+		return arg.FullName == payload.FullName
+	})).Return(expectedError)
 
 	requestBody, _ := json.Marshal(payload)
 
@@ -132,7 +132,14 @@ func (suite *InterviewerControllerTestSuite) TestCreateHandler_InternalServerErr
 	suite.router.ServeHTTP(w, req)
 
 	assert.Equal(suite.T(), http.StatusInternalServerError, w.Code)
+
+	// Verify the mock method call with any InterviewerId value
+	suite.interviewerUsecaseMock.AssertCalled(suite.T(), "RegisterNewInterviewer", mock.MatchedBy(func(arg model.Interviewer) bool {
+		return arg.FullName == payload.FullName
+	}))
 }
+
+
 
 func (suite *InterviewerControllerTestSuite) TestListHandler_Success() {
 	dummyInterviewers := []model.Interviewer{

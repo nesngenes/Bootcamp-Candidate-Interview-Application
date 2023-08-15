@@ -1,7 +1,7 @@
 package api
 
 import (
-	"interview_bootcamp/delivery/middleware"
+	// "interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
@@ -53,7 +53,6 @@ func (b *BootcampController) listHandler(c *gin.Context) {
 		"data":   bootcamps,
 		"paging": paging,
 	})
-
 }
 func (b *BootcampController) getHandler(c *gin.Context) {
 	id := c.Param("id")
@@ -115,10 +114,16 @@ func NewBootcampController(r *gin.Engine, usecase usecase.BootcampUseCase) *Boot
 		usecase: usecase,
 	}
 	rg := r.Group("/api/v1")
-	rg.POST("/bootcamps", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.createHandler)
-	rg.GET("/bootcamps", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.listHandler)
-	rg.GET("/bootcamps/:id", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.getHandler)
-	rg.PUT("/bootcamps", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.updateHandler)
-	rg.DELETE("/bootcamps/:id", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.deleteHandler)
+	// rg.POST("/bootcamps", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.createHandler)
+	// rg.GET("/bootcamps", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.listHandler)
+	// rg.GET("/bootcamps/:id", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.getHandler)
+	// rg.PUT("/bootcamps", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.updateHandler)
+	// rg.DELETE("/bootcamps/:id", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.deleteHandler)
+
+	rg.POST("/bootcamps", controller.createHandler)
+	rg.GET("/bootcamps", controller.listHandler)
+	rg.GET("/bootcamps/:id", controller.getHandler)
+	rg.PUT("/bootcamps", controller.updateHandler)
+	rg.DELETE("/bootcamps/:id", controller.deleteHandler)
 	return &controller
 }

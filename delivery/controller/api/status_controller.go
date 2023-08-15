@@ -4,7 +4,6 @@ import (
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
-	"interview_bootcamp/utils/common"
 	"net/http"
 	"strconv"
 
@@ -23,7 +22,7 @@ func (s *StatusController) createHandler(c *gin.Context) {
 		return
 	}
 
-	status.StatusId = common.GenerateID()
+	// status.StatusId = common.GenerateID()
 	if err := s.usecase.RegisterNewStatus(status); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return

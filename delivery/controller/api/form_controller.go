@@ -4,25 +4,25 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
-	"interview_bootcamp/usecase"
 	"interview_bootcamp/model/dto"
+	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
 	"io"
 	"net/http"
 	"strconv"
+
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/gin-gonic/gin"
 )
 
-
 type FormController struct {
-	router           *gin.Engine
-	usecase usecase.FormUseCase
-	cloudinary       *cloudinary.Cloudinary
+	router     *gin.Engine
+	usecase    usecase.FormUseCase
+	cloudinary *cloudinary.Cloudinary
 }
-
 
 func (f *FormController) createHandler(c *gin.Context) {
 	err := c.Request.ParseMultipartForm(10 << 20)
@@ -79,7 +79,7 @@ func (f *FormController) createHandler(c *gin.Context) {
 	}
 
 	status := common.WebStatus{
-		Code: http.StatusCreated,
+		Code:        http.StatusCreated,
 		Description: "Create Data Successfully",
 	}
 	c.JSON(http.StatusCreated, gin.H{
@@ -181,8 +181,8 @@ func (f *FormController) deleteHandler(c *gin.Context) {
 		return
 	}
 
-	status := map[string]any {
-		"code": http.StatusNoContent,
+	status := map[string]any{
+		"code":        http.StatusNoContent,
 		"description": "delete data succesfully",
 	}
 	c.JSON(http.StatusNoContent, gin.H{
@@ -190,17 +190,16 @@ func (f *FormController) deleteHandler(c *gin.Context) {
 	})
 }
 
-
 func NewFormController(r *gin.Engine, usecase usecase.FormUseCase, cloudinary *cloudinary.Cloudinary) *FormController {
 	controller := FormController{
-		router:      r,
-		usecase: usecase, // Change this line
-		cloudinary:  cloudinary,
+		router:     r,
+		usecase:    usecase, // Change this line
+		cloudinary: cloudinary,
 	}
 	rg := r.Group("/api/v1")
-	rg.POST("/forms", controller.createHandler)
-	rg.GET("/forms", controller.listHandler)
-	rg.DELETE("/forms/:id", controller.deleteHandler)
-	rg.PUT("/forms", controller.updateHandler)
+	rg.POST("/forms", middleware.AuthMiddleware("admin", "interviewer"), controller.createHandler)
+	rg.GET("/forms", middleware.AuthMiddleware("admin", "interviewer", "hr_recruitment"), controller.listHandler)
+	rg.DELETE("/forms/:id", middleware.AuthMiddleware("admin", "interviewer"), controller.deleteHandler)
+	rg.PUT("/forms", middleware.AuthMiddleware("admin", "interviewer"), controller.updateHandler)
 	return &controller
 }

@@ -134,10 +134,10 @@ func NewUserController(r *gin.Engine, usecase usecase.UserUsecase) *UserControll
 	rg := r.Group("/api/v1")
 	rg.POST("/users", controller.createHandler)
 	rg.GET("/users", middleware.AuthMiddleware("admin"), controller.listHandler)
-	rg.GET("/users/:id", controller.getHandler)
-	rg.GET("/users/by-username/:username", controller.getByUsernameHandler)
-	rg.PUT("/users/:id", controller.updateHandler) //bisa update asal role id and role name tetep sama
-	rg.DELETE("/users/:id", controller.deleteHandler)
+	rg.GET("/users/:id", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.getHandler)
+	rg.GET("/users/by-username/:username", middleware.AuthMiddleware("admin"), controller.getByUsernameHandler)
+	rg.PUT("/users/:id", middleware.AuthMiddleware("admin"), controller.updateHandler) //bisa update asal role id and role name tetep sama
+	rg.DELETE("/users/:id", middleware.AuthMiddleware("admin"), controller.deleteHandler)
 
 	return &controller
 }

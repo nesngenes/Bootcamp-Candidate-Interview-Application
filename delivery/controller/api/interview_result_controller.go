@@ -1,6 +1,7 @@
 package api
 
 import (
+	"interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
@@ -77,8 +78,8 @@ func NewInterviewResultController(r *gin.Engine, usecase usecase.InterviewResult
 	}
 
 	rg := r.Group("/api/v1")
-	rg.POST("/interviewresult", controller.createHandler)
-	rg.GET("/interviewresult", controller.listHandler)
-	rg.GET("/interviewresult/:id", controller.getHandler)
+	rg.POST("/interviewresult", middleware.AuthMiddleware("admin", "interviewer"), controller.createHandler)
+	rg.GET("/interviewresult", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.listHandler)
+	rg.GET("/interviewresult/:id", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.getHandler)
 	return &controller
 }

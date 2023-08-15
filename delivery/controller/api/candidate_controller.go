@@ -7,6 +7,7 @@ import (
 
 	// "interview_bootcamp/delivery/middleware"
 
+	"interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/model/dto"
 	"interview_bootcamp/usecase"
@@ -267,10 +268,10 @@ func NewCandidateController(r *gin.Engine, candidateUsecase usecase.CandidateUse
 		cloudinary:       cloudinary,
 	}
 	rg := r.Group("/api/v1")
-	rg.POST("/candidates", controller.createHandler)
-	rg.GET("/candidates", controller.listHandler)
-	rg.GET("/candidates/:id", controller.getHandler)
-	rg.PUT("/candidates", controller.updateHandler)
-	rg.DELETE("/candidates/:id", controller.deleteHandler)
+	rg.POST("/candidates", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.createHandler)
+	rg.GET("/candidates", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.listHandler)
+	rg.GET("/candidates/:id", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.getHandler)
+	rg.PUT("/candidates", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.updateHandler)
+	rg.DELETE("/candidates/:id", middleware.AuthMiddleware("admin", "hr_recruitment"), controller.deleteHandler)
 	return &controller
 }

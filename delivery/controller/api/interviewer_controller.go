@@ -1,6 +1,7 @@
 package api
 
 import (
+	"interview_bootcamp/delivery/middleware"
 	"interview_bootcamp/model"
 	"interview_bootcamp/usecase"
 	"interview_bootcamp/utils/common"
@@ -101,10 +102,10 @@ func NewInterviewerController(r *gin.Engine, usecase usecase.InterviewerUseCase)
 		usecase: usecase,
 	}
 	rg := r.Group("/api/v1")
-	rg.POST("/interviewers", controller.createHandler)
-	rg.GET("/interviewers", controller.listHandler)
-	rg.GET("/interviewers/:id", controller.getHandler)
-	rg.PUT("/interviewers", controller.updateHandler)
-	rg.DELETE("/interviewers/:id", controller.deleteHandler)
+	rg.POST("/interviewers", middleware.AuthMiddleware("admin", "interviewer"), controller.createHandler)
+	rg.GET("/interviewers", middleware.AuthMiddleware("admin", "interviewer", "hr_recruitmen"), controller.listHandler)
+	rg.GET("/interviewers/:id", middleware.AuthMiddleware("admin", "hr_recruitment", "interviewer"), controller.getHandler)
+	rg.PUT("/interviewers", middleware.AuthMiddleware("admin", "interviewer"), controller.updateHandler)
+	rg.DELETE("/interviewers/:id", middleware.AuthMiddleware("admin", "interviewer"), controller.deleteHandler)
 	return &controller
 }

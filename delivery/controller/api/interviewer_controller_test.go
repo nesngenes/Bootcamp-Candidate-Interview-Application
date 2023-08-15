@@ -87,7 +87,9 @@ func (suite *InterviewerControllerTestSuite) TestCreateHandler_Success() {
 		FullName:      "John Doe",
 		UserID:        "1",
 	}
-	suite.interviewerUsecaseMock.On("RegisterNewInterviewer", payload).Return(nil)
+	suite.interviewerUsecaseMock.On("RegisterNewInterviewer", mock.MatchedBy(func(args model.Interviewer) bool {
+		return args.FullName == payload.FullName
+	})).Return(nil)
 	requestBody, _ := json.Marshal(payload)
 	req := httptest.NewRequest("POST", "/api/v1/interviewers", strings.NewReader(string(requestBody)))
 	req.Header.Set("Content-Type", "application/json")
